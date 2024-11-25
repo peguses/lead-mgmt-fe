@@ -1,38 +1,20 @@
-.App {
-  text-align: center;
-}
+/* Ensure the sidebar behaves properly on small screens */
+@media (max-width: 600px) {
+  .MuiDrawer-paper {
+    width: 60px; /* Collapsed width */
+  }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
+  .MuiDrawer-root.MuiDrawer-paper {
+    display: none; /* Hide the drawer by default on small screens */
+  }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+  .MuiDrawer-root.MuiDrawer-paper.MuiDrawer-open {
+    display: block; /* Show the drawer when open */
   }
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.MuiAppBar-root {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  justify-content: space-between;
+  padding: 0 16px;
 }
