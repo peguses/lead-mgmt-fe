@@ -1,6 +1,5 @@
-import { Home, Settings, AccountCircle, Menu as MenuIcon } from "@mui/icons-material";
 import { SwipeableDrawer, IconButton, List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
-import { SyntheticEvent } from "react";
+import { SyntheticEvent, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
@@ -9,10 +8,43 @@ import NotificationsNoneRoundedIcon from '@mui/icons-material/NotificationsNoneR
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
-import styled from "@emotion/styled";
+import useViewport from "../hooks/useViewport";
+import { useDispatch } from "react-redux";
+import { setViewport } from "../redux/common.slice";
 
 export const ApplicationDrawerComponent: React.FC<any> = ({open, setOpen }) => {
-    const toggleSidebar = () => setOpen(!open);
+
+    const viewPort = useViewport();
+
+    const dispatch = useDispatch();
+
+    const [menuOpen, setMenuOpen] = useState<boolean>(open);
+
+    const [smallDevice, setSmallDevice] = useState<boolean>(open);
+
+    useEffect(() => {
+
+        dispatch(setViewport({viewPort}));
+
+        if (viewPort.width < 900) {
+            setOpen(false)
+            setMenuOpen(false);
+            setSmallDevice(true);
+        } else {
+            setOpen(true)
+            setMenuOpen(true);
+            setSmallDevice(false)
+        }
+
+    }, [viewPort]);
+
+    const toggleSidebar = () => {
+        if (menuOpen && smallDevice) {
+            setMenuOpen(false);
+        }
+        setMenuOpen(!menuOpen);
+        setOpen(!menuOpen);
+    };
 
     return (
         <SwipeableDrawer
@@ -33,7 +65,7 @@ export const ApplicationDrawerComponent: React.FC<any> = ({open, setOpen }) => {
                 throw new Error("Function not implemented.");
             } }        
         >
-        <IconButton
+        {viewPort.width > 900 && (<IconButton
             onClick={toggleSidebar}
             sx={{
                 height: "24px",
@@ -46,45 +78,45 @@ export const ApplicationDrawerComponent: React.FC<any> = ({open, setOpen }) => {
                 overflowY: "clip",
             }}
         >
-        { open ? <ArrowCircleLeftIcon /> :  <ArrowCircleRightIcon />}
-      </IconButton>
-          <List sx={{ marginTop: '80px' }}>
+        { menuOpen ? <ArrowCircleLeftIcon /> :  <ArrowCircleRightIcon />}
+        </IconButton> )}
+        <List sx={{ marginTop: '80px' }}>
             <ListItem component={Link} to="/">
               <ListItemIcon>
                 <HomeOutlinedIcon />
               </ListItemIcon>
-              {open && <ListItemText primary="Home" />}
+              {menuOpen && <ListItemText primary="Home" />}
             </ListItem>
     
             <ListItem component={Link} to="/inquery-status">
               <ListItemIcon>
                 <HelpOutlineOutlinedIcon />
               </ListItemIcon>
-              {open && <ListItemText primary="Inquery Status" />}
+              {menuOpen && <ListItemText primary="Inquery Status" />}
             </ListItem>
     
             <ListItem component={Link} to="/lead-view">
               <ListItemIcon>
                 <NotificationsNoneRoundedIcon />
               </ListItemIcon>
-              {open && <ListItemText primary="Leads" />}
+              {menuOpen && <ListItemText primary="Leads" />}
             </ListItem>
 
             <ListItem component={Link} to="/referal-manager-view">
               <ListItemIcon>
                 <FavoriteBorderSharpIcon />
               </ListItemIcon>
-              {open && <ListItemText primary="Referals" />}
+              {menuOpen && <ListItemText primary="Referals" />}
             </ListItem>
 
             <ListItem component={Link} to="/user-view">
               <ListItemIcon>
                 <PeopleAltOutlinedIcon />
               </ListItemIcon>
-              {open && <ListItemText 
+              {menuOpen && <ListItemText 
               primary="Users" />}
             </ListItem>
-          </List>
+        </List>
         </SwipeableDrawer>
       );
 }

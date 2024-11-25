@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Box, CssBaseline } from "@mui/material";
+import { Box } from "@mui/material";
 import './App.css';
 import { useState } from 'react';
 import { ApplicationNavbarComponent } from "./shared/components/ApplicationNavbar.componenet";
@@ -15,10 +15,9 @@ function App() {
   return (
     <Router>
       <Box sx={{ display: 'flex' }}>
-        {/* <CssBaseline /> */}
         <ApplicationNavbarComponent />
         <ApplicationDrawerComponent open={open} setOpen={setOpen}  />
-        <Box component="main" sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 ,  marginTop: "64px", zIndex: 0 }}>
+        <Box component="main" sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 ,  marginTop: "74px", zIndex: 0 }}>
           <Routes>
             <Route path="/" element={<LandingPageContainer />} />
             <Route path="/inquery-status" element={<InqueryStatusViewContainer />} />
