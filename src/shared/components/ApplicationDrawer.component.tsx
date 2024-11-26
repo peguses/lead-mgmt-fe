@@ -14,7 +14,7 @@ import { setViewport } from "../redux/common.slice";
 
 export const ApplicationDrawerComponent: React.FC<any> = ({open, setOpen }) => {
 
-    const viewPort = useViewport();
+  const viewPort = useViewport();
 
     const dispatch = useDispatch();
 
@@ -26,7 +26,7 @@ export const ApplicationDrawerComponent: React.FC<any> = ({open, setOpen }) => {
 
         dispatch(setViewport({viewPort}));
 
-        if (viewPort.width < 900) {
+        if (viewPort.width < 900 || !open) {
             setOpen(false)
             setMenuOpen(false);
             setSmallDevice(true);
@@ -44,6 +44,8 @@ export const ApplicationDrawerComponent: React.FC<any> = ({open, setOpen }) => {
         }
         setMenuOpen(!menuOpen);
         setOpen(!menuOpen);
+        dispatch(setViewport({...viewPort, menuOpen: !menuOpen}));
+
     };
 
     return (

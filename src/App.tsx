@@ -11,7 +11,7 @@ import { UserViewContainer } from "./pages/UserView.container";
 import { ReferalManagerViewContainer } from "./pages/ReferalManagerView.container";
 
 function App() {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   return (
     <Router>
       <Box sx={{ display: 'flex' }}>

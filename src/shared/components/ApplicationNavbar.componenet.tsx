@@ -1,6 +1,5 @@
-import { AppBar, Avatar, Box, IconButton, Toolbar, Typography } from "@mui/material";
-import React from "react"
-import { Menu as MenuIcon } from "@mui/icons-material";
+import { AppBar, Avatar, Box, Toolbar, Typography } from "@mui/material";
+import React from "react";
 
 export const ApplicationNavbarComponent: React.FC<any> = () => {
     return (

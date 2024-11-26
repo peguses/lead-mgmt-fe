@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 interface IViewPort {
     height: number;
     width: number;
+    menuOpned: boolean
 };
 
 interface ICommon {
@@ -10,7 +11,7 @@ interface ICommon {
 };
 
 const INITIAL_STATE: ICommon = {
-    viewPort: { height: 0, width: 0},
+    viewPort: { height: 0, width: 0, menuOpned: false},
 };
 
 export const commonSlice = createSlice({
