@@ -9,6 +9,7 @@ import { InqueryStatusViewContainer } from "./pages/InqueryStatusView.container"
 import { LeadViewContainer } from "./pages/LeadView.container";
 import { UserViewContainer } from "./pages/UserView.container";
 import { ReferalManagerViewContainer } from "./pages/ReferalManagerView.container";
+import { ApplicatiopnFooterComponenet } from "./shared/components/ApplicationFooter.component";
 
 function App() {
   const [open, setOpen] = useState(false);
@@ -26,6 +27,7 @@ function App() {
             <Route path="/referal-manager-view" element={<ReferalManagerViewContainer />} />
           </Routes>
         </Box>
+        <ApplicatiopnFooterComponenet/>
       </Box>
     </Router>
   );
