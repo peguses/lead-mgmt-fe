@@ -38,7 +38,7 @@ export const SubscriptionComponenet: React.FC<any> = () => {
             </Grid>
             <Grid container size={{xl: 6, lg: 6, md: 6, sm: 12, xs: 12}} sx={{ marginTop: "20px"}}>
                 <Grid size={{xl: 12, lg: 12}} offset={{xl: 5, lg: 4,  md: 2}}>
-                        <Button variant="contained">Contained</Button>
+                        <Button variant="contained">Subscribe</Button>
                 </Grid>
             </Grid>
             <Grid container size={{xl: 4, lg: 4, md: 6, sm: 12, xs: 12}} sx={{ marginTop: "20px"}} offset={{xl: 2, lg: 2}}>
