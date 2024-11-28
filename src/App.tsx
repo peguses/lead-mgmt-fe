@@ -4,7 +4,7 @@ import './App.css';
 import { useState } from 'react';
 import { ApplicationNavbarComponent } from "./shared/components/ApplicationNavbar.componenet";
 import { ApplicationDrawerComponent } from "./shared/components/ApplicationDrawer.component";
-import { LandingPageContainer } from "./pages/LandingPage.container";
+import { LandingPageContainer } from "./pages/landingPage/LandingPage.container";
 import { InqueryStatusViewContainer } from "./pages/InqueryStatusView.container";
 import { LeadViewContainer } from "./pages/LeadView.container";
 import { UserViewContainer } from "./pages/UserView.container";
@@ -18,7 +18,7 @@ function App() {
       <Box sx={{ display: 'flex' }}>
         <ApplicationNavbarComponent />
         <ApplicationDrawerComponent open={open} setOpen={setOpen}  />
-        <Box component="main" sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 ,  marginTop: "74px", zIndex: 0 }}>
+        <Box component="main" sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 ,  marginTop: "74px", marginBottom: "74px", zIndex: 0 }}>
           <Routes>
             <Route path="/" element={<LandingPageContainer />} />
             <Route path="/inquery-status" element={<InqueryStatusViewContainer />} />

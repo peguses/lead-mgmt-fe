@@ -1,8 +1,13 @@
 import { Box, Button, Grid2 as Grid, InputAdornment, TextField, Typography } from "@mui/material"
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import { useAppSelector } from "../redux/hooks";
+import { SubmitHandler, useForm } from "react-hook-form";
 
 export const SubscriptionComponenet: React.FC<any> = () => {
+
+    const { control, register, handleSubmit, formState: { errors }, clearErrors } = useForm<any>();
+
+    const onSubmit: SubmitHandler<any> = data => console.log(data);
 
     const viewPort = useAppSelector((state: any) => {
         return state.common.viewPort;
@@ -21,6 +26,15 @@ export const SubscriptionComponenet: React.FC<any> = () => {
                             variant="outlined"
                             fullWidth
                             placeholder={"Input your email"}
+                            {...register('email', {
+                                required: 'Email is required',
+                                pattern: {
+                                  value: /\S+@\S+\.\S+/,
+                                  message: 'Entered value does not match email format',
+                                },
+                            })}
+                            error={!!errors.email}
+                            helperText={errors.email ? String(errors.email.message) : ''}
                             slotProps={{
                                 input: {
                                     startAdornment: (
@@ -29,7 +43,8 @@ export const SubscriptionComponenet: React.FC<any> = () => {
                                         </InputAdornment>
                                     ),
                                     sx: {
-                                        height: "36px"
+                                        height: "36px",
+                                        marginTop: "20px"
                                     }
                                 },
                             }}
@@ -38,7 +53,7 @@ export const SubscriptionComponenet: React.FC<any> = () => {
             </Grid>
             <Grid container size={{xl: 6, lg: 6, md: 6, sm: 12, xs: 12}} sx={{ marginTop: "20px"}}>
                 <Grid size={{xl: 12, lg: 12}} offset={{xl: 5, lg: 4,  md: 2}}>
-                        <Button variant="contained">Subscribe</Button>
+                        <Button onClick={handleSubmit(onSubmit)} variant="contained">Subscribe</Button>
                 </Grid>
             </Grid>
             <Grid container size={{xl: 4, lg: 4, md: 6, sm: 12, xs: 12}} sx={{ marginTop: "20px"}} offset={{xl: 2, lg: 2}}>
