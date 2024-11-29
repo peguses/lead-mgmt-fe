@@ -3,9 +3,9 @@ import React, { useEffect, useRef, useState } from "react"
 import { SubscriptionComponenet } from "../../shared/components/Subscription.component"
 import { TabPanel } from "../../shared/components/TabPanel.component";
 import { WorkInforamtionTab } from "./WorkInformation.tab";
-import { PersonalInformation, resetPersonalInforamtions, setJoinLoanApplication, setPersonalInforamtions } from "../../shared/redux/applicant.slice";
+import { addOrUpdatePersonalInforamtions, PersonalInformation, removePersonalInformation, setJoinLoanApplication } from "../../shared/redux/applicant.slice";
 import PersonalInformationTab from "./PersonalInformation.tab";
-import { useDispatch } from "react-redux";
+import { batch, useDispatch } from "react-redux";
 import { useAppSelector } from "../../shared/redux/hooks";
 
 export const LandingPageContainer: React.FC<any> = () => {
@@ -20,7 +20,7 @@ export const LandingPageContainer: React.FC<any> = () => {
 
     const [applicantTwoValid, setApplicantTwoValid] = useState<boolean>(false);
 
-    const [allowNextTab, setAllowNextTab] = useState<boolean>(false);
+    const [allowWorkTab, setAllowWorkTab] = useState<boolean>(false);
 
     const applicantOnePersonalInforamtionRef = useRef<any>();
 
@@ -30,16 +30,12 @@ export const LandingPageContainer: React.FC<any> = () => {
         return state.application.personalInforamtions;
     });
 
-    useEffect(() => {console.log(applicants)}, [applicants]);
-
     useEffect(() => {
 
-        console.log(applicantOneValid, applicantTwoValid);
-
         if (jointLoan) {
-            setAllowNextTab(applicantOneValid && applicantTwoValid);
+            setAllowWorkTab(applicantOneValid && applicantTwoValid);
         } else {
-            setAllowNextTab(applicantOneValid);
+            setAllowWorkTab(applicantOneValid);
         }
 
     }, [applicantOneValid, applicantTwoValid])
@@ -54,29 +50,19 @@ export const LandingPageContainer: React.FC<any> = () => {
     };
 
     const handleSubmit = () => {
-        if (applicantOnePersonalInforamtionRef?.current) {
-            applicantOnePersonalInforamtionRef.current.triggerSubmit();
-        }
-        if (applicantTwoPersonalInforamtionRef?.current) {
-            applicantTwoPersonalInforamtionRef.current.triggerSubmit();
-        }
+        batch(() => {
+            if (applicantOnePersonalInforamtionRef?.current) {
+                applicantOnePersonalInforamtionRef.current.triggerSubmit();
+            }
+            if (applicantTwoPersonalInforamtionRef?.current) {
+                applicantTwoPersonalInforamtionRef.current.triggerSubmit();
+            }
+        })
+        setValue(2);
     }
 
-    const onPersonalInformationSubmit = (applicant: number, data: PersonalInformation) => {
-
-        const copy = applicants;
-
-        dispatch(resetPersonalInforamtions());
-
-        const personalInformations: PersonalInformation[]  = [];
-
-        if (copy[0]) {
-            personalInformations.push(copy[0]);
-        }
-
-        personalInformations.push({...data, applicantId: applicant});
-        
-        dispatch(setPersonalInforamtions(personalInformations));
+    const  onPersonalInformationSubmit = (applicant: number, data: PersonalInformation) => {
+        dispatch(addOrUpdatePersonalInforamtions({applicantId: applicant, data}));
     }
     
     return(
@@ -108,6 +94,7 @@ export const LandingPageContainer: React.FC<any> = () => {
                                 setApplicantOneValid(false);
                                 setApplicantTwoValid(true);
                                 dispatch(setJoinLoanApplication(false));
+                                dispatch(removePersonalInformation({ applicantId: 2}));
                             }
                         }}
                         >
@@ -124,17 +111,17 @@ export const LandingPageContainer: React.FC<any> = () => {
                 ? (
                 <Grid container size={8} offset={1.5}>
                     <Grid size={5.5}>
-                    <PersonalInformationTab key={1} applicant={1} onValid={(isValid) => setApplicantOneValid(isValid)} onSubmit={(data) => onPersonalInformationSubmit(1, data)} ref={applicantOnePersonalInforamtionRef}/>
+                        <PersonalInformationTab key={1} applicant={1} onValid={(isValid) => setApplicantOneValid(isValid)} onSubmit={(data) => onPersonalInformationSubmit(1,data)} ref={applicantOnePersonalInforamtionRef}/>
                     </Grid>
                     <Grid size={5.5} offset={1}>
-                    <PersonalInformationTab key={2} applicant={2} onValid={(isValid) => setApplicantTwoValid(isValid)} onSubmit={(data) => onPersonalInformationSubmit(2, data)} ref={applicantTwoPersonalInforamtionRef}/>
+                        <PersonalInformationTab key={2} applicant={2} onValid={(isValid) => setApplicantTwoValid(isValid)} onSubmit={(data) => onPersonalInformationSubmit(2,data)} ref={applicantTwoPersonalInforamtionRef}/>
                     </Grid>
                     </Grid>
                 ) : 
-                <PersonalInformationTab applicant={1} onValid={(isValid) => setApplicantOneValid(isValid)} onSubmit={(data) => onPersonalInformationSubmit(1, data)} ref={applicantOnePersonalInforamtionRef}/>
+                <PersonalInformationTab applicant={1} onValid={(isValid) => setApplicantOneValid(isValid)} onSubmit={(data) => onPersonalInformationSubmit(1,data)} ref={applicantOnePersonalInforamtionRef}/>
                 }
                  <Grid size={jointLoan ? 2: 3} offset={jointLoan? 7.5: 9} sx={{marginTop: "20px"}}>
-                    <Button onClick={handleSubmit} variant="contained" color="primary" fullWidth disabled={!allowNextTab}>
+                    <Button onClick={handleSubmit} variant="contained" color="primary" fullWidth disabled={!allowWorkTab}>
                         Next
                     </Button>
                 </Grid>

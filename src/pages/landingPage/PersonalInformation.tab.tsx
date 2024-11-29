@@ -3,6 +3,8 @@ import {FormControl, FormControlLabel, FormHelperText, InputAdornment, MenuItem,
 import { Controller, useForm } from "react-hook-form";
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import { forwardRef, useEffect, useImperativeHandle } from "react";
+import { useAppSelector } from "../../shared/redux/hooks";
+import { PersonalInformation } from "../../shared/redux/applicant.slice";
 
 
 interface PersonalInformationTab {
@@ -13,21 +15,13 @@ interface PersonalInformationTab {
 
 const PersonalInformationTab = forwardRef(( { applicant, onSubmit, onValid}: PersonalInformationTab, ref) => {
 
+    const applicantInformation = useAppSelector((state): PersonalInformation | undefined => {
+        return state?.application?.personalInforamtions?.find((app) => app.applicantId === applicant);
+    });
+
     const { control, register, handleSubmit, formState: { errors, isValid, isDirty  }, clearErrors } = useForm<any>({
         mode: "all",
-        defaultValues: {
-            firstName: "",
-            lastName: "",
-            mobile: "",
-            email: "",
-            state: "",
-            residancyStatus: "",
-            investmentType: "",
-            firstTimeBuyer: "",
-            stateCapitalCityBuyer: "",
-            buyerAgreedToConnectWithAgent: "",
-
-        },
+        defaultValues: applicantInformation,
     });
 
     const states = [
@@ -175,7 +169,6 @@ const PersonalInformationTab = forwardRef(( { applicant, onSubmit, onValid}: Per
                             <Select
                                 labelId="state-label"
                                 {...field}
-                                value={field.value}
                                 displayEmpty
                                 style={{height: "36px"}}
                                 onChange={(e) => {
@@ -205,7 +198,6 @@ const PersonalInformationTab = forwardRef(( { applicant, onSubmit, onValid}: Per
                             <Select
                                 labelId="residancyStatus-label"
                                 {...field}
-                                value={field.value}
                                 displayEmpty
                                 style={{height: "36px"}}
                                 onChange={(e) => {
@@ -237,7 +229,6 @@ const PersonalInformationTab = forwardRef(( { applicant, onSubmit, onValid}: Per
                             <Select
                                 labelId="investmentType-label"
                                 {...field}
-                                value={field.value}
                                 displayEmpty
                                 style={{height: "36px"}}
                                 onChange={(e) => {
@@ -271,7 +262,6 @@ const PersonalInformationTab = forwardRef(( { applicant, onSubmit, onValid}: Per
                                     row
                                     defaultValue=""
                                     name="firstTimeBuyer"
-                                    value={field?.value}
                                     onChange={(e) => {
                                         clearErrors("firstTimeBuyer");
                                         field.onChange(e);
@@ -298,7 +288,6 @@ const PersonalInformationTab = forwardRef(( { applicant, onSubmit, onValid}: Per
                                         row
                                         defaultValue=""
                                         name="stateCapitalCityBuyer"
-                                        value={field?.value}
                                         onChange={(e) => {
                                             clearErrors("stateCapitalCityBuyer");
                                             field.onChange(e);
@@ -325,7 +314,6 @@ const PersonalInformationTab = forwardRef(( { applicant, onSubmit, onValid}: Per
                                         row
                                         defaultValue=""
                                         name="buyerAgreedToConnectWithAgent"
-                                        value={field?.value}
                                         onChange={(e) => {
                                             clearErrors("buyerAgreedToConnectWithAgent");
                                             field.onChange(e);

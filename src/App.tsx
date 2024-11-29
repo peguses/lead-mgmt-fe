@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Box } from "@mui/material";
 import './App.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ApplicationNavbarComponent } from "./shared/components/ApplicationNavbar.componenet";
 import { ApplicationDrawerComponent } from "./shared/components/ApplicationDrawer.component";
 import { LandingPageContainer } from "./pages/landingPage/LandingPage.container";
@@ -10,9 +10,17 @@ import { LeadViewContainer } from "./pages/LeadView.container";
 import { UserViewContainer } from "./pages/UserView.container";
 import { ReferalManagerViewContainer } from "./pages/ReferalManagerView.container";
 import { ApplicatiopnFooterComponenet } from "./shared/components/ApplicationFooter.component";
+import { useDispatch } from "react-redux";
+import { resetPersonalInforamtions } from "./shared/redux/applicant.slice";
 
 function App() {
   const [open, setOpen] = useState(false);
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(resetPersonalInforamtions());
+  }, [dispatch]);
+  
   return (
     <Router>
       <Box sx={{ display: 'flex' }}>

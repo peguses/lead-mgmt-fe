@@ -9,7 +9,6 @@ export interface WorkInformation {
 export interface FinantialInformation {
 
     applicantId: number;
-
 };
 
 export interface PersonalInformation {
@@ -51,8 +50,23 @@ export const applicationSlice = createSlice({
             state.jointLoan = action.payload;
         },
 
-        setPersonalInforamtions: (state, action) => {
-            state.personalInforamtions = action.payload;
+        addOrUpdatePersonalInforamtions: (state, action) => {
+
+            const { applicantId, data } = action.payload;
+            const index = state?.personalInforamtions?.findIndex((a) => a.applicantId === applicantId);
+
+            if (index !== -1) {
+                state.personalInforamtions[index] = { ...state.personalInforamtions[index], ...data };
+            } else {
+                state.personalInforamtions.push({...data, applicantId: applicantId});
+            }
+        },
+
+        removePersonalInformation: (state, action) => {
+            
+            const { applicantId } = action.payload;
+            state.personalInforamtions = state?.personalInforamtions?.filter((a) => a.applicantId !== applicantId);
+
         },
 
         resetPersonalInforamtions: (state) => {
@@ -62,5 +76,5 @@ export const applicationSlice = createSlice({
     },
 });
 
-export const { setPersonalInforamtions, resetPersonalInforamtions, setJoinLoanApplication } = applicationSlice.actions;
+export const { resetPersonalInforamtions, setJoinLoanApplication, addOrUpdatePersonalInforamtions, removePersonalInformation } = applicationSlice.actions;
 export default applicationSlice.reducer;
