@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react"
 import { SubscriptionComponenet } from "../../shared/components/Subscription.component"
 import { TabPanel } from "../../shared/components/TabPanel.component";
 import { WorkInforamtionTab } from "./WorkInformation.tab";
-import { PersonalInformation, setPersonalInforamtions } from "../../shared/redux/applicant.slice";
+import { PersonalInformation, resetPersonalInforamtions, setJoinLoanApplication, setPersonalInforamtions } from "../../shared/redux/applicant.slice";
 import PersonalInformationTab from "./PersonalInformation.tab";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "../../shared/redux/hooks";
@@ -16,9 +16,11 @@ export const LandingPageContainer: React.FC<any> = () => {
 
     const [jointLoan, setJointLoan] = useState<boolean>(false);
 
-    const [applicantOnePersonalInforamtion, setApplicantOnePersonalInforamtion] = useState<PersonalInformation>();
+    const [applicantOneValid, setApplicantOneValid] = useState<boolean>(false);
 
-    const [applicantTwoPersonalInforamtion, setApplicantTwoPersonalInforamtion] = useState<PersonalInformation>();
+    const [applicantTwoValid, setApplicantTwoValid] = useState<boolean>(false);
+
+    const [allowNextTab, setAllowNextTab] = useState<boolean>(false);
 
     const applicantOnePersonalInforamtionRef = useRef<any>();
 
@@ -28,7 +30,19 @@ export const LandingPageContainer: React.FC<any> = () => {
         return state.application.personalInforamtions;
     });
 
-    // useEffect(() => {console.log(oppp)}, [oppp])
+    useEffect(() => {console.log(applicants)}, [applicants]);
+
+    useEffect(() => {
+
+        console.log(applicantOneValid, applicantTwoValid);
+
+        if (jointLoan) {
+            setAllowNextTab(applicantOneValid && applicantTwoValid);
+        } else {
+            setAllowNextTab(applicantOneValid);
+        }
+
+    }, [applicantOneValid, applicantTwoValid])
 
     const applicantStatus = [
         {code: "1APP", name: "1 Applicant"},
@@ -50,9 +64,18 @@ export const LandingPageContainer: React.FC<any> = () => {
 
     const onPersonalInformationSubmit = (applicant: number, data: PersonalInformation) => {
 
-        
+        const copy = applicants;
+
+        dispatch(resetPersonalInforamtions());
+
         const personalInformations: PersonalInformation[]  = [];
+
+        if (copy[0]) {
+            personalInformations.push(copy[0]);
+        }
+
         personalInformations.push({...data, applicantId: applicant});
+        
         dispatch(setPersonalInforamtions(personalInformations));
     }
     
@@ -74,7 +97,19 @@ export const LandingPageContainer: React.FC<any> = () => {
                         value={jointLoan === true ? "2APP" : "1APP"}
                         displayEmpty
                         style={{height: "36px"}}
-                        onChange={(event) => setJointLoan(event.target.value === "2APP")}
+                        onChange={(event) => {
+                            if (event.target.value === "2APP") {
+                                setJointLoan(true);
+                                setApplicantTwoValid(false);
+                                setApplicantOneValid(false);
+                                dispatch(setJoinLoanApplication(true));
+                            } else {
+                                setJointLoan(false);
+                                setApplicantOneValid(false);
+                                setApplicantTwoValid(true);
+                                dispatch(setJoinLoanApplication(false));
+                            }
+                        }}
                         >
                         <MenuItem value="" disabled>Select if Joint Loan</MenuItem>
                             {applicantStatus.map((stateObj) => (
@@ -89,17 +124,17 @@ export const LandingPageContainer: React.FC<any> = () => {
                 ? (
                 <Grid container size={8} offset={1.5}>
                     <Grid size={5.5}>
-                    <PersonalInformationTab key={1} applicant={1} onSubmit={(data) => onPersonalInformationSubmit(1, data)} ref={applicantOnePersonalInforamtionRef}/>
+                    <PersonalInformationTab key={1} applicant={1} onValid={(isValid) => setApplicantOneValid(isValid)} onSubmit={(data) => onPersonalInformationSubmit(1, data)} ref={applicantOnePersonalInforamtionRef}/>
                     </Grid>
                     <Grid size={5.5} offset={1}>
-                    <PersonalInformationTab key={2} applicant={2} onSubmit={(data) => onPersonalInformationSubmit(2, data)} ref={applicantTwoPersonalInforamtionRef}/>
+                    <PersonalInformationTab key={2} applicant={2} onValid={(isValid) => setApplicantTwoValid(isValid)} onSubmit={(data) => onPersonalInformationSubmit(2, data)} ref={applicantTwoPersonalInforamtionRef}/>
                     </Grid>
                     </Grid>
                 ) : 
-                <PersonalInformationTab applicant={1} onSubmit={(data) => onPersonalInformationSubmit(1, data)} ref={applicantOnePersonalInforamtionRef}/>
+                <PersonalInformationTab applicant={1} onValid={(isValid) => setApplicantOneValid(isValid)} onSubmit={(data) => onPersonalInformationSubmit(1, data)} ref={applicantOnePersonalInforamtionRef}/>
                 }
                  <Grid size={jointLoan ? 2: 3} offset={jointLoan? 7.5: 9} sx={{marginTop: "20px"}}>
-                    <Button onClick={handleSubmit} variant="contained" color="primary" fullWidth>
+                    <Button onClick={handleSubmit} variant="contained" color="primary" fullWidth disabled={!allowNextTab}>
                         Next
                     </Button>
                 </Grid>

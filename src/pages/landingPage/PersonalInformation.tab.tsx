@@ -2,17 +2,33 @@ import { AccountCircle, PhoneAndroid } from "@mui/icons-material";
 import {FormControl, FormControlLabel, FormHelperText, InputAdornment, MenuItem, Radio, RadioGroup, Select, TextField, Typography } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
-import { forwardRef, useImperativeHandle } from "react";
+import { forwardRef, useEffect, useImperativeHandle } from "react";
 
 
 interface PersonalInformationTab {
     applicant: number;
-    onSubmit: (data: any) => void
+    onSubmit: (data: any) => void,
+    onValid: (isValid: boolean) => void
 }
 
-const PersonalInformationTab = forwardRef(( { applicant, onSubmit }: PersonalInformationTab, ref) => {
+const PersonalInformationTab = forwardRef(( { applicant, onSubmit, onValid}: PersonalInformationTab, ref) => {
 
-    const { control, register, handleSubmit, formState: { errors }, clearErrors } = useForm<any>();
+    const { control, register, handleSubmit, formState: { errors, isValid, isDirty  }, clearErrors } = useForm<any>({
+        mode: "all",
+        defaultValues: {
+            firstName: "",
+            lastName: "",
+            mobile: "",
+            email: "",
+            state: "",
+            residancyStatus: "",
+            investmentType: "",
+            firstTimeBuyer: "",
+            stateCapitalCityBuyer: "",
+            buyerAgreedToConnectWithAgent: "",
+
+        },
+    });
 
     const states = [
         { code: 'NSW', name: 'New South Wales' },
@@ -44,6 +60,8 @@ const PersonalInformationTab = forwardRef(( { applicant, onSubmit }: PersonalInf
     useImperativeHandle(ref, () => ({
         triggerSubmit
     }));
+
+    useEffect(() => {onValid(isValid && !!errors)}, [isValid, errors])
 
     return <>
                 <Typography sx={{marginTop: "20px", fontSize: "14px", fontWeight: 700}}>Applicant {applicant} Details</Typography>

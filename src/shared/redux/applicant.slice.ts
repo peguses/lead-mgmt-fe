@@ -30,6 +30,7 @@ export interface PersonalInformation {
 
 export interface Application {
 
+    jointLoan: boolean
     personalInforamtions: PersonalInformation[];
     workInformations: WorkInformation[];
     finantialInformations: FinantialInformation[];
@@ -37,7 +38,7 @@ export interface Application {
 }
 
 const INITIAL_STATE: Application = {
-     personalInforamtions: [], workInformations: [], finantialInformations: []
+    jointLoan: false, personalInforamtions: [], workInformations: [], finantialInformations: []
 };
 
 
@@ -45,11 +46,21 @@ export const applicationSlice = createSlice({
     name: 'application',
     initialState: INITIAL_STATE,
     reducers: {
+
+        setJoinLoanApplication:  (state, action) => {
+            state.jointLoan = action.payload;
+        },
+
         setPersonalInforamtions: (state, action) => {
             state.personalInforamtions = action.payload;
         },
+
+        resetPersonalInforamtions: (state) => {
+            state.personalInforamtions = []
+        },
+
     },
 });
 
-export const { setPersonalInforamtions } = applicationSlice.actions;
+export const { setPersonalInforamtions, resetPersonalInforamtions, setJoinLoanApplication } = applicationSlice.actions;
 export default applicationSlice.reducer;
