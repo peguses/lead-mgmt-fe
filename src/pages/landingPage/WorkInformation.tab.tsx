@@ -13,6 +13,8 @@ import PersonIcon from "@mui/icons-material/Person";
 import BusinessIcon from "@mui/icons-material/Business";
 import PhoneIcon from "@mui/icons-material/Phone";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
+import { Business, LocationOn, MailOutline } from "@mui/icons-material";
+import { AustralienState } from "../../shared/constants/AustralienState.constant";
 
 export const WorkInforamtionTab: React.FC<any> = () => {
   const {
@@ -188,21 +190,166 @@ export const WorkInforamtionTab: React.FC<any> = () => {
       <TextField
         variant="outlined"
         fullWidth
-        {...register("email", {
+        {...register("employerEmail", {
           required: "Email is required",
           pattern: {
             value: /\S+@\S+\.\S+/,
             message: "Entered value does not match email format",
           },
         })}
-        error={!!errors.email}
-        helperText={errors.email ? String(errors.email.message) : ""}
+        error={!!errors.employerEmail}
+        helperText={
+          errors.employerEmail ? String(errors?.employerEmail.message) : ""
+        }
         placeholder={"Email"}
         slotProps={{
           input: {
             startAdornment: (
               <InputAdornment position="start">
                 <EmailOutlinedIcon />
+              </InputAdornment>
+            ),
+            sx: {
+              height: "36px",
+              marginTop: "20px",
+            },
+          },
+        }}
+      />
+
+      <TextField
+        variant="outlined"
+        fullWidth
+        {...register("employerABN", {
+          required: "Australien ABN is required",
+          pattern: {
+            value: /^\d{11}$/,
+            message: "Entered value does not match ABN format",
+          },
+        })}
+        error={!!errors.employerABN}
+        helperText={
+          errors.employerABN ? String(errors.employerABN.message) : ""
+        }
+        placeholder={"Australien ABN"}
+        slotProps={{
+          input: {
+            startAdornment: (
+              <InputAdornment position="start">
+                <Business />
+              </InputAdornment>
+            ),
+            sx: {
+              height: "36px",
+              marginTop: "20px",
+            },
+          },
+        }}
+      />
+
+      <TextField
+        variant="outlined"
+        fullWidth
+        {...register("employerAddress", {
+          required: "Employee address is requried",
+        })}
+        error={!!errors.employerAddress}
+        helperText={
+          errors.employerAddress ? String(errors.employerAddress.message) : ""
+        }
+        placeholder={"Employer Address"}
+        slotProps={{
+          input: {
+            startAdornment: (
+              <InputAdornment position="start">
+                <LocationOn />
+              </InputAdornment>
+            ),
+            sx: {
+              height: "36px",
+              marginTop: "20px",
+            },
+          },
+        }}
+      />
+
+      <TextField
+        variant="outlined"
+        fullWidth
+        {...register("employerSuburb", {
+          required: "Employee suburb is requried",
+        })}
+        error={!!errors.employerSuburb}
+        helperText={
+          errors.employerSuburb ? String(errors.employerSuburb.message) : ""
+        }
+        placeholder={"Employer suburb"}
+        slotProps={{
+          input: {
+            startAdornment: (
+              <InputAdornment position="start">
+                <BusinessIcon />
+              </InputAdornment>
+            ),
+            sx: {
+              height: "36px",
+              marginTop: "20px",
+            },
+          },
+        }}
+      />
+      <FormControl
+        fullWidth
+        sx={{ marginTop: "20px" }}
+        error={Boolean(errors.state)}
+      >
+        <Controller
+          name="state"
+          control={control}
+          defaultValue=""
+          rules={{ required: "State is required" }}
+          render={({ field }) => (
+            <Select
+              labelId="state-label"
+              {...field}
+              displayEmpty
+              style={{ height: "36px" }}
+              onChange={(e) => {
+                clearErrors("state");
+                field.onChange(e);
+              }}
+            >
+              <MenuItem value="" disabled>
+                Select a state
+              </MenuItem>
+              {AustralienState.map((stateObj) => (
+                <MenuItem key={stateObj.code} value={stateObj.code}>
+                  {stateObj.name}
+                </MenuItem>
+              ))}
+            </Select>
+          )}
+        />
+        {errors.state && (
+          <FormHelperText>{String(errors.state?.message)}</FormHelperText>
+        )}
+      </FormControl>
+      <TextField
+        variant="outlined"
+        fullWidth
+        {...register("postCode", {
+          required: "Post code is requried",
+        })}
+        error={!!errors.postCode}
+        helperText={
+          errors.postCode ? String(errors.postCode.message) : ""
+        }
+        placeholder={"Post code"}
+        slotProps={{
+          input: {
+            startAdornment: (
+              <InputAdornment position="start">
+                <MailOutline />
               </InputAdornment>
             ),
             sx: {

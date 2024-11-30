@@ -16,6 +16,7 @@ import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import { forwardRef, useEffect, useImperativeHandle } from "react";
 import { useAppSelector } from "../../shared/redux/hooks";
 import { PersonalInformation } from "../../shared/redux/applicant.slice";
+import { AustralienState } from "../../shared/constants/AustralienState.constant";
 
 interface PersonalInformationTab {
   applicant: number;
@@ -25,6 +26,7 @@ interface PersonalInformationTab {
 
 const PersonalInformationTab = forwardRef(
   ({ applicant, onSubmit, onValid }: PersonalInformationTab, ref) => {
+    
     const applicantInformation = useAppSelector(
       (state): PersonalInformation | undefined => {
         return state?.application?.personalInforamtions?.find(
@@ -43,17 +45,6 @@ const PersonalInformationTab = forwardRef(
       mode: "all",
       defaultValues: applicantInformation,
     });
-
-    const states = [
-      { code: "NSW", name: "New South Wales" },
-      { code: "VIC", name: "Victoria" },
-      { code: "QLD", name: "Queensland" },
-      { code: "SA", name: "South Australia" },
-      { code: "WA", name: "Western Australia" },
-      { code: "TAS", name: "Tasmania" },
-      { code: "ACT", name: "Australian Capital Territory" },
-      { code: "NT", name: "Northern Territory" },
-    ];
 
     const residancyStatus = [
       { code: "AC", name: "Austrailen Citizen" },
@@ -219,7 +210,7 @@ const PersonalInformationTab = forwardRef(
                 <MenuItem value="" disabled>
                   Select a state
                 </MenuItem>
-                {states.map((stateObj) => (
+                {AustralienState.map((stateObj) => (
                   <MenuItem key={stateObj.code} value={stateObj.code}>
                     {stateObj.name}
                   </MenuItem>
