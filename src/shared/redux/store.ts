@@ -1,19 +1,19 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore } from "@reduxjs/toolkit";
 
-import storage from 'redux-persist/lib/storage';
-import commonSlice from './common.slice';
-import { persistReducer, persistStore } from 'redux-persist';
-import applicantSlice from './applicant.slice';
+import storage from "redux-persist/lib/storage";
+import commonSlice from "./common.slice";
+import { persistReducer, persistStore } from "redux-persist";
+import applicantSlice from "./applicant.slice";
 
-const env = process.env.REACT_APP_ENV! as 'DEVELOPMENT' | 'PRODUCTION' | 'QA';
+const env = process.env.REACT_APP_ENV! as "DEVELOPMENT" | "PRODUCTION" | "QA";
 
 const commonConfig = {
-  key: 'common',
+  key: "common",
   storage,
 };
 
 const applicationConfig = {
-  key: 'application',
+  key: "application",
   storage,
 };
 
@@ -25,7 +25,7 @@ export const store = configureStore({
     common: persistedCommon,
     application: persistedApplication,
   },
-  devTools: env === 'DEVELOPMENT' ? true : false,
+  devTools: env === "DEVELOPMENT" ? true : false,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,

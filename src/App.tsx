@@ -11,7 +11,7 @@ import { UserViewContainer } from "./pages/UserView.container";
 import { ReferalManagerViewContainer } from "./pages/ReferalManagerView.container";
 import { ApplicatiopnFooterComponenet } from "./shared/components/ApplicationFooter.component";
 import { useDispatch } from "react-redux";
-import { resetPersonalInforamtions } from "./shared/redux/applicant.slice";
+import { resetPersonalInforamtions, resetWorkInforamtions } from "./shared/redux/applicant.slice";
 
 function App() {
   const [open, setOpen] = useState(false);
@@ -19,6 +19,7 @@ function App() {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(resetPersonalInforamtions());
+    dispatch(resetWorkInforamtions());
   }, [dispatch]);
   
   return (

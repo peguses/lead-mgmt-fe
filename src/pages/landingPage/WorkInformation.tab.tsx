@@ -1,11 +1,14 @@
-import { AccountCircle } from "@mui/icons-material";
 import {
   FormControl,
+  FormControlLabel,
   FormHelperText,
   InputAdornment,
   MenuItem,
+  Radio,
+  RadioGroup,
   Select,
   TextField,
+  Typography,
 } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import WorkIcon from "@mui/icons-material/Work";
@@ -15,17 +18,39 @@ import PhoneIcon from "@mui/icons-material/Phone";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import { Business, LocationOn, MailOutline } from "@mui/icons-material";
 import { AustralienState } from "../../shared/constants/AustralienState.constant";
+import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers";
+import { useAppSelector } from "../../shared/redux/hooks";
+import { WorkInformation } from "../../shared/redux/applicant.slice";
 
-export const WorkInforamtionTab: React.FC<any> = () => {
+interface WorkInforamtionTab {
+  applicant: number;
+  onSubmit: (data: any) => void;
+  onValid: (isValid: boolean) => void;
+}
+
+const WorkInformationTab = forwardRef(
+  ({ applicant, onSubmit, onValid }: WorkInforamtionTab, ref) => {
+
+  const workInformation = useAppSelector(
+      (state): WorkInformation | undefined => {
+        return state?.application?.workInformations?.find(
+          (app) => app.applicantId === applicant
+        );
+      }
+  );
+
   const {
     control,
     register,
     handleSubmit,
-    formState: { errors, isValid, isDirty },
+    formState: { errors, isValid },
     clearErrors,
   } = useForm<any>({
     mode: "all",
-    defaultValues: {},
+    defaultValues: workInformation,
   });
 
   const employmentTypes = [
@@ -37,6 +62,18 @@ export const WorkInforamtionTab: React.FC<any> = () => {
     { code: "HOME_DUTIES", name: "Home Duties" },
     { code: "OTHER", name: "Other" },
   ];
+
+  const triggerSubmit = () => {
+    handleSubmit(onSubmit)();
+  };
+
+  useImperativeHandle(ref, () => ({
+    triggerSubmit,
+  }));
+
+  useEffect(() => {
+    onValid(isValid && !!errors);
+  }, [isValid, errors]);
 
   return (
     <>
@@ -301,13 +338,13 @@ export const WorkInforamtionTab: React.FC<any> = () => {
       <FormControl
         fullWidth
         sx={{ marginTop: "20px" }}
-        error={Boolean(errors.state)}
+        error={Boolean(errors.employerState)}
       >
         <Controller
-          name="state"
+          name="employerState"
           control={control}
           defaultValue=""
-          rules={{ required: "State is required" }}
+          rules={{ required: "Employer is required" }}
           render={({ field }) => (
             <Select
               labelId="state-label"
@@ -315,7 +352,7 @@ export const WorkInforamtionTab: React.FC<any> = () => {
               displayEmpty
               style={{ height: "36px" }}
               onChange={(e) => {
-                clearErrors("state");
+                clearErrors("employerState");
                 field.onChange(e);
               }}
             >
@@ -330,20 +367,18 @@ export const WorkInforamtionTab: React.FC<any> = () => {
             </Select>
           )}
         />
-        {errors.state && (
-          <FormHelperText>{String(errors.state?.message)}</FormHelperText>
+        {errors.employerState && (
+          <FormHelperText>{String(errors.employerState?.message)}</FormHelperText>
         )}
       </FormControl>
       <TextField
         variant="outlined"
         fullWidth
-        {...register("postCode", {
+        {...register("employerPostCode", {
           required: "Post code is requried",
         })}
-        error={!!errors.postCode}
-        helperText={
-          errors.postCode ? String(errors.postCode.message) : ""
-        }
+        error={!!errors.employerPostCode}
+        helperText={errors.employerPostCode ? String(errors.employerPostCode.message) : ""}
         placeholder={"Post code"}
         slotProps={{
           input: {
@@ -359,6 +394,67 @@ export const WorkInforamtionTab: React.FC<any> = () => {
           },
         }}
       />
+      <FormControl
+        fullWidth
+        sx={{ marginTop: "20px" }}
+        error={Boolean(errors.currentEmployementStartDate)}
+      >
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <Controller
+            defaultValue=""
+            name="currentEmployementStartDate"
+            control={control}
+            rules={{ required: "Employement start date is required" }}
+            render={({ field }) => (
+              <DatePicker
+                {...field}
+                label="Employement start date"
+                value={field.value}
+                onChange={(e) => {
+                  clearErrors("currentEmployementStartDate");
+                  field.onChange(e);
+                }}
+              />
+            )}
+          />
+          {errors.state && (
+            <FormHelperText>
+              {String(errors.currentEmployementStartDate?.message)}
+            </FormHelperText>
+          )}
+        </LocalizationProvider>
+      </FormControl>
+      <Typography sx={{ marginTop: "20px", fontSize: "14px", fontWeight: 700 }}>
+        Probaton
+      </Typography>
+      <FormControl error={Boolean(errors.probationaryEmployee)}>
+        <Controller
+          name="probationaryEmployee"
+          control={control}
+          rules={{ required: "Please select Yes/No" }}
+          render={({ field }) => (
+            <RadioGroup
+              {...field}
+              row
+              defaultValue=""
+              name="probationaryEmployee"
+              onChange={(e) => {
+                clearErrors("probationaryEmployee");
+                field.onChange(e);
+              }}
+            >
+              <FormControlLabel value="yes" control={<Radio />} label="Yes" />
+              <FormControlLabel value="no" control={<Radio />} label="No" />
+            </RadioGroup>
+          )}
+        />
+        {errors.probationaryEmployee && (
+          <FormHelperText>
+            {String(errors.probationaryEmployee.message)}
+          </FormHelperText>
+        )}
+      </FormControl>
     </>
   );
-};
+});
+export default WorkInformationTab;

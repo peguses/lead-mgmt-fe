@@ -10,12 +10,14 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 import { SubscriptionComponenet } from "../../shared/components/Subscription.component";
 import { TabPanel } from "../../shared/components/TabPanel.component";
-import { WorkInforamtionTab } from "./WorkInformation.tab";
+import WorkInformationTab from "./WorkInformation.tab";
 import {
   addOrUpdatePersonalInforamtions,
+  addOrUpdateWorkInformation,
   PersonalInformation,
   removePersonalInformation,
   setJoinLoanApplication,
+  WorkInformation,
 } from "../../shared/redux/applicant.slice";
 import PersonalInformationTab from "./PersonalInformation.tab";
 import { batch, useDispatch } from "react-redux";
@@ -28,27 +30,59 @@ export const LandingPageContainer: React.FC<any> = () => {
 
   const [jointLoan, setJointLoan] = useState<boolean>(false);
 
-  const [applicantOneValid, setApplicantOneValid] = useState<boolean>(false);
+  const [applicantOnePersonalInfoValid, setApplicantOnePersonalInfoValid] =
+    useState<boolean>(false);
 
-  const [applicantTwoValid, setApplicantTwoValid] = useState<boolean>(false);
+  const [applicantTwoPersonalInfoValid, setApplicantTwoPersonalInfoValid] =
+    useState<boolean>(false);
+
+  const [applicantOneWorkInfoValid, setApplicantOneWorkInfoValid] =
+    useState<boolean>(false);
+
+  const [applicantTwoWorkInfoValid, setApplicantTwoWorkInfoValid] =
+    useState<boolean>(false);
 
   const [allowWorkTab, setAllowWorkTab] = useState<boolean>(false);
+
+  const [allowFinancialTab, setAllowFinancialTab] = useState<boolean>(false);
 
   const applicantOnePersonalInforamtionRef = useRef<any>();
 
   const applicantTwoPersonalInforamtionRef = useRef<any>();
 
-  const applicants = useAppSelector((state): PersonalInformation[] => {
-    return state.application.personalInforamtions;
+  const applicantOneWorkInfoRef = useRef<any>();
+
+  const applicantTwoWorkInfoRef = useRef<any>();
+
+  const applicants = useAppSelector((state): WorkInformation[] => {
+    return state.application.workInformations;
   });
 
   useEffect(() => {
+      console.log(applicants)
+  }, [applicants])
+
+  useEffect(() => {
+
     if (jointLoan) {
-      setAllowWorkTab(applicantOneValid && applicantTwoValid);
+      setAllowFinancialTab(
+        applicantOneWorkInfoValid && applicantTwoWorkInfoValid
+      );
     } else {
-      setAllowWorkTab(applicantOneValid);
+      setAllowFinancialTab(applicantOneWorkInfoValid);
     }
-  }, [applicantOneValid, applicantTwoValid]);
+
+  }, [applicantOneWorkInfoValid, applicantTwoWorkInfoValid, jointLoan])
+
+  useEffect(() => {
+    if (jointLoan) {
+      setAllowWorkTab(
+        applicantOnePersonalInfoValid && applicantTwoPersonalInfoValid
+      );
+    } else {
+      setAllowWorkTab(applicantOnePersonalInfoValid);
+    }
+  }, [applicantOnePersonalInfoValid, applicantTwoPersonalInfoValid, jointLoan]);
 
   const applicantStatus = [
     { code: "1APP", name: "1 Applicant" },
@@ -59,23 +93,62 @@ export const LandingPageContainer: React.FC<any> = () => {
     setValue(newValue);
   };
 
-  const handleSubmit = () => {
+  const handleWorkInformationSubmit = () => {
+   
+    batch(() => {
+      if (applicantOneWorkInfoRef?.current) {
+        applicantOneWorkInfoRef.current.triggerSubmit();
+      }
+
+      if (applicantTwoWorkInfoRef?.current) {
+        applicantTwoWorkInfoRef.current.triggerSubmit();
+      }
+    });
+
+    setValue(3);
+  };
+
+  const handlePersonalInforamtionSubmit = () => {
     batch(() => {
       if (applicantOnePersonalInforamtionRef?.current) {
         applicantOnePersonalInforamtionRef.current.triggerSubmit();
       }
+
       if (applicantTwoPersonalInforamtionRef?.current) {
         applicantTwoPersonalInforamtionRef.current.triggerSubmit();
       }
     });
     setValue(2);
-  };
+  }
 
   const onPersonalInformationSubmit = (
     applicant: number,
     data: PersonalInformation
   ) => {
     dispatch(addOrUpdatePersonalInforamtions({ applicantId: applicant, data }));
+  };
+
+  const onWorkInfoSubmit = (applicant: number, data: WorkInformation) => {
+    dispatch(addOrUpdateWorkInformation({ applicantId: applicant, data }));
+  };
+
+  const handleSingleApplicantio = () => {
+    setJointLoan(false);
+    setApplicantOnePersonalInfoValid(false);
+    setApplicantTwoPersonalInfoValid(true);
+    setApplicantOneWorkInfoValid(false);
+    setApplicantTwoWorkInfoValid(true);
+    dispatch(setJoinLoanApplication(false));
+    dispatch(removePersonalInformation({ applicantId: 2 }));
+  };
+
+  const handleJointApplication = () => {
+    setJointLoan(true);
+    setApplicantTwoPersonalInfoValid(false);
+    setApplicantOnePersonalInfoValid(false);
+    setApplicantOneWorkInfoValid(false);
+    setApplicantTwoWorkInfoValid(false);
+    dispatch(setJoinLoanApplication(true));
   };
 
   return (
@@ -128,16 +201,9 @@ export const LandingPageContainer: React.FC<any> = () => {
                 style={{ height: "36px" }}
                 onChange={(event) => {
                   if (event.target.value === "2APP") {
-                    setJointLoan(true);
-                    setApplicantTwoValid(false);
-                    setApplicantOneValid(false);
-                    dispatch(setJoinLoanApplication(true));
+                    handleJointApplication();
                   } else {
-                    setJointLoan(false);
-                    setApplicantOneValid(false);
-                    setApplicantTwoValid(true);
-                    dispatch(setJoinLoanApplication(false));
-                    dispatch(removePersonalInformation({ applicantId: 2 }));
+                    handleSingleApplicantio();
                   }
                 }}
               >
@@ -158,7 +224,9 @@ export const LandingPageContainer: React.FC<any> = () => {
                 <PersonalInformationTab
                   key={1}
                   applicant={1}
-                  onValid={(isValid) => setApplicantOneValid(isValid)}
+                  onValid={(isValid) =>
+                    setApplicantOnePersonalInfoValid(isValid)
+                  }
                   onSubmit={(data) => onPersonalInformationSubmit(1, data)}
                   ref={applicantOnePersonalInforamtionRef}
                 />
@@ -167,7 +235,9 @@ export const LandingPageContainer: React.FC<any> = () => {
                 <PersonalInformationTab
                   key={2}
                   applicant={2}
-                  onValid={(isValid) => setApplicantTwoValid(isValid)}
+                  onValid={(isValid) =>
+                    setApplicantTwoPersonalInfoValid(isValid)
+                  }
                   onSubmit={(data) => onPersonalInformationSubmit(2, data)}
                   ref={applicantTwoPersonalInforamtionRef}
                 />
@@ -176,7 +246,7 @@ export const LandingPageContainer: React.FC<any> = () => {
           ) : (
             <PersonalInformationTab
               applicant={1}
-              onValid={(isValid) => setApplicantOneValid(isValid)}
+              onValid={(isValid) => setApplicantOnePersonalInfoValid(isValid)}
               onSubmit={(data) => onPersonalInformationSubmit(1, data)}
               ref={applicantOnePersonalInforamtionRef}
             />
@@ -187,7 +257,7 @@ export const LandingPageContainer: React.FC<any> = () => {
             sx={{ marginTop: "20px" }}
           >
             <Button
-              onClick={handleSubmit}
+              onClick={handlePersonalInforamtionSubmit}
               variant="contained"
               color="primary"
               fullWidth
@@ -198,9 +268,55 @@ export const LandingPageContainer: React.FC<any> = () => {
           </Grid>
         </TabPanel>
       </Grid>
-      <Grid size={{ xl: 4, lg: 4, md: 4 }} offset={{ xl: 4, lg: 4, md: 4 }}>
+      <Grid
+        size={jointLoan ? 12 : { xl: 5, lg: 6, md: 6, sm: 8, xs: 8 }}
+        offset={jointLoan ? 1 : { xl: 3.5, lg: 3, md: 3, sm: 2, xs: 2 }}
+      >
         <TabPanel value={value} index={2}>
-          <WorkInforamtionTab />
+          {jointLoan ? (
+            <Grid container size={8} offset={1.5}>
+              <Grid size={5.5}>
+                <WorkInformationTab
+                  key={1}
+                  applicant={1}
+                  onValid={(isValid) => setApplicantOneWorkInfoValid(isValid)}
+                  onSubmit={(data) => onWorkInfoSubmit(1, data)}
+                  ref={applicantOneWorkInfoRef}
+                />
+              </Grid>
+              <Grid size={5.5} offset={1}>
+                <WorkInformationTab
+                  key={2}
+                  applicant={2}
+                  onValid={(isValid) => setApplicantTwoWorkInfoValid(isValid)}
+                  onSubmit={(data) => onWorkInfoSubmit(2, data)}
+                  ref={applicantTwoWorkInfoRef}
+                />
+              </Grid>
+            </Grid>
+          ) : (
+            <WorkInformationTab
+              applicant={1}
+              onValid={(isValid) => setApplicantOneWorkInfoValid(isValid)}
+              onSubmit={(data) => onWorkInfoSubmit(1, data)}
+              ref={applicantOneWorkInfoRef}
+            />
+          )}
+          <Grid
+            size={jointLoan ? 2 : 3}
+            offset={jointLoan ? 7.5 : 9}
+            sx={{ marginTop: "20px" }}
+          >
+            <Button
+              onClick={handleWorkInformationSubmit}
+              variant="contained"
+              color="primary"
+              fullWidth
+              disabled={!allowFinancialTab}
+            >
+              Next
+            </Button>
+          </Grid>
         </TabPanel>
       </Grid>
 
