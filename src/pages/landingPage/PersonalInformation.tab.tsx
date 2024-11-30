@@ -4,6 +4,7 @@ import {
   FormControlLabel,
   FormHelperText,
   InputAdornment,
+  InputLabel,
   MenuItem,
   Radio,
   RadioGroup,
@@ -26,7 +27,6 @@ interface PersonalInformationTab {
 
 const PersonalInformationTab = forwardRef(
   ({ applicant, onSubmit, onValid }: PersonalInformationTab, ref) => {
-    
     const applicantInformation = useAppSelector(
       (state): PersonalInformation | undefined => {
         return state?.application?.personalInforamtions?.find(
@@ -88,7 +88,9 @@ const PersonalInformationTab = forwardRef(
         </Typography>
         <TextField
           variant="outlined"
+          size="small"
           fullWidth
+          label="First Name"
           {...register("firstName", {
             required: "First name is required",
           })}
@@ -103,15 +105,21 @@ const PersonalInformationTab = forwardRef(
                 </InputAdornment>
               ),
               sx: {
-                height: "36px",
                 marginTop: "20px",
               },
+            },
+          }}
+          sx={{
+            ".MuiInputLabel-outlined": {
+              lineHeight: "70px",
             },
           }}
         />
         <TextField
           variant="outlined"
           fullWidth
+          size="small"
+          label="Last Name"
           placeholder={"Last Name"}
           {...register("lastName", {
             required: "Last name is required",
@@ -126,15 +134,21 @@ const PersonalInformationTab = forwardRef(
                 </InputAdornment>
               ),
               sx: {
-                height: "36px",
                 marginTop: "20px",
               },
+            },
+          }}
+          sx={{
+            ".MuiInputLabel-outlined": {
+              lineHeight: "70px",
             },
           }}
         />
         <TextField
           variant="outlined"
+          size="small"
           fullWidth
+          label="Mobile"
           placeholder={"Mobile"}
           {...register("mobile", {
             required: "Mobile is required",
@@ -153,15 +167,21 @@ const PersonalInformationTab = forwardRef(
                 </InputAdornment>
               ),
               sx: {
-                height: "36px",
                 marginTop: "20px",
               },
+            },
+          }}
+          sx={{
+            ".MuiInputLabel-outlined": {
+              lineHeight: "70px",
             },
           }}
         />
         <TextField
           variant="outlined"
           fullWidth
+          size="small"
+          label="Email"
           {...register("email", {
             required: "Email is required",
             pattern: {
@@ -180,17 +200,28 @@ const PersonalInformationTab = forwardRef(
                 </InputAdornment>
               ),
               sx: {
-                height: "36px",
                 marginTop: "20px",
               },
             },
           }}
+          sx={{
+            ".MuiInputLabel-outlined": {
+              lineHeight: "70px",
+            },
+          }}
         />
         <FormControl
+          variant="outlined"
+          size="small"
           fullWidth
-          sx={{ marginTop: "20px" }}
+          sx={{
+            marginTop: "20px",
+          }}
           error={Boolean(errors.state)}
         >
+          <InputLabel htmlFor="state-label" id="state">
+            State
+          </InputLabel>
           <Controller
             name="state"
             control={control}
@@ -199,17 +230,15 @@ const PersonalInformationTab = forwardRef(
             render={({ field }) => (
               <Select
                 labelId="state-label"
+                id="state"
+                label="State"
                 {...field}
                 displayEmpty
-                style={{ height: "36px" }}
                 onChange={(e) => {
                   clearErrors("state");
                   field.onChange(e);
                 }}
               >
-                <MenuItem value="" disabled>
-                  Select a state
-                </MenuItem>
                 {AustralienState.map((stateObj) => (
                   <MenuItem key={stateObj.code} value={stateObj.code}>
                     {stateObj.name}
@@ -224,9 +253,13 @@ const PersonalInformationTab = forwardRef(
         </FormControl>
         <FormControl
           fullWidth
+          size="small"
           sx={{ marginTop: "20px" }}
           error={Boolean(errors.residancyStatus)}
         >
+          <InputLabel htmlFor="residancyStatus-label" id="residancyStatus">
+            Select Residency Status
+          </InputLabel>
           <Controller
             name="residancyStatus"
             control={control}
@@ -234,18 +267,16 @@ const PersonalInformationTab = forwardRef(
             rules={{ required: "Residancy status is required" }}
             render={({ field }) => (
               <Select
+                id="residancyStatus"
                 labelId="residancyStatus-label"
+                label="Select Residency Status"
                 {...field}
                 displayEmpty
-                style={{ height: "36px" }}
                 onChange={(e) => {
                   clearErrors("residancyStatus");
                   field.onChange(e);
                 }}
               >
-                <MenuItem value="" disabled>
-                  Select Residency Status
-                </MenuItem>
                 {residancyStatus.map((stateObj) => (
                   <MenuItem key={stateObj.code} value={stateObj.code}>
                     {stateObj.name}
@@ -269,9 +300,13 @@ const PersonalInformationTab = forwardRef(
 
         <FormControl
           fullWidth
+          size="small"
           sx={{ marginTop: "20px" }}
           error={Boolean(errors.investmentType)}
         >
+          <InputLabel htmlFor="investmentType-label" id="investmentType">
+            Select Residency Status
+          </InputLabel>
           <Controller
             name="investmentType"
             control={control}
@@ -279,18 +314,16 @@ const PersonalInformationTab = forwardRef(
             rules={{ required: "Investment type is required" }}
             render={({ field }) => (
               <Select
+                id="investmentType"
                 labelId="investmentType-label"
+                label="Select Residency Status"
                 {...field}
                 displayEmpty
-                style={{ height: "36px" }}
                 onChange={(e) => {
                   clearErrors("investmentType");
                   field.onChange(e);
                 }}
               >
-                <MenuItem value="" disabled>
-                  Select investment type
-                </MenuItem>
                 {investmentTypes.map((stateObj) => (
                   <MenuItem key={stateObj.code} value={stateObj.code}>
                     {stateObj.name}

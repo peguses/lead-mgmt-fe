@@ -2,6 +2,7 @@ import {
   Button,
   FormControl,
   Grid2 as Grid,
+  InputLabel,
   MenuItem,
   Select,
   Tab,
@@ -22,6 +23,7 @@ import {
 import PersonalInformationTab from "./PersonalInformation.tab";
 import { batch, useDispatch } from "react-redux";
 import { useAppSelector } from "../../shared/redux/hooks";
+import FinantialInformationTab from "./FinantialInformation.tab";
 
 export const LandingPageContainer: React.FC<any> = () => {
   const dispatch = useDispatch();
@@ -59,11 +61,10 @@ export const LandingPageContainer: React.FC<any> = () => {
   });
 
   useEffect(() => {
-      console.log(applicants)
-  }, [applicants])
+    console.log(applicants);
+  }, [applicants]);
 
   useEffect(() => {
-
     if (jointLoan) {
       setAllowFinancialTab(
         applicantOneWorkInfoValid && applicantTwoWorkInfoValid
@@ -71,8 +72,7 @@ export const LandingPageContainer: React.FC<any> = () => {
     } else {
       setAllowFinancialTab(applicantOneWorkInfoValid);
     }
-
-  }, [applicantOneWorkInfoValid, applicantTwoWorkInfoValid, jointLoan])
+  }, [applicantOneWorkInfoValid, applicantTwoWorkInfoValid, jointLoan]);
 
   useEffect(() => {
     if (jointLoan) {
@@ -94,7 +94,6 @@ export const LandingPageContainer: React.FC<any> = () => {
   };
 
   const handleWorkInformationSubmit = () => {
-   
     batch(() => {
       if (applicantOneWorkInfoRef?.current) {
         applicantOneWorkInfoRef.current.triggerSubmit();
@@ -119,7 +118,7 @@ export const LandingPageContainer: React.FC<any> = () => {
       }
     });
     setValue(2);
-  }
+  };
 
   const onPersonalInformationSubmit = (
     applicant: number,
@@ -193,8 +192,13 @@ export const LandingPageContainer: React.FC<any> = () => {
             size={jointLoan ? 8 : { xl: 12, lg: 12, md: 12, sm: 12, xs: 12 }}
             offset={jointLoan ? 1.5 : { xl: 0, lg: 0, md: 0, sm: 0, xs: 0 }}
           >
-            <FormControl fullWidth sx={{ marginTop: "5px" }}>
+            <FormControl fullWidth sx={{ marginTop: "5px" }} size="small">
+              <InputLabel htmlFor="applicantStatus-label" id="applicantStatus">
+                Applicants
+              </InputLabel>
               <Select
+                id="applicantStatus"
+                label="Applicants"
                 labelId="applicantStatus-label"
                 value={jointLoan === true ? "2APP" : "1APP"}
                 displayEmpty
@@ -207,9 +211,6 @@ export const LandingPageContainer: React.FC<any> = () => {
                   }
                 }}
               >
-                <MenuItem value="" disabled>
-                  Select if Joint Loan
-                </MenuItem>
                 {applicantStatus.map((stateObj) => (
                   <MenuItem key={stateObj.code} value={stateObj.code}>
                     {stateObj.name}
@@ -322,7 +323,12 @@ export const LandingPageContainer: React.FC<any> = () => {
 
       <Grid size={{ xl: 4, lg: 4, md: 4 }} offset={{ xl: 4, lg: 4, md: 4 }}>
         <TabPanel value={value} index={3}>
-          Item three
+          <FinantialInformationTab
+            applicant={1}
+            onValid={(isValid) => setApplicantOneWorkInfoValid(isValid)}
+            onSubmit={(data) => onWorkInfoSubmit(1, data)}
+            ref={applicantOneWorkInfoRef}
+          />
         </TabPanel>
       </Grid>
       <Grid size={12} offset={1}>
