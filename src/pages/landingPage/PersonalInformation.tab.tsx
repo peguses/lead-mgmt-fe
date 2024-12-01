@@ -219,19 +219,18 @@ const PersonalInformationTab = forwardRef(
           }}
           error={Boolean(errors.state)}
         >
-          <InputLabel htmlFor="state-label" id="state">
+          <InputLabel htmlFor="state-label" id="state"  shrink>
             State
           </InputLabel>
           <Controller
             name="state"
             control={control}
-            defaultValue=""
             rules={{ required: "State is required" }}
             render={({ field }) => (
               <Select
                 labelId="state-label"
                 id="state"
-                label="State"
+                label={"State"}
                 {...field}
                 displayEmpty
                 onChange={(e) => {
@@ -257,7 +256,7 @@ const PersonalInformationTab = forwardRef(
           sx={{ marginTop: "20px" }}
           error={Boolean(errors.residancyStatus)}
         >
-          <InputLabel htmlFor="residancyStatus-label" id="residancyStatus">
+          <InputLabel htmlFor="residancyStatus-label" id="residancyStatus" shrink>
             Select Residency Status
           </InputLabel>
           <Controller
@@ -304,7 +303,7 @@ const PersonalInformationTab = forwardRef(
           sx={{ marginTop: "20px" }}
           error={Boolean(errors.investmentType)}
         >
-          <InputLabel htmlFor="investmentType-label" id="investmentType">
+          <InputLabel htmlFor="investmentType-label" id="investmentType" shrink>
             Select Residency Status
           </InputLabel>
           <Controller

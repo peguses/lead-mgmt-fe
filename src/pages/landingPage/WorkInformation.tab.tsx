@@ -396,7 +396,7 @@ const WorkInformationTab = forwardRef(
           sx={{ marginTop: "20px" }}
           error={Boolean(errors.employerState)}
         >
-          <InputLabel htmlFor="employerState-label" id="employerState">
+          <InputLabel htmlFor="employerState-label" id="employerState" shrink>
             Employer State
           </InputLabel>
           <Controller
