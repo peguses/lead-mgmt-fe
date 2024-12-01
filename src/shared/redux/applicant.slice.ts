@@ -20,7 +20,7 @@ export interface WorkInformation {
 export interface GeneralInformation {
   numberOfDependants: number;
   hasPropertyOffer: boolean
-  hasPropertyOfferElaboration: number;
+  propertyOfferElaboration: string;
   applicantOptionalNote: string;
   referalOption: string;
   applicantAgreedOnConditions: boolean
@@ -64,6 +64,7 @@ export interface Application {
   personalInforamtions: PersonalInformation[];
   workInformations: WorkInformation[];
   finantialInformations: FinantialInformation[];
+  generalInformation: GeneralInformation | undefined;
 }
 
 const INITIAL_STATE: Application = {
@@ -71,6 +72,14 @@ const INITIAL_STATE: Application = {
   personalInforamtions: [],
   workInformations: [],
   finantialInformations: [],
+  generalInformation: {
+    numberOfDependants: 0,
+    hasPropertyOffer: false,
+    propertyOfferElaboration: '',
+    applicantOptionalNote: '',
+    referalOption: '',
+    applicantAgreedOnConditions: false
+  }
 };
 
 export const applicationSlice = createSlice({
@@ -150,6 +159,14 @@ export const applicationSlice = createSlice({
       );
     },
 
+    addOrUpdateGeneralInformation: (state, action) => {
+      state.generalInformation = action.payload;
+    },
+
+    resetGeneralInformation:(state) => {
+      state.generalInformation = undefined;
+    },
+
     resetPersonalInforamtions: (state) => {
       state.personalInforamtions = [];
     },
@@ -167,5 +184,9 @@ export const {
   addOrUpdateWorkInformation,
   removePersonalInformation,
   resetWorkInforamtions,
+  removeWorkInformation,
+  addOrUpdateFinantialInformation,
+  resetGeneralInformation,
+  addOrUpdateGeneralInformation
 } = applicationSlice.actions;
 export default applicationSlice.reducer;

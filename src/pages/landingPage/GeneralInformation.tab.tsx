@@ -10,10 +10,12 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { forwardRef, useState } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import GroupIcon from "@mui/icons-material/Group";
 import { NumericFormat } from "react-number-format";
+import { GeneralInformation } from "../../shared/redux/applicant.slice";
+import { useAppSelector } from "../../shared/redux/hooks";
 
 interface GeneralInformationProps {
   applicant: number;
@@ -23,18 +25,34 @@ interface GeneralInformationProps {
 
 const GeneralInformationTab = forwardRef(
   ({ applicant, onSubmit, onValid }: GeneralInformationProps, ref) => {
+
     const [hasOfferForProperty, setHasOfferForProperty] =
       useState<boolean>(false);
+
+    const generalInformation = useAppSelector((state): GeneralInformation | undefined =>  state?.application?.generalInformation);
 
     const {
       control,
       register,
+      handleSubmit,
       formState: { errors, isValid },
       clearErrors,
     } = useForm<any>({
       mode: "all",
-      defaultValues: {},
+      defaultValues: generalInformation,
     });
+
+    const triggerSubmit = () => {
+      handleSubmit(onSubmit)();
+    };
+
+    useImperativeHandle(ref, () => ({
+      triggerSubmit,
+    }));
+
+    useEffect(() => {
+      onValid(isValid && !!errors);
+    }, [isValid, errors]);
 
     return (
       <>
@@ -127,13 +145,13 @@ const GeneralInformationTab = forwardRef(
             multiline
             rows={2}
             fullWidth
-            {...register("hasPropertyOfferElaboration", {
+            {...register("propertyOfferElaboration", {
               required: hasOfferForProperty,
             })}
-            error={!!errors.hasPropertyOfferElaboration}
+            error={!!errors.propertyOfferElaboration}
             helperText={
-              errors.hasPropertyOfferElaboration
-                ? String(errors.hasPropertyOfferElaboration.message)
+              errors.propertyOfferElaboration
+                ? String(errors.propertyOfferElaboration.message)
                 : ""
             }
             placeholder={"Elaborate your offer on property"}

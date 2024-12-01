@@ -8,7 +8,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { forwardRef, useState } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { AttachMoney, AccessTime } from "@mui/icons-material";
 import SavingsIcon from "@mui/icons-material/Savings";
@@ -16,6 +16,8 @@ import CreditCardIcon from "@mui/icons-material/CreditCard";
 import PaidIcon from "@mui/icons-material/Paid";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { NumericFormat } from "react-number-format";
+import { FinantialInformation } from "../../shared/redux/applicant.slice";
+import { useAppSelector } from "../../shared/redux/hooks";
 
 interface FinantialInformationProps {
   applicant: number;
@@ -25,17 +27,38 @@ interface FinantialInformationProps {
 
 const FinantialInformationTab = forwardRef(
   ({ applicant, onSubmit, onValid }: FinantialInformationProps, ref) => {
+
+    const finantialInformation = useAppSelector(
+      (state): FinantialInformation | undefined => {
+        return state?.application?.finantialInformations?.find(
+          (app) => app.applicantId === applicant
+        );
+      }
+    );
     const {
       control,
       register,
+      handleSubmit,
       formState: { errors, isValid },
       clearErrors,
     } = useForm<any>({
       mode: "all",
-      defaultValues: {},
+      defaultValues: finantialInformation,
     });
 
     const [hasDefalted, setHasDefalted] = useState<boolean>(false);
+
+    const triggerSubmit = () => {
+      handleSubmit(onSubmit)();
+    };
+
+    useImperativeHandle(ref, () => ({
+      triggerSubmit,
+    }));
+
+    useEffect(() => {
+      onValid(isValid && !!errors);
+    }, [isValid, errors]);
 
     return (
       <>
@@ -607,7 +630,6 @@ const FinantialInformationTab = forwardRef(
                 name="hasDefalted"
                 onChange={(e) => {
                   clearErrors("hasDefalted");
-                  console.log(field.value);
                   setHasDefalted(false);
                   if (e.target.value === "yes") {
                     setHasDefalted(true);
