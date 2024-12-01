@@ -14,6 +14,7 @@ import { forwardRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import GroupIcon from "@mui/icons-material/Group";
 import HomeIcon from "@mui/icons-material/Home";
+import { NumericFormat } from "react-number-format";
 
 interface GeneralInformationProps {
   applicant: number;
@@ -43,34 +44,41 @@ const GeneralInformationTab = forwardRef(
         >
           Number of dependents between applicants*
         </Typography>
-        <TextField
-          size="small"
-          variant="outlined"
-          fullWidth
-          margin="normal"
-          {...register("numberOfDependants", {
-            required: "Number of dependant is required",
-          })}
-          error={!!errors.numberOfDependants}
-          helperText={
-            errors.numberOfDependants
-              ? String(errors.numberOfDependants.message)
-              : ""
-          }
-          placeholder={"Number of dependant"}
-          slotProps={{
-            input: {
-              startAdornment: (
-                <InputAdornment position="start">
-                  <GroupIcon />
-                </InputAdornment>
-              ),
-              sx: {
-                marginTop: "-10px",
-              },
-            },
-          }}
-        />
+        <FormControl fullWidth error={Boolean(errors.numberOfDependants)}>
+          <Controller
+            name="numberOfDependants"
+            control={control}
+            rules={{ required: "Number of dependant is required" }}
+            render={({ field }) => (
+              <NumericFormat
+                {...field}
+                variant="outlined"
+                size="small"
+                decimalScale={0}
+                customInput={TextField}
+                error={!!errors.numberOfDependants}
+                placeholder={"Number of dependant"}
+                slotProps={{
+                  input: {
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <GroupIcon />
+                      </InputAdornment>
+                    ),
+                    sx: {
+                      marginTop: "5px",
+                    },
+                  },
+                }}
+              />
+            )}
+          />
+          {errors.numberOfDependants && (
+            <FormHelperText>
+              {String(errors.numberOfDependants.message)}
+            </FormHelperText>
+          )}
+        </FormControl>
 
         <Typography
           sx={{ marginTop: "20px", fontSize: "14px", fontWeight: 700 }}
@@ -79,7 +87,10 @@ const GeneralInformationTab = forwardRef(
           elaborate:*
         </Typography>
 
-        <FormControl sx={{marginTop: "5px"}} error={Boolean(errors.hasPropertyOffer)}>
+        <FormControl
+          sx={{ marginTop: "5px" }}
+          error={Boolean(errors.hasPropertyOffer)}
+        >
           <Controller
             name="hasPropertyOffer"
             control={control}
@@ -137,7 +148,7 @@ const GeneralInformationTab = forwardRef(
         </Typography>
 
         <TextField
-          sx={{marginTop: "5px"}}
+          sx={{ marginTop: "5px" }}
           variant="outlined"
           size="small"
           multiline
@@ -157,7 +168,7 @@ const GeneralInformationTab = forwardRef(
           variant="outlined"
           size="small"
           fullWidth
-          sx={{marginTop: "5px"}}
+          sx={{ marginTop: "5px" }}
           {...register("referalOption", {
             required: "Who refer us to you is required",
           })}

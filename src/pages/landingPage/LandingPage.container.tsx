@@ -25,6 +25,8 @@ import { batch, useDispatch } from "react-redux";
 import { useAppSelector } from "../../shared/redux/hooks";
 import FinantialInformationTab from "./FinantialInformation.tab";
 import GeneralInformationTab from "./GeneralInformation.tab";
+import ArrowCircleRightOutlinedIcon from '@mui/icons-material/ArrowCircleRightOutlined';
+import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
 
 export const LandingPageContainer: React.FC<any> = () => {
   const dispatch = useDispatch();
@@ -272,6 +274,7 @@ export const LandingPageContainer: React.FC<any> = () => {
               variant="contained"
               color="primary"
               fullWidth
+              endIcon={<ArrowCircleRightOutlinedIcon />}
               disabled={!allowWorkTab}
             >
               Next
@@ -323,6 +326,7 @@ export const LandingPageContainer: React.FC<any> = () => {
               variant="contained"
               color="primary"
               fullWidth
+              endIcon={<ArrowCircleRightOutlinedIcon />}
               disabled={!allowFinancialTab}
             >
               Next
@@ -375,6 +379,7 @@ export const LandingPageContainer: React.FC<any> = () => {
               variant="contained"
               color="primary"
               fullWidth
+              endIcon={<ArrowCircleRightOutlinedIcon />}
               disabled={!allowFinancialTab}
             >
               Next
@@ -404,6 +409,7 @@ export const LandingPageContainer: React.FC<any> = () => {
               variant="contained"
               color="primary"
               fullWidth
+              startIcon={<CheckCircleOutlineOutlinedIcon/>}
               disabled={!allowFinancialTab}
             >
               Submit

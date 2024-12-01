@@ -83,7 +83,7 @@ const WorkInformationTab = forwardRef(
           sx={{ marginTop: "20px" }}
           error={Boolean(errors.employementType)}
         >
-          <InputLabel htmlFor="employementType-label" id="employementType">
+          <InputLabel htmlFor="employementType-label" id="employementType" shrink>
             Employement type
           </InputLabel>
           <Controller
@@ -100,7 +100,7 @@ const WorkInformationTab = forwardRef(
                 displayEmpty
                 style={{ height: "36px" }}
                 onChange={(e) => {
-                  clearErrors("state");
+                  clearErrors("employementType");
                   field.onChange(e);
                 }}
               >
