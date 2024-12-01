@@ -24,6 +24,7 @@ import PersonalInformationTab from "./PersonalInformation.tab";
 import { batch, useDispatch } from "react-redux";
 import { useAppSelector } from "../../shared/redux/hooks";
 import FinantialInformationTab from "./FinantialInformation.tab";
+import GeneralInformationTab from "./GeneralInformation.tab";
 
 export const LandingPageContainer: React.FC<any> = () => {
   const dispatch = useDispatch();
@@ -181,6 +182,15 @@ export const LandingPageContainer: React.FC<any> = () => {
             label="Financial"
             value={3}
           />
+           <Tab
+            sx={{
+              textTransform: "capitalize",
+              fontSize: "16px",
+              fontWeight: 700,
+            }}
+            label="General"
+            value={4}
+          />
         </Tabs>
       </Grid>
       <Grid
@@ -321,14 +331,84 @@ export const LandingPageContainer: React.FC<any> = () => {
         </TabPanel>
       </Grid>
 
-      <Grid size={{ xl: 4, lg: 4, md: 4 }} offset={{ xl: 4, lg: 4, md: 4 }}>
+      <Grid 
+        size={jointLoan ? 12 : { xl: 5, lg: 6, md: 6, sm: 8, xs: 8 }}
+        offset={jointLoan ? 1 : { xl: 3.5, lg: 3, md: 3, sm: 2, xs: 2 }}
+      >
         <TabPanel value={value} index={3}>
-          <FinantialInformationTab
+          {jointLoan ? (
+            <Grid container size={8} offset={1.5}>
+              <Grid size={5.5}>
+                <FinantialInformationTab
+                  key={1}
+                  applicant={1}
+                  onValid={(isValid) => setApplicantOneWorkInfoValid(isValid)}
+                  onSubmit={(data) => onWorkInfoSubmit(1, data)}
+                  ref={applicantOneWorkInfoRef}
+                />
+              </Grid>
+              <Grid size={5.5} offset={1}>
+                <FinantialInformationTab
+                  key={2}
+                  applicant={2}
+                  onValid={(isValid) => setApplicantTwoWorkInfoValid(isValid)}
+                  onSubmit={(data) => onWorkInfoSubmit(2, data)}
+                  ref={applicantTwoWorkInfoRef}
+                />
+              </Grid>
+            </Grid>
+          ) : (
+            <FinantialInformationTab
+              applicant={1}
+              onValid={(isValid) => setApplicantOneWorkInfoValid(isValid)}
+              onSubmit={(data) => onWorkInfoSubmit(1, data)}
+              ref={applicantOneWorkInfoRef}
+            />
+          )}
+           <Grid
+            size={jointLoan ? 2 : 3}
+            offset={jointLoan ? 7.5 : 9}
+            sx={{ marginTop: "20px" }}
+          >
+            <Button
+              onClick={handleWorkInformationSubmit}
+              variant="contained"
+              color="primary"
+              fullWidth
+              disabled={!allowFinancialTab}
+            >
+              Next
+            </Button>
+          </Grid>
+        </TabPanel>
+      </Grid>
+
+      <Grid 
+        size={jointLoan ? 12 : { xl: 5, lg: 6, md: 6, sm: 8, xs: 8 }}
+        offset={jointLoan ? 1 : { xl: 3.5, lg: 3, md: 3, sm: 2, xs: 2 }}
+      >
+        <TabPanel value={value} index={4}>
+          <GeneralInformationTab
             applicant={1}
             onValid={(isValid) => setApplicantOneWorkInfoValid(isValid)}
             onSubmit={(data) => onWorkInfoSubmit(1, data)}
             ref={applicantOneWorkInfoRef}
           />
+           <Grid
+            size={jointLoan ? 2 : 3}
+            offset={jointLoan ? 7.5 : 9}
+            sx={{ marginTop: "20px" }}
+          >
+            <Button
+              onClick={handleWorkInformationSubmit}
+              variant="contained"
+              color="primary"
+              fullWidth
+              disabled={!allowFinancialTab}
+            >
+              Submit
+            </Button>
+          </Grid>
         </TabPanel>
       </Grid>
       <Grid size={12} offset={1}>

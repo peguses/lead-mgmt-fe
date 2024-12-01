@@ -26,14 +26,14 @@ import { DatePicker } from "@mui/x-date-pickers";
 import { useAppSelector } from "../../shared/redux/hooks";
 import { WorkInformation } from "../../shared/redux/applicant.slice";
 
-interface WorkInforamtionTab {
+interface WorkInforamtionProps {
   applicant: number;
   onSubmit: (data: any) => void;
   onValid: (isValid: boolean) => void;
 }
 
 const WorkInformationTab = forwardRef(
-  ({ applicant, onSubmit, onValid }: WorkInforamtionTab, ref) => {
+  ({ applicant, onSubmit, onValid }: WorkInforamtionProps, ref) => {
     const workInformation = useAppSelector(
       (state): WorkInformation | undefined => {
         return state?.application?.workInformations?.find(

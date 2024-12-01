@@ -16,14 +16,14 @@ import CreditCardIcon from "@mui/icons-material/CreditCard";
 import PaidIcon from "@mui/icons-material/Paid";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 
-interface WorkInforamtionTab {
+interface FinantialInformationProps {
   applicant: number;
   onSubmit: (data: any) => void;
   onValid: (isValid: boolean) => void;
 }
 
 const FinantialInformationTab = forwardRef(
-  ({ applicant, onSubmit, onValid }: WorkInforamtionTab, ref) => {
+  ({ applicant, onSubmit, onValid }: FinantialInformationProps, ref) => {
     const {
       control,
       register,
@@ -286,13 +286,13 @@ const FinantialInformationTab = forwardRef(
           variant="outlined"
           size="small"
           fullWidth
-          {...register("totalExistingHomeRepaymentAmt", {
+          {...register("totalExistingHomeLoanRepaymentAmt", {
             required: "Total existing home loan repayment amount is required",
           })}
-          error={!!errors.totalExistingHomeRepaymentAmt}
+          error={!!errors.totalExistingHomeLoanRepaymentAmt}
           helperText={
-            errors.totalExistingHomeRepaymentAmt
-              ? String(errors.totalExistingHomeRepaymentAmt.message)
+            errors.totalExistingHomeLoanRepaymentAmt
+              ? String(errors.totalExistingHomeLoanRepaymentAmt.message)
               : ""
           }
           placeholder={"Total existing home loan repayments"}
@@ -461,7 +461,7 @@ const FinantialInformationTab = forwardRef(
                   clearErrors("hasDefalted");
                   console.log(field.value);
                   setHasDefalted(false);
-                  if (field.value === "yes") {
+                  if (e.target.value === "yes") {
                     setHasDefalted(true);
                   }
                   field.onChange(e);
@@ -486,25 +486,13 @@ const FinantialInformationTab = forwardRef(
             rows={2}
             fullWidth
             {...register("defaltedReason", {
-              required: "Defalted reason is required",
+              required: hasDefalted,
             })}
             error={!!errors.defaltedReason}
             helperText={
               errors.defaltedReason ? String(errors.defaltedReason.message) : ""
             }
-            placeholder={"Living expenses"}
-            slotProps={{
-              input: {
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <ShoppingCartIcon />
-                  </InputAdornment>
-                ),
-                sx: {
-                  marginTop: "5px",
-                },
-              },
-            }}
+            placeholder={"Credit history or defaults reason"}
           />
         )}
       </>

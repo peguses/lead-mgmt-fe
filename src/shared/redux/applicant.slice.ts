@@ -17,8 +17,32 @@ export interface WorkInformation {
   probationaryEmployee: boolean;
 }
 
+export interface GeneralInformation {
+  numberOfDependants: number;
+  hasPropertyOffer: boolean
+  hasPropertyOfferElaboration: number;
+  applicantOptionalNote: string;
+  referalOption: string;
+  applicantAgreedOnConditions: boolean
+}
+
 export interface FinantialInformation {
   applicantId: number;
+  annualIncome: number;
+  lengthOfEmployment: number;
+  totalAmountSaved: number;
+  parentWillBeGuarantors: boolean;
+  totalLoanAmount: number;
+  totalLoanRepayments: number;
+  helpDebtTotalAmount: number;
+  totalExistingHomeLoanAmount: number;
+  totalExistingHomeLoanRepaymentAmt: number;
+  totalPropertyValue: number;
+  totalCreditCardLimits: number;
+  livinExpenses: number;
+  wereBankrupted: boolean;
+  hasDefalted: boolean;
+  defaltedReason: string;
 }
 
 export interface PersonalInformation {
@@ -101,7 +125,30 @@ export const applicationSlice = createSlice({
         state.workInformations = state?.workInformations?.filter(
           (a) => a.applicantId !== applicantId
         );
-      },
+    },
+
+    addOrUpdateFinantialInformation: (state, action) => {
+      const { applicantId, data } = action.payload;
+      const index = state?.finantialInformations?.findIndex(
+        (a) => a.applicantId === applicantId
+      );
+
+      if (index !== -1) {
+        state.finantialInformations[index] = {
+          ...state.finantialInformations[index],
+          ...data,
+        };
+      } else {
+        state.finantialInformations.push({ ...data, applicantId: applicantId });
+      }
+    },
+
+    removeFinantialInformation: (state, action) => {
+      const { applicantId } = action.payload;
+      state.finantialInformations = state?.finantialInformations?.filter(
+        (a) => a.applicantId !== applicantId
+      );
+    },
 
     resetPersonalInforamtions: (state) => {
       state.personalInforamtions = [];

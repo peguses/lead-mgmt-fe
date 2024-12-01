@@ -19,14 +19,14 @@ import { useAppSelector } from "../../shared/redux/hooks";
 import { PersonalInformation } from "../../shared/redux/applicant.slice";
 import { AustralienState } from "../../shared/constants/AustralienState.constant";
 
-interface PersonalInformationTab {
+interface PersonalInformationProps {
   applicant: number;
   onSubmit: (data: any) => void;
   onValid: (isValid: boolean) => void;
 }
 
 const PersonalInformationTab = forwardRef(
-  ({ applicant, onSubmit, onValid }: PersonalInformationTab, ref) => {
+  ({ applicant, onSubmit, onValid }: PersonalInformationProps, ref) => {
     const applicantInformation = useAppSelector(
       (state): PersonalInformation | undefined => {
         return state?.application?.personalInforamtions?.find(
