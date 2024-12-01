@@ -13,7 +13,6 @@ import {
 import { forwardRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import GroupIcon from "@mui/icons-material/Group";
-import HomeIcon from "@mui/icons-material/Home";
 import { NumericFormat } from "react-number-format";
 
 interface GeneralInformationProps {

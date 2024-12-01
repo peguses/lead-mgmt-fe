@@ -15,7 +15,6 @@ import SavingsIcon from "@mui/icons-material/Savings";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import PaidIcon from "@mui/icons-material/Paid";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import CurrencyInput from "react-currency-input-field";
 import { NumericFormat } from "react-number-format";
 
 interface FinantialInformationProps {
