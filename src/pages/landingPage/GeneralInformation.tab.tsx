@@ -57,7 +57,7 @@ const GeneralInformationTab = forwardRef(
     return (
       <>
         <Typography
-          sx={{ marginTop: "20px", fontSize: "14px", fontWeight: 700 }}
+          sx={{fontSize: "14px", fontWeight: 700 }}
         >
           Number of dependents between applicants*
         </Typography>
@@ -81,10 +81,7 @@ const GeneralInformationTab = forwardRef(
                       <InputAdornment position="start">
                         <GroupIcon />
                       </InputAdornment>
-                    ),
-                    sx: {
-                      marginTop: "5px",
-                    },
+                    )
                   },
                 }}
               />

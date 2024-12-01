@@ -5,12 +5,12 @@ import {
   InputLabel,
   MenuItem,
   Select,
-  Tab,
-  Tabs,
+  Step,
+  StepButton,
+  Stepper,
 } from "@mui/material";
-import React, { useEffect, useRef, useState } from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import { SubscriptionComponenet } from "../../shared/components/Subscription.component";
-import { TabPanel } from "../../shared/components/TabPanel.component";
 import WorkInformationTab from "./WorkInformation.tab";
 import {
   addOrUpdateFinantialInformation,
@@ -29,13 +29,13 @@ import { batch, useDispatch } from "react-redux";
 import { useAppSelector } from "../../shared/redux/hooks";
 import FinantialInformationTab from "./FinantialInformation.tab";
 import GeneralInformationTab from "./GeneralInformation.tab";
-import ArrowCircleRightOutlinedIcon from '@mui/icons-material/ArrowCircleRightOutlined';
-import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
+import ArrowCircleRightOutlinedIcon from "@mui/icons-material/ArrowCircleRightOutlined";
+import CheckCircleOutlineOutlinedIcon from "@mui/icons-material/CheckCircleOutlineOutlined";
 
 export const LandingPageContainer: React.FC<any> = () => {
   const dispatch = useDispatch();
 
-  const [value, setValue] = useState<number>(1);
+  const [activeStep, setActiveStep] = useState<number>(0);
 
   const [jointLoan, setJointLoan] = useState<boolean>(false);
 
@@ -51,11 +51,14 @@ export const LandingPageContainer: React.FC<any> = () => {
   const [applicantTwoWorkInfoValid, setApplicantTwoWorkInfoValid] =
     useState<boolean>(false);
 
-  const [applicationOneFinantialValid, setApplicationOneFinantialValid] = useState<boolean>(false);
+  const [applicationOneFinantialValid, setApplicationOneFinantialValid] =
+    useState<boolean>(false);
 
-  const [applicationTwoFinantialValid, setApplicationTwoFinantialValid] = useState<boolean>(false);
+  const [applicationTwoFinantialValid, setApplicationTwoFinantialValid] =
+    useState<boolean>(false);
 
-  const [applicationGeneralInfoValid, setApplicationGeneralInfoValid] = useState<boolean>(false);
+  const [applicationGeneralInfoValid, setApplicationGeneralInfoValid] =
+    useState<boolean>(false);
 
   const [allowWorkTab, setAllowWorkTab] = useState<boolean>(false);
 
@@ -79,6 +82,12 @@ export const LandingPageContainer: React.FC<any> = () => {
 
   const applicationGeneralInfoRef = useRef<any>();
 
+  const steps = ["Personal", "Work", "Financial", "General"];
+
+  const [completed, setCompleted] = React.useState<{
+    [k: number]: boolean;
+  }>({});
+
   const applicants = useAppSelector((state): WorkInformation[] => {
     return state.application.workInformations;
   });
@@ -88,13 +97,10 @@ export const LandingPageContainer: React.FC<any> = () => {
   }, [applicants]);
 
   useEffect(() => {
-
     setAllowSubmit(applicationGeneralInfoValid);
-
-  }, [applicationGeneralInfoValid])
+  }, [applicationGeneralInfoValid]);
 
   useEffect(() => {
-
     if (jointLoan) {
       setAllowGeneralTab(
         applicationOneFinantialValid && applicationTwoFinantialValid
@@ -102,8 +108,7 @@ export const LandingPageContainer: React.FC<any> = () => {
     } else {
       setAllowGeneralTab(applicationOneFinantialValid);
     }
-
-  },[applicationOneFinantialValid, applicationTwoFinantialValid, jointLoan]);
+  }, [applicationOneFinantialValid, applicationTwoFinantialValid, jointLoan]);
 
   useEffect(() => {
     if (jointLoan) {
@@ -131,7 +136,11 @@ export const LandingPageContainer: React.FC<any> = () => {
   ];
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
+    setActiveStep(newValue);
+  };
+
+  const handleStep = (step: number) => () => {
+    setActiveStep(step);
   };
 
   const handlePersonalInforamtionSubmit = () => {
@@ -144,7 +153,7 @@ export const LandingPageContainer: React.FC<any> = () => {
         applicantTwoPersonalInforamtionRef.current.triggerSubmit();
       }
     });
-    setValue(2);
+    setActiveStep(1);
   };
 
   const handleWorkInformationSubmit = () => {
@@ -158,7 +167,7 @@ export const LandingPageContainer: React.FC<any> = () => {
       }
     });
 
-    setValue(3);
+    setActiveStep(2);
   };
 
   const handleFinantialInformationSubmit = () => {
@@ -172,9 +181,8 @@ export const LandingPageContainer: React.FC<any> = () => {
       }
     });
 
-    setValue(4);
+    setActiveStep(3);
   };
-  
 
   const handleSubmit = () => {
     batch(() => {
@@ -214,7 +222,7 @@ export const LandingPageContainer: React.FC<any> = () => {
     dispatch(setJoinLoanApplication(false));
     dispatch(removePersonalInformation({ applicantId: 2 }));
     dispatch(removeWorkInformation({ applicantId: 2 }));
-    dispatch(resetGeneralInformation())
+    dispatch(resetGeneralInformation());
   };
 
   const handleJointApplication = () => {
@@ -226,272 +234,246 @@ export const LandingPageContainer: React.FC<any> = () => {
     setApplicationOneFinantialValid(false);
     setApplicationTwoFinantialValid(false);
     dispatch(setJoinLoanApplication(true));
-    dispatch(resetGeneralInformation())
+    dispatch(resetGeneralInformation());
   };
 
   return (
     <Grid container size={jointLoan ? 12 : 4} offset={jointLoan ? 12 : 4}>
-      <Grid size={12} sx={{ marginTop: "5px", marginBottom: "20px" }}>
-        <Tabs value={value} onChange={handleTabChange} centered>
-          <Tab
-            sx={{
-              textTransform: "capitalize",
-              fontSize: "16px",
-              fontWeight: 700,
-            }}
-            label="Personal"
-            value={1}
-          />
-          <Tab
-            sx={{
-              textTransform: "capitalize",
-              fontSize: "16px",
-              fontWeight: 700,
-            }}
-            label="Work"
-            value={2}
-          />
-          <Tab
-            sx={{
-              textTransform: "capitalize",
-              fontSize: "16px",
-              fontWeight: 700,
-            }}
-            label="Financial"
-            value={3}
-          />
-           <Tab
-            sx={{
-              textTransform: "capitalize",
-              fontSize: "16px",
-              fontWeight: 700,
-            }}
-            label="General"
-            value={4}
-          />
-        </Tabs>
+      <Grid 
+       size={jointLoan ? 12 : { xl: 5, lg: 6, md: 6, sm: 8, xs: 8 }}
+       offset={jointLoan ? 1 : { xl: 3.5, lg: 3, md: 3, sm: 2, xs: 2 }}
+       sx={{ marginTop: "5px", marginBottom: "20px" }}
+      >
+        <Stepper nonLinear activeStep={activeStep}>
+          {steps.map((label, index) => (
+            <Step key={label} completed={completed[index]}>
+              <StepButton color="inherit" onClick={handleStep(index)}>
+                {label}
+              </StepButton>
+            </Step>
+          ))}
+        </Stepper>
       </Grid>
       <Grid
+        sx={{marginTop: "20px"}}
         size={jointLoan ? 12 : { xl: 5, lg: 6, md: 6, sm: 8, xs: 8 }}
         offset={jointLoan ? 1 : { xl: 3.5, lg: 3, md: 3, sm: 2, xs: 2 }}
       >
-        <TabPanel value={value} index={1}>
-          <Grid
-            size={jointLoan ? 8 : { xl: 12, lg: 12, md: 12, sm: 12, xs: 12 }}
-            offset={jointLoan ? 1.5 : { xl: 0, lg: 0, md: 0, sm: 0, xs: 0 }}
-          >
-            <FormControl fullWidth sx={{ marginTop: "5px" }} size="small">
-              <InputLabel htmlFor="applicantStatus-label" id="applicantStatus">
-                Applicants
-              </InputLabel>
-              <Select
-                id="applicantStatus"
-                label="Applicants"
-                labelId="applicantStatus-label"
-                value={jointLoan === true ? "2APP" : "1APP"}
-                displayEmpty
-                style={{ height: "36px" }}
-                onChange={(event) => {
-                  if (event.target.value === "2APP") {
-                    handleJointApplication();
-                  } else {
-                    handleSingleApplicantio();
-                  }
-                }}
+        {activeStep === 0 && (
+          <Fragment>
+            <Grid
+              size={jointLoan ? 8 : { xl: 12, lg: 12, md: 12, sm: 12, xs: 12 }}
+              offset={jointLoan ? 1.5 : { xl: 0, lg: 0, md: 0, sm: 0, xs: 0 }}
+            >
+              <FormControl fullWidth sx={{ marginTop: "5px" }} size="small">
+                <InputLabel
+                  htmlFor="applicantStatus-label"
+                  id="applicantStatus"
+                >
+                  Applicants
+                </InputLabel>
+                <Select
+                  id="applicantStatus"
+                  label="Applicants"
+                  labelId="applicantStatus-label"
+                  value={jointLoan === true ? "2APP" : "1APP"}
+                  displayEmpty
+                  style={{ height: "36px" }}
+                  onChange={(event) => {
+                    if (event.target.value === "2APP") {
+                      handleJointApplication();
+                    } else {
+                      handleSingleApplicantio();
+                    }
+                  }}
+                >
+                  {applicantStatus.map((stateObj) => (
+                    <MenuItem key={stateObj.code} value={stateObj.code}>
+                      {stateObj.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            {jointLoan ? (
+              <Grid container size={8} offset={1.5}>
+                <Grid size={5.5}>
+                  <PersonalInformationTab
+                    key={1}
+                    applicant={1}
+                    onValid={(isValid) =>
+                      setApplicantOnePersonalInfoValid(isValid)
+                    }
+                    onSubmit={(data) => onPersonalInformationSubmit(1, data)}
+                    ref={applicantOnePersonalInforamtionRef}
+                  />
+                </Grid>
+                <Grid size={5.5} offset={1}>
+                  <PersonalInformationTab
+                    key={2}
+                    applicant={2}
+                    onValid={(isValid) =>
+                      setApplicantTwoPersonalInfoValid(isValid)
+                    }
+                    onSubmit={(data) => onPersonalInformationSubmit(2, data)}
+                    ref={applicantTwoPersonalInforamtionRef}
+                  />
+                </Grid>
+              </Grid>
+            ) : (
+              <PersonalInformationTab
+                applicant={1}
+                onValid={(isValid) => setApplicantOnePersonalInfoValid(isValid)}
+                onSubmit={(data) => onPersonalInformationSubmit(1, data)}
+                ref={applicantOnePersonalInforamtionRef}
+              />
+            )}
+            <Grid
+              size={jointLoan ? 2 : 3}
+              offset={jointLoan ? 7.5 : 9}
+              sx={{ marginTop: "20px" }}
+            >
+              <Button
+                onClick={handlePersonalInforamtionSubmit}
+                variant="contained"
+                color="primary"
+                fullWidth
+                endIcon={<ArrowCircleRightOutlinedIcon />}
+                disabled={!allowWorkTab}
               >
-                {applicantStatus.map((stateObj) => (
-                  <MenuItem key={stateObj.code} value={stateObj.code}>
-                    {stateObj.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-          {jointLoan ? (
-            <Grid container size={8} offset={1.5}>
-              <Grid size={5.5}>
-                <PersonalInformationTab
-                  key={1}
-                  applicant={1}
-                  onValid={(isValid) =>
-                    setApplicantOnePersonalInfoValid(isValid)
-                  }
-                  onSubmit={(data) => onPersonalInformationSubmit(1, data)}
-                  ref={applicantOnePersonalInforamtionRef}
-                />
-              </Grid>
-              <Grid size={5.5} offset={1}>
-                <PersonalInformationTab
-                  key={2}
-                  applicant={2}
-                  onValid={(isValid) =>
-                    setApplicantTwoPersonalInfoValid(isValid)
-                  }
-                  onSubmit={(data) => onPersonalInformationSubmit(2, data)}
-                  ref={applicantTwoPersonalInforamtionRef}
-                />
-              </Grid>
+                Next
+              </Button>
             </Grid>
-          ) : (
-            <PersonalInformationTab
-              applicant={1}
-              onValid={(isValid) => setApplicantOnePersonalInfoValid(isValid)}
-              onSubmit={(data) => onPersonalInformationSubmit(1, data)}
-              ref={applicantOnePersonalInforamtionRef}
-            />
-          )}
-          <Grid
-            size={jointLoan ? 2 : 3}
-            offset={jointLoan ? 7.5 : 9}
-            sx={{ marginTop: "20px" }}
-          >
-            <Button
-              onClick={handlePersonalInforamtionSubmit}
-              variant="contained"
-              color="primary"
-              fullWidth
-              endIcon={<ArrowCircleRightOutlinedIcon />}
-              disabled={!allowWorkTab}
+          </Fragment>
+        )}
+        {activeStep === 1 && (
+          <Fragment>
+            {jointLoan ? (
+              <Grid container size={8} offset={1.5}>
+                <Grid size={5.5}>
+                  <WorkInformationTab
+                    key={1}
+                    applicant={1}
+                    onValid={(isValid) => setApplicantOneWorkInfoValid(isValid)}
+                    onSubmit={(data) => onWorkInfoSubmit(1, data)}
+                    ref={applicantOneWorkInfoRef}
+                  />
+                </Grid>
+                <Grid size={5.5} offset={1}>
+                  <WorkInformationTab
+                    key={2}
+                    applicant={2}
+                    onValid={(isValid) => setApplicantTwoWorkInfoValid(isValid)}
+                    onSubmit={(data) => onWorkInfoSubmit(2, data)}
+                    ref={applicantTwoWorkInfoRef}
+                  />
+                </Grid>
+              </Grid>
+            ) : (
+              <WorkInformationTab
+                applicant={1}
+                onValid={(isValid) => setApplicantOneWorkInfoValid(isValid)}
+                onSubmit={(data) => onWorkInfoSubmit(1, data)}
+                ref={applicantOneWorkInfoRef}
+              />
+            )}
+            <Grid
+              size={jointLoan ? 2 : 3}
+              offset={jointLoan ? 7.5 : 9}
+              sx={{ marginTop: "20px" }}
             >
-              Next
-            </Button>
-          </Grid>
-        </TabPanel>
-      </Grid>
-      <Grid
-        size={jointLoan ? 12 : { xl: 5, lg: 6, md: 6, sm: 8, xs: 8 }}
-        offset={jointLoan ? 1 : { xl: 3.5, lg: 3, md: 3, sm: 2, xs: 2 }}
-      >
-        <TabPanel value={value} index={2}>
-          {jointLoan ? (
-            <Grid container size={8} offset={1.5}>
-              <Grid size={5.5}>
-                <WorkInformationTab
-                  key={1}
-                  applicant={1}
-                  onValid={(isValid) => setApplicantOneWorkInfoValid(isValid)}
-                  onSubmit={(data) => onWorkInfoSubmit(1, data)}
-                  ref={applicantOneWorkInfoRef}
-                />
-              </Grid>
-              <Grid size={5.5} offset={1}>
-                <WorkInformationTab
-                  key={2}
-                  applicant={2}
-                  onValid={(isValid) => setApplicantTwoWorkInfoValid(isValid)}
-                  onSubmit={(data) => onWorkInfoSubmit(2, data)}
-                  ref={applicantTwoWorkInfoRef}
-                />
-              </Grid>
+              <Button
+                onClick={handleWorkInformationSubmit}
+                variant="contained"
+                color="primary"
+                fullWidth
+                endIcon={<ArrowCircleRightOutlinedIcon />}
+                disabled={!allowFinancialTab}
+              >
+                Next
+              </Button>
             </Grid>
-          ) : (
-            <WorkInformationTab
-              applicant={1}
-              onValid={(isValid) => setApplicantOneWorkInfoValid(isValid)}
-              onSubmit={(data) => onWorkInfoSubmit(1, data)}
-              ref={applicantOneWorkInfoRef}
-            />
-          )}
-          <Grid
-            size={jointLoan ? 2 : 3}
-            offset={jointLoan ? 7.5 : 9}
-            sx={{ marginTop: "20px" }}
-          >
-            <Button
-              onClick={handleWorkInformationSubmit}
-              variant="contained"
-              color="primary"
-              fullWidth
-              endIcon={<ArrowCircleRightOutlinedIcon />}
-              disabled={!allowFinancialTab}
+          </Fragment>
+        )}
+        {activeStep === 2 && (
+          <Fragment>
+            {jointLoan ? (
+              <Grid container size={8} offset={1.5}>
+                <Grid size={5.5}>
+                  <FinantialInformationTab
+                    key={1}
+                    applicant={1}
+                    onValid={(isValid) =>
+                      setApplicationOneFinantialValid(isValid)
+                    }
+                    onSubmit={(data) => onFinantialInfoSubmit(1, data)}
+                    ref={applicationOneFinantialInfoRef}
+                  />
+                </Grid>
+                <Grid size={5.5} offset={1}>
+                  <FinantialInformationTab
+                    key={2}
+                    applicant={2}
+                    onValid={(isValid) =>
+                      setApplicationTwoFinantialValid(isValid)
+                    }
+                    onSubmit={(data) => onFinantialInfoSubmit(2, data)}
+                    ref={applicationTwoFinantialInfoRef}
+                  />
+                </Grid>
+              </Grid>
+            ) : (
+              <FinantialInformationTab
+                applicant={1}
+                onValid={(isValid) => setApplicationOneFinantialValid(isValid)}
+                onSubmit={(data) => onFinantialInfoSubmit(1, data)}
+                ref={applicationOneFinantialInfoRef}
+              />
+            )}
+            <Grid
+              size={jointLoan ? 2 : 3}
+              offset={jointLoan ? 7.5 : 9}
+              sx={{ marginTop: "20px" }}
             >
-              Next
-            </Button>
-          </Grid>
-        </TabPanel>
-      </Grid>
-
-      <Grid 
-        size={jointLoan ? 12 : { xl: 5, lg: 6, md: 6, sm: 8, xs: 8 }}
-        offset={jointLoan ? 1 : { xl: 3.5, lg: 3, md: 3, sm: 2, xs: 2 }}
-      >
-        <TabPanel value={value} index={3}>
-          {jointLoan ? (
-            <Grid container size={8} offset={1.5}>
-              <Grid size={5.5}>
-                <FinantialInformationTab
-                  key={1}
-                  applicant={1}
-                  onValid={(isValid) => setApplicationOneFinantialValid(isValid)}
-                  onSubmit={(data) => onFinantialInfoSubmit(1, data)}
-                  ref={applicationOneFinantialInfoRef}
-                />
-              </Grid>
-              <Grid size={5.5} offset={1}>
-                <FinantialInformationTab
-                  key={2}
-                  applicant={2}
-                  onValid={(isValid) => setApplicationTwoFinantialValid(isValid)}
-                  onSubmit={(data) => onFinantialInfoSubmit(2, data)}
-                  ref={applicationTwoFinantialInfoRef}
-                />
-              </Grid>
+              <Button
+                onClick={handleFinantialInformationSubmit}
+                variant="contained"
+                color="primary"
+                fullWidth
+                endIcon={<ArrowCircleRightOutlinedIcon />}
+                disabled={!allowGeneralTab}
+              >
+                Next
+              </Button>
             </Grid>
-          ) : (
-            <FinantialInformationTab
+          </Fragment>
+        )}
+        {activeStep === 3 && (
+          <Fragment>
+            <GeneralInformationTab
               applicant={1}
-              onValid={(isValid) => setApplicationOneFinantialValid(isValid)}
-              onSubmit={(data) => onFinantialInfoSubmit(1, data)}
-              ref={applicationOneFinantialInfoRef}
+              onValid={(isValid) => setApplicationGeneralInfoValid(isValid)}
+              onSubmit={(data) => onGeneralInfoInfoSubmit(data)}
+              ref={applicationGeneralInfoRef}
             />
-          )}
-           <Grid
-            size={jointLoan ? 2 : 3}
-            offset={jointLoan ? 7.5 : 9}
-            sx={{ marginTop: "20px" }}
-          >
-            <Button
-              onClick={handleFinantialInformationSubmit}
-              variant="contained"
-              color="primary"
-              fullWidth
-              endIcon={<ArrowCircleRightOutlinedIcon />}
-              disabled={!allowGeneralTab}
+            <Grid
+              size={jointLoan ? 2 : 3}
+              offset={jointLoan ? 7.5 : 9}
+              sx={{ marginTop: "20px" }}
             >
-              Next
-            </Button>
-          </Grid>
-        </TabPanel>
-      </Grid>
-
-      <Grid 
-        size={jointLoan ? 12 : { xl: 5, lg: 6, md: 6, sm: 8, xs: 8 }}
-        offset={jointLoan ? 1 : { xl: 3.5, lg: 3, md: 3, sm: 2, xs: 2 }}
-      >
-        <TabPanel value={value} index={4}>
-          <GeneralInformationTab
-            applicant={1}
-            onValid={(isValid) => setApplicationGeneralInfoValid(isValid)}
-            onSubmit={(data) => onGeneralInfoInfoSubmit(data)}
-            ref={applicationGeneralInfoRef}
-          />
-           <Grid
-            size={jointLoan ? 2 : 3}
-            offset={jointLoan ? 7.5 : 9}
-            sx={{ marginTop: "20px" }}
-          >
-            <Button
-              onClick={handleSubmit}
-              variant="contained"
-              color="primary"
-              fullWidth
-              startIcon={<CheckCircleOutlineOutlinedIcon/>}
-              disabled={!allowSubmit}
-            >
-              Submit
-            </Button>
-          </Grid>
-        </TabPanel>
+              <Button
+                onClick={handleSubmit}
+                variant="contained"
+                color="primary"
+                fullWidth
+                startIcon={<CheckCircleOutlineOutlinedIcon />}
+                disabled={!allowSubmit}
+              >
+                Submit
+              </Button>
+            </Grid>
+          </Fragment>
+        )}
       </Grid>
       <Grid size={12} offset={1}>
         <SubscriptionComponenet />
@@ -499,4 +481,3 @@ export const LandingPageContainer: React.FC<any> = () => {
     </Grid>
   );
 };
-

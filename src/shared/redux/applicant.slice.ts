@@ -174,6 +174,11 @@ export const applicationSlice = createSlice({
     resetWorkInforamtions: (state) => {
       state.workInformations = [];
     },
+
+    resetFinantialInforamtions: (state) => {
+      state.finantialInformations = [];
+    },
+    
   },
 });
 
@@ -187,6 +192,7 @@ export const {
   removeWorkInformation,
   addOrUpdateFinantialInformation,
   resetGeneralInformation,
-  addOrUpdateGeneralInformation
+  addOrUpdateGeneralInformation,
+  resetFinantialInforamtions
 } = applicationSlice.actions;
 export default applicationSlice.reducer;
