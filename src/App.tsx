@@ -4,7 +4,7 @@ import './App.css';
 import { useEffect, useState } from 'react';
 import { ApplicationNavbarComponent } from "./shared/components/ApplicationNavbar.componenet";
 import { ApplicationDrawerComponent } from "./shared/components/ApplicationDrawer.component";
-import { LandingPageContainer } from "./pages/landingPage/LandingPage.container";
+import { LandingPageContainer } from "./pages/LandingPage/LandingPage.container";
 import { InqueryStatusViewContainer } from "./pages/InqueryStatusView.container";
 import { LeadViewContainer } from "./pages/LeadView.container";
 import { UserViewContainer } from "./pages/UserView.container";
