@@ -347,12 +347,12 @@ export const LandingPageContainer: React.FC<any> = () => {
       <Grid
         sx={{ marginTop: "5px" }}
         size={
-          jointLoan
+          jointLoan && activeStep !== 3
             ? 7.5
             : { xl: 5, lg: 6, md: 6, sm: 8, xs: 8 }
         }
         offset={
-          jointLoan
+          jointLoan && activeStep !== 3
             ? 2.25
             : { xl: 3.5, lg: 3, md: 3, sm: 2, xs: 2 }
         }
@@ -591,7 +591,7 @@ export const LandingPageContainer: React.FC<any> = () => {
             />
             <Grid
               size={jointLoan ? 2 : 3}
-              offset={jointLoan ? 7.5 : 9}
+              offset={jointLoan ? 10 : 9}
               sx={{ marginTop: "20px" }}
             >
               <Button
