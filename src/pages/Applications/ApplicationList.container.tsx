@@ -31,8 +31,10 @@ import { data } from "../../mocks/applications.mocks";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { Controller, useForm } from "react-hook-form";
 import { processingOfficers } from "../../mocks/processing.officers.mocks";
+import { useNavigate } from 'react-router-dom';
 
 export const ApplicationListContainer: React.FC<any> = () => {
+
   const style = {
     position: "absolute",
     top: "50%",
@@ -44,6 +46,8 @@ export const ApplicationListContainer: React.FC<any> = () => {
     boxShadow: 24,
     p: 4,
   };
+
+  const navigate = useNavigate();
 
   const {
     control,
@@ -77,6 +81,10 @@ export const ApplicationListContainer: React.FC<any> = () => {
 
   const handleAssign = (data) => {
     console.log(data);
+  };
+
+  const handleNavigate = (applicationId: string) => {
+    navigate(`/lead-view/application-view/${applicationId}`);
   };
 
   return (
@@ -145,7 +153,10 @@ export const ApplicationListContainer: React.FC<any> = () => {
                         <Grid size={1}>
                           <IconButton
                             color="primary"
-                            onClick={() => alert("Home clicked!")}
+                            onClick={() => {
+                              console.log(row.applicationId);
+                              handleNavigate(row.applicationId)
+                            }}
                           >
                             <Visibility />
                           </IconButton>

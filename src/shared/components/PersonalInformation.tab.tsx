@@ -15,23 +15,22 @@ import {
 import { Controller, useForm } from "react-hook-form";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import { forwardRef, useEffect, useImperativeHandle } from "react";
-import { useAppSelector } from "../../shared/redux/hooks";
-import { PersonalInformation } from "../../shared/redux/applicant.slice";
-import { AustralianState } from "../../shared/constants/AustralianState.constant";
+import { useAppSelector } from "../redux/hooks";
+import { PersonalInformation } from "../redux/application.slice";
+import { AustralianState } from "../constants/AustralianState.constant";
 
 interface PersonalInformationProps {
-  applicant: number;
-  onSubmit: (data: any) => void;
-  onValid: (isValid: boolean) => void;
+  applicant: string;
+  onSubmit?: (data: any) => void;
+  onValid?: (isValid: boolean) => void;
+  readonly?: boolean
 }
 
 const PersonalInformationTab = forwardRef(
-  ({ applicant, onSubmit, onValid }: PersonalInformationProps, ref) => {
+  ({ applicant, onSubmit, onValid, readonly = false }: PersonalInformationProps, ref) => {
     const applicantInformation = useAppSelector(
       (state): PersonalInformation | undefined => {
-        return state?.application?.personalInformation?.find(
-          (app) => app.applicantId === applicant
-        );
+        return state?.application?.[applicant].personalInformation;
       }
     );
 
@@ -68,7 +67,9 @@ const PersonalInformationTab = forwardRef(
     ];
 
     const triggerSubmit = () => {
-      handleSubmit(onSubmit)();
+      if (!readonly && onSubmit) {
+        handleSubmit(onSubmit)();
+      }
     };
 
     useImperativeHandle(ref, () => ({
@@ -76,7 +77,9 @@ const PersonalInformationTab = forwardRef(
     }));
 
     useEffect(() => {
-      onValid(isValid && !!errors);
+      if (!readonly && onValid) {
+        onValid(isValid && !!errors);
+      }
     }, [isValid, errors]);
 
     return (
@@ -90,6 +93,7 @@ const PersonalInformationTab = forwardRef(
           variant="outlined"
           size="small"
           fullWidth
+          disabled = {readonly}
           label="First Name"
           {...register("firstName", {
             required: "First name is required",
@@ -120,6 +124,7 @@ const PersonalInformationTab = forwardRef(
           fullWidth
           size="small"
           label="Last Name"
+          disabled = {readonly}
           placeholder={"Last Name"}
           {...register("lastName", {
             required: "Last name is required",
@@ -149,6 +154,7 @@ const PersonalInformationTab = forwardRef(
           size="small"
           fullWidth
           label="Mobile"
+          disabled = {readonly}
           placeholder={"Mobile"}
           {...register("mobile", {
             required: "Mobile is required",
@@ -182,6 +188,7 @@ const PersonalInformationTab = forwardRef(
           fullWidth
           size="small"
           label="Email"
+          disabled = {readonly}
           {...register("email", {
             required: "Email is required",
             pattern: {
@@ -225,6 +232,7 @@ const PersonalInformationTab = forwardRef(
           <Controller
             name="state"
             control={control}
+            disabled = {readonly}
             rules={{ required: "State is required" }}
             render={({ field }) => (
               <Select
@@ -262,7 +270,7 @@ const PersonalInformationTab = forwardRef(
           <Controller
             name="residencyStatus"
             control={control}
-            defaultValue=""
+            disabled = {readonly}
             rules={{ required: "Residency status is required" }}
             render={({ field }) => (
               <Select
@@ -309,7 +317,7 @@ const PersonalInformationTab = forwardRef(
           <Controller
             name="investmentType"
             control={control}
-            defaultValue=""
+            disabled = {readonly}
             rules={{ required: "Investment type is required" }}
             render={({ field }) => (
               <Select
@@ -348,6 +356,7 @@ const PersonalInformationTab = forwardRef(
           <Controller
             name="firstTimeBuyer"
             control={control}
+            disabled = {readonly}
             rules={{ required: "Please select Yes/No" }}
             render={({ field }) => (
               <RadioGroup
@@ -383,6 +392,7 @@ const PersonalInformationTab = forwardRef(
           <Controller
             name="stateCapitalCityBuyer"
             control={control}
+            disabled = {readonly}
             rules={{ required: "Please select Yes/No" }} // Validation rule
             render={({ field }) => (
               <RadioGroup
@@ -419,7 +429,8 @@ const PersonalInformationTab = forwardRef(
           <Controller
             name="buyerAgreedToConnectWithAgent"
             control={control}
-            rules={{ required: "Please select Yes/No" }} // Validation rule
+            rules={{ required: "Please select Yes/No" }}
+            disabled = {readonly}
             render={({ field }) => (
               <RadioGroup
                 {...field}

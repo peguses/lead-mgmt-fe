@@ -3,7 +3,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import storage from "redux-persist/lib/storage";
 import commonSlice from "./common.slice";
 import { persistReducer, persistStore } from "redux-persist";
-import applicantSlice from "./applicant.slice";
+import applicantSlice from "./application.slice";
 
 const env = process.env.REACT_APP_ENV! as "DEVELOPMENT" | "PRODUCTION" | "QA";
 

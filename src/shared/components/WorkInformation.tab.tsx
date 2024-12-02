@@ -22,23 +22,22 @@ import { forwardRef, useEffect, useImperativeHandle } from "react";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers";
-import { useAppSelector } from "../../shared/redux/hooks";
-import { WorkInformation } from "../../shared/redux/applicant.slice";
-import { AustralianState } from "../../shared/constants/AustralianState.constant";
+import { useAppSelector } from "../redux/hooks";
+import { WorkInformation } from "../redux/application.slice";
+import { AustralianState } from "../constants/AustralianState.constant";
 
 interface WorkInformationProps {
-  applicant: number;
-  onSubmit: (data: any) => void;
-  onValid: (isValid: boolean) => void;
+  applicant: string;
+  onSubmit?: (data: any) => void;
+  onValid?: (isValid: boolean) => void;
+  readonly?: boolean
 }
 
 const WorkInformationTab = forwardRef(
-  ({ applicant, onSubmit, onValid }: WorkInformationProps, ref) => {
+  ({ applicant, onSubmit, onValid, readonly = false }: WorkInformationProps, ref) => {
     const workInformation = useAppSelector(
       (state): WorkInformation | undefined => {
-        return state?.application?.workInformation?.find(
-          (app) => app.applicantId === applicant
-        );
+        return state?.application?.[applicant].workInformation;
       }
     );
 
@@ -64,7 +63,9 @@ const WorkInformationTab = forwardRef(
     ];
 
     const triggerSubmit = () => {
-      handleSubmit(onSubmit)();
+      if (!readonly && onSubmit) {
+        handleSubmit(onSubmit)();
+      }
     };
 
     useImperativeHandle(ref, () => ({
@@ -72,7 +73,10 @@ const WorkInformationTab = forwardRef(
     }));
 
     useEffect(() => {
-      onValid(isValid && !!errors);
+      if (!readonly && onValid) {
+        onValid(isValid && !!errors);
+      }
+      
     }, [isValid, errors]);
 
     return (
@@ -89,7 +93,7 @@ const WorkInformationTab = forwardRef(
           <Controller
             name="employmentType"
             control={control}
-            defaultValue=""
+            disabled = {readonly}
             rules={{ required: "Employment type is required" }}
             render={({ field }) => (
               <Select
@@ -122,7 +126,8 @@ const WorkInformationTab = forwardRef(
         <TextField
           variant="outlined"
           fullWidth
-           size="small"
+          size="small"
+          disabled = {readonly}
           label="Occupation"
           {...register("occupation", {
             required: "Occupation is required",
@@ -154,7 +159,8 @@ const WorkInformationTab = forwardRef(
         <TextField
           variant="outlined"
           fullWidth
-           size="small"
+          size="small"
+          disabled = {readonly}
           label="Employer contact name"
           {...register("employerContactName", {
             required: "Employer contact name is required",
@@ -189,6 +195,7 @@ const WorkInformationTab = forwardRef(
           variant="outlined"
           fullWidth
           size="small"
+          disabled = {readonly}
           label="Business name"
           {...register("businessName", {
             required: "Business name is required",
@@ -220,7 +227,8 @@ const WorkInformationTab = forwardRef(
         <TextField
           variant="outlined"
           fullWidth
-           size="small"
+          size="small"
+          disabled = {readonly}
           label="Employer phone number"
           placeholder={"Employer phone number"}
           {...register("employerPhoneNumber", {
@@ -259,6 +267,7 @@ const WorkInformationTab = forwardRef(
           variant="outlined"
           fullWidth
           size="small"
+          disabled = {readonly}
           label="Email"
           {...register("employerEmail", {
             required: "Email is required",
@@ -295,6 +304,7 @@ const WorkInformationTab = forwardRef(
           variant="outlined"
           fullWidth
           size="small"
+          disabled = {readonly}
           label="Australian ABN"
           {...register("employerABN", {
             required: "Australian ABN is required",
@@ -331,6 +341,7 @@ const WorkInformationTab = forwardRef(
           variant="outlined"
           fullWidth
           size="small"
+          disabled = {readonly}
           label="Employer Address"
           {...register("employerAddress", {
             required: "Employee address is required",
@@ -363,6 +374,7 @@ const WorkInformationTab = forwardRef(
           variant="outlined"
           fullWidth
           size="small"
+          disabled = {readonly}
           label="Employer suburb"
           {...register("employerSuburb", {
             required: "Employee suburb is required",
@@ -402,7 +414,7 @@ const WorkInformationTab = forwardRef(
           <Controller
             name="employerState"
             control={control}
-            defaultValue=""
+            disabled = {readonly}
             rules={{ required: "Employer state is required" }}
             render={({ field }) => (
               <Select
@@ -435,6 +447,7 @@ const WorkInformationTab = forwardRef(
           variant="outlined"
           fullWidth
           size="small"
+          disabled = {readonly}
           {...register("employerPostCode", {
             required: "Post code is required",
           })}
@@ -469,6 +482,7 @@ const WorkInformationTab = forwardRef(
               defaultValue=""
               name="currentEmploymentStartDate"
               control={control}
+              disabled = {readonly}
               rules={{ required: "Employment start date is required" }}
               render={({ field }) => (
                 <DatePicker
@@ -498,6 +512,7 @@ const WorkInformationTab = forwardRef(
           <Controller
             name="probationaryEmployee"
             control={control}
+            disabled = {readonly}
             rules={{ required: "Please select Yes/No" }}
             render={({ field }) => (
               <RadioGroup

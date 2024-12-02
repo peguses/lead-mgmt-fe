@@ -14,8 +14,8 @@ import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import GroupIcon from "@mui/icons-material/Group";
 import { NumericFormat } from "react-number-format";
-import { GeneralInformation } from "../../shared/redux/applicant.slice";
-import { useAppSelector } from "../../shared/redux/hooks";
+import { GeneralInformation } from "../redux/application.slice";
+import { useAppSelector } from "../redux/hooks";
 
 interface GeneralInformationProps {
   applicant: number;

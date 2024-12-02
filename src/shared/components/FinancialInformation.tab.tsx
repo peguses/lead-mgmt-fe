@@ -16,23 +16,22 @@ import CreditCardIcon from "@mui/icons-material/CreditCard";
 import PaidIcon from "@mui/icons-material/Paid";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { NumericFormat } from "react-number-format";
-import { FinancialInformation } from "../../shared/redux/applicant.slice";
-import { useAppSelector } from "../../shared/redux/hooks";
+import { FinancialInformation } from "../redux/application.slice";
+import { useAppSelector } from "../redux/hooks";
 
 interface FinancialInformationProps {
-  applicant: number;
+  applicant: string;
   onSubmit: (data: any) => void;
   onValid: (isValid: boolean) => void;
+  readonly?: boolean
 }
 
 const FinancialInformationTab = forwardRef(
-  ({ applicant, onSubmit, onValid }: FinancialInformationProps, ref) => {
+  ({ applicant, onSubmit, onValid, readonly = false }: FinancialInformationProps, ref) => {
 
     const financialInformation = useAppSelector(
       (state): FinancialInformation | undefined => {
-        return state?.application?.financialInformation?.find(
-          (app) => app.applicantId === applicant
-        );
+        return state?.application?.[applicant].financialInformation;
       }
     );
     const {
@@ -72,6 +71,7 @@ const FinancialInformationTab = forwardRef(
                 {...field}
                 variant="outlined"
                 size="small"
+                disabled={readonly}
                 thousandSeparator=","
                 decimalScale={2}
                 customInput={TextField}
@@ -109,6 +109,7 @@ const FinancialInformationTab = forwardRef(
                 customInput={TextField}
                 size="small"
                 variant="outlined"
+                disabled={readonly}
                 fullWidth
                 label="Length of employment"
                 error={!!errors.lengthOfEmployment}
@@ -154,6 +155,7 @@ const FinancialInformationTab = forwardRef(
                 variant="outlined"
                 size="small"
                 fullWidth
+                disabled={readonly}
                 label="Total amount saved"
                 error={!!errors.totalAmountSaved}
                 placeholder={"Total amount saved"}
@@ -194,6 +196,7 @@ const FinancialInformationTab = forwardRef(
             name="parentWillBeGuarantors"
             control={control}
             rules={{ required: "Please select Yes/No" }} // Validation rule
+            disabled={readonly}
             render={({ field }) => (
               <RadioGroup
                 {...field}
@@ -234,6 +237,7 @@ const FinancialInformationTab = forwardRef(
                 variant="outlined"
                 size="small"
                 fullWidth
+                disabled={readonly}
                 thousandSeparator=","
                 decimalScale={2}
                 error={!!errors.totalLoanAmount}
@@ -279,6 +283,7 @@ const FinancialInformationTab = forwardRef(
                 decimalScale={2}
                 variant="outlined"
                 size="small"
+                disabled={readonly}
                 fullWidth
                 error={!!errors.totalLoanRepayments}
                 placeholder={"Total loans repayments"}
@@ -323,6 +328,7 @@ const FinancialInformationTab = forwardRef(
                 decimalScale={2}
                 variant="outlined"
                 size="small"
+                disabled={readonly}
                 error={!!errors.helpDebtTotalAmount}
                 placeholder={"Total help debt amount"}
                 slotProps={{
@@ -370,6 +376,7 @@ const FinancialInformationTab = forwardRef(
                 variant="outlined"
                 size="small"
                 fullWidth
+                disabled={readonly}
                 error={!!errors.totalExistingHomeLoanAmount}
                 placeholder={"Total existing home loan amount"}
                 slotProps={{
@@ -419,6 +426,7 @@ const FinancialInformationTab = forwardRef(
                 variant="outlined"
                 size="small"
                 fullWidth
+                disabled={readonly}
                 error={!!errors.totalExistingHomeLoanRepaymentAmt}
                 placeholder={"Total existing home loan repayments"}
                 slotProps={{
@@ -463,6 +471,7 @@ const FinancialInformationTab = forwardRef(
                 variant="outlined"
                 size="small"
                 fullWidth
+                disabled={readonly}
                 error={!!errors.totalPropertyValue}
                 placeholder={"Total estimated property value"}
                 slotProps={{
@@ -507,6 +516,7 @@ const FinancialInformationTab = forwardRef(
                 variant="outlined"
                 size="small"
                 fullWidth
+                disabled={readonly}
                 error={!!errors.totalCreditCardLimits}
                 placeholder={"Total credit card limit"}
                 slotProps={{
@@ -552,6 +562,7 @@ const FinancialInformationTab = forwardRef(
                 variant="outlined"
                 size="small"
                 fullWidth
+                disabled={readonly}
                 error={!!errors.livingExpenses}
                 placeholder={"Living expenses"}
                 slotProps={{
@@ -587,6 +598,7 @@ const FinancialInformationTab = forwardRef(
             name="wereBankrupted"
             control={control}
             rules={{ required: "Please select Yes/No" }} // Validation rule
+            disabled={readonly}
             render={({ field }) => (
               <RadioGroup
                 {...field}
@@ -622,6 +634,7 @@ const FinancialInformationTab = forwardRef(
             name="hasDefaulted"
             control={control}
             rules={{ required: "Please select Yes/No" }} // Validation rule
+            disabled={readonly}
             render={({ field }) => (
               <RadioGroup
                 {...field}
@@ -655,6 +668,7 @@ const FinancialInformationTab = forwardRef(
             multiline
             rows={2}
             fullWidth
+            disabled={readonly}
             {...register("defaultedReason", {
               required: hasDefaulted,
             })}
