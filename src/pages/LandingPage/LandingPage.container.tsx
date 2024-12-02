@@ -98,17 +98,17 @@ export const LandingPageContainer: React.FC<any> = () => {
 
   useEffect(() => {
     setAllowSubmit(applicationGeneralInfoValid);
-    setCompletedStep(3, applicationGeneralInfoValid);
+    setCompletedStep(2, applicationGeneralInfoValid);
   }, [applicationGeneralInfoValid]);
 
   useEffect(() => {
     if (jointLoan) {
       const valid = applicationOneFinancialValid && applicationTwoFinancialValid
       setAllowGeneralTab(valid);
-      setCompletedStep(2, valid);
+      setCompletedStep(1, valid);
     } else {
       setAllowGeneralTab(applicationOneFinancialValid);
-      setCompletedStep(2, applicationOneFinancialValid);
+      setCompletedStep(1, applicationOneFinancialValid);
     }
   }, [applicationOneFinancialValid, applicationTwoFinancialValid, jointLoan]);
 
@@ -116,9 +116,9 @@ export const LandingPageContainer: React.FC<any> = () => {
     if (jointLoan) {
       const valid = applicantOneWorkInfoValid && applicantTwoWorkInfoValid;
       setAllowFinancialTab(valid);
-      setCompletedStep(1, valid);
+      setCompletedStep(5, valid);
     } else {
-      setCompletedStep(1, applicantOneWorkInfoValid);
+      setCompletedStep(5, applicantOneWorkInfoValid);
       setAllowFinancialTab(applicantOneWorkInfoValid);
     }
   }, [applicantOneWorkInfoValid, applicantTwoWorkInfoValid, jointLoan]);
@@ -163,7 +163,7 @@ export const LandingPageContainer: React.FC<any> = () => {
       }
     });
 
-    setActiveStep(2);
+    setActiveStep(5);
   };
 
   const handleFinancialInformationSubmit = () => {
@@ -177,7 +177,7 @@ export const LandingPageContainer: React.FC<any> = () => {
       }
     });
 
-    setActiveStep(3);
+    setActiveStep(2);
   };
 
   const setCompletedStep = (step: number, state: boolean) => {
@@ -301,7 +301,7 @@ export const LandingPageContainer: React.FC<any> = () => {
               Personal
             </StepLabel>
           </Step>
-          <Step key={"work"} completed={isStepCompleted(1)}>
+          {/* <Step key={"work"} completed={isStepCompleted(1)}>
             <StepLabel
               icon={<WorkIcon />}
               sx={{
@@ -313,28 +313,28 @@ export const LandingPageContainer: React.FC<any> = () => {
             >
               Work
             </StepLabel>
-          </Step>
-          <Step key={"financial"} completed={isStepCompleted(2)}>
+          </Step> */}
+          <Step key={"financial"} completed={isStepCompleted(1)}>
             <StepLabel
               icon={<AttachMoneyIcon />}
               sx={{
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
-                ...stepColor(2),
+                ...stepColor(1),
               }}
             >
               Financial
             </StepLabel>
           </Step>
-          <Step key={"general"} completed={isStepCompleted(3)}>
+          <Step key={"general"} completed={isStepCompleted(2)}>
             <StepLabel
               icon={<InfoIcon />}
               sx={{
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
-                ...stepColor(3),
+                ...stepColor(2),
               }}
             >
               General
@@ -477,7 +477,7 @@ export const LandingPageContainer: React.FC<any> = () => {
             </Grid>
           </Fragment>
         )}
-        {activeStep === 1 && (
+        {activeStep === 5 && (
           <Fragment>
             {jointLoan ? (
               <Grid container size={8} offset={1.5}>
@@ -526,7 +526,7 @@ export const LandingPageContainer: React.FC<any> = () => {
             </Grid>
           </Fragment>
         )}
-        {activeStep === 2 && (
+        {activeStep === 1 && (
           <Fragment>
             {jointLoan ? (
               <Grid container size={8} offset={1.5}>
@@ -579,7 +579,7 @@ export const LandingPageContainer: React.FC<any> = () => {
             </Grid>
           </Fragment>
         )}
-        {activeStep === 3 && (
+        {activeStep === 2 && (
           <Fragment>
             <GeneralInformationTab
               applicant={1}
