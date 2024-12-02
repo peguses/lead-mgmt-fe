@@ -60,6 +60,7 @@ export interface PersonalInformation {
 }
 
 export interface Application {
+  applicationId: string;
   referrer: string;
   referrerId: string;
   jointLoan: boolean;
@@ -76,11 +77,12 @@ export enum ApplicationStatus {
   Processing = "PROCESSING",
   Approved = "APPROVED",
   Canceled = "CANCELLED",
-  Settled = "Settled",
-  Paid = "Paid"
+  Settled = "SETTLED",
+  Paid = "PAID"
 }
 
 const INITIAL_STATE: Application = {
+  applicationId: "",
   referrer: "",
   referrerId: "",
   jointLoan: false,
