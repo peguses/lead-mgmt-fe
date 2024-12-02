@@ -16,21 +16,21 @@ import CreditCardIcon from "@mui/icons-material/CreditCard";
 import PaidIcon from "@mui/icons-material/Paid";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { NumericFormat } from "react-number-format";
-import { FinantialInformation } from "../../shared/redux/applicant.slice";
+import { FinancialInformation } from "../../shared/redux/applicant.slice";
 import { useAppSelector } from "../../shared/redux/hooks";
 
-interface FinantialInformationProps {
+interface FinancialInformationProps {
   applicant: number;
   onSubmit: (data: any) => void;
   onValid: (isValid: boolean) => void;
 }
 
-const FinantialInformationTab = forwardRef(
-  ({ applicant, onSubmit, onValid }: FinantialInformationProps, ref) => {
+const FinancialInformationTab = forwardRef(
+  ({ applicant, onSubmit, onValid }: FinancialInformationProps, ref) => {
 
-    const finantialInformation = useAppSelector(
-      (state): FinantialInformation | undefined => {
-        return state?.application?.finantialInformations?.find(
+    const financialInformation = useAppSelector(
+      (state): FinancialInformation | undefined => {
+        return state?.application?.financialInformation?.find(
           (app) => app.applicantId === applicant
         );
       }
@@ -43,10 +43,10 @@ const FinantialInformationTab = forwardRef(
       clearErrors,
     } = useForm<any>({
       mode: "all",
-      defaultValues: finantialInformation,
+      defaultValues: financialInformation,
     });
 
-    const [hasDefalted, setHasDefalted] = useState<boolean>(false);
+    const [hasDefaulted, setHasDefaulted] = useState<boolean>(false);
 
     const triggerSubmit = () => {
       handleSubmit(onSubmit)();
@@ -538,9 +538,9 @@ const FinantialInformationTab = forwardRef(
           HECS debt)*
         </Typography>
 
-        <FormControl fullWidth error={Boolean(errors.livinExpenses)}>
+        <FormControl fullWidth error={Boolean(errors.livingExpenses)}>
           <Controller
-            name="livinExpenses"
+            name="livingExpenses"
             control={control}
             rules={{ required: "Living expenses is required" }}
             render={({ field }) => (
@@ -552,7 +552,7 @@ const FinantialInformationTab = forwardRef(
                 variant="outlined"
                 size="small"
                 fullWidth
-                error={!!errors.livinExpenses}
+                error={!!errors.livingExpenses}
                 placeholder={"Living expenses"}
                 slotProps={{
                   input: {
@@ -569,9 +569,9 @@ const FinantialInformationTab = forwardRef(
               />
             )}
           />
-          {errors.livinExpenses && (
+          {errors.livingExpenses && (
             <FormHelperText>
-              {String(errors.livinExpenses.message)}
+              {String(errors.livingExpenses.message)}
             </FormHelperText>
           )}
         </FormControl>
@@ -617,9 +617,9 @@ const FinantialInformationTab = forwardRef(
           elaborate below.*
         </Typography>
 
-        <FormControl error={Boolean(errors.hasDefalted)}>
+        <FormControl error={Boolean(errors.hasDefaulted)}>
           <Controller
-            name="hasDefalted"
+            name="hasDefaulted"
             control={control}
             rules={{ required: "Please select Yes/No" }} // Validation rule
             render={({ field }) => (
@@ -627,12 +627,12 @@ const FinantialInformationTab = forwardRef(
                 {...field}
                 row
                 defaultValue=""
-                name="hasDefalted"
+                name="hasDefaulted"
                 onChange={(e) => {
-                  clearErrors("hasDefalted");
-                  setHasDefalted(false);
+                  clearErrors("hasDefaulted");
+                  setHasDefaulted(false);
                   if (e.target.value === "yes") {
-                    setHasDefalted(true);
+                    setHasDefaulted(true);
                   }
                   field.onChange(e);
                 }}
@@ -642,25 +642,25 @@ const FinantialInformationTab = forwardRef(
               </RadioGroup>
             )}
           />
-          {errors.hasDefalted && (
+          {errors.hasDefaulted && (
             <FormHelperText>
-              {String(errors.hasDefalted.message)}
+              {String(errors.hasDefaulted.message)}
             </FormHelperText>
           )}
         </FormControl>
-        {hasDefalted && (
+        {hasDefaulted && (
           <TextField
             variant="outlined"
             size="small"
             multiline
             rows={2}
             fullWidth
-            {...register("defaltedReason", {
-              required: hasDefalted,
+            {...register("defaultedReason", {
+              required: hasDefaulted,
             })}
             error={!!errors.defaltedReason}
             helperText={
-              errors.defaltedReason ? String(errors.defaltedReason.message) : ""
+              errors.defaultedReason ? String(errors.defaultedReason.message) : ""
             }
             placeholder={"Credit history or defaults reason"}
           />
@@ -669,4 +669,4 @@ const FinantialInformationTab = forwardRef(
     );
   }
 );
-export default FinantialInformationTab;
+export default FinancialInformationTab;

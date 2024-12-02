@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 export interface WorkInformation {
   applicantId: number;
-  employementType: string;
+  employmentType: string;
   occupation: string;
   employerContactName: string;
   businessName: string;
@@ -13,20 +13,20 @@ export interface WorkInformation {
   employerSuburb: string;
   employerState: string;
   employerPostCode: string;
-  currentEmployementStartDate: Date;
+  currentEmploymentStartDate: Date;
   probationaryEmployee: boolean;
 }
 
 export interface GeneralInformation {
-  numberOfDependants: number;
+  numberOfDependant: number;
   hasPropertyOffer: boolean
   propertyOfferElaboration: string;
   applicantOptionalNote: string;
-  referalOption: string;
+  referralOption: string;
   applicantAgreedOnConditions: boolean
 }
 
-export interface FinantialInformation {
+export interface FinancialInformation {
   applicantId: number;
   annualIncome: number;
   lengthOfEmployment: number;
@@ -39,10 +39,10 @@ export interface FinantialInformation {
   totalExistingHomeLoanRepaymentAmt: number;
   totalPropertyValue: number;
   totalCreditCardLimits: number;
-  livinExpenses: number;
+  livingExpenses: number;
   wereBankrupted: boolean;
-  hasDefalted: boolean;
-  defaltedReason: string;
+  hasDefaulted: boolean;
+  defaultedReason: string;
 }
 
 export interface PersonalInformation {
@@ -51,7 +51,7 @@ export interface PersonalInformation {
   mobile: string;
   email: string;
   state: string;
-  residancyStatus: string;
+  residencyStatus: string;
   investmentType: string;
   firstTimeBuyer: boolean;
   stateCapitalCityBuyer: boolean;
@@ -60,24 +60,40 @@ export interface PersonalInformation {
 }
 
 export interface Application {
+  referrer: string;
+  referrerId: string;
   jointLoan: boolean;
-  personalInforamtions: PersonalInformation[];
-  workInformations: WorkInformation[];
-  finantialInformations: FinantialInformation[];
+  personalInformation: PersonalInformation[];
+  workInformation: WorkInformation[];
+  financialInformation: FinancialInformation[];
   generalInformation: GeneralInformation | undefined;
+  applicationStatus: ApplicationStatus
+}
+
+export enum ApplicationStatus {
+  Inquiry = "INQUIRY",
+  Deal = "DEAL",
+  Processing = "PROCESSING",
+  Approved = "APPROVED",
+  Canceled = "CANCELLED",
+  Settled = "Settled",
+  Paid = "Paid"
 }
 
 const INITIAL_STATE: Application = {
+  referrer: "",
+  referrerId: "",
   jointLoan: false,
-  personalInforamtions: [],
-  workInformations: [],
-  finantialInformations: [],
+  applicationStatus: ApplicationStatus.Inquiry,
+  personalInformation: [],
+  workInformation: [],
+  financialInformation: [],
   generalInformation: {
-    numberOfDependants: 0,
+    numberOfDependant: 0,
     hasPropertyOffer: false,
     propertyOfferElaboration: '',
     applicantOptionalNote: '',
-    referalOption: '',
+    referralOption: '',
     applicantAgreedOnConditions: false
   }
 };
@@ -90,71 +106,71 @@ export const applicationSlice = createSlice({
       state.jointLoan = action.payload;
     },
 
-    addOrUpdatePersonalInforamtions: (state, action) => {
+    addOrUpdatePersonalInformation: (state, action) => {
       const { applicantId, data } = action.payload;
-      const index = state?.personalInforamtions?.findIndex(
+      const index = state?.personalInformation?.findIndex(
         (a) => a.applicantId === applicantId
       );
 
       if (index !== -1) {
-        state.personalInforamtions[index] = {
-          ...state.personalInforamtions[index],
+        state.personalInformation[index] = {
+          ...state.personalInformation[index],
           ...data,
         };
       } else {
-        state.personalInforamtions.push({ ...data, applicantId: applicantId });
+        state.personalInformation.push({ ...data, applicantId: applicantId });
       }
     },
 
     removePersonalInformation: (state, action) => {
       const { applicantId } = action.payload;
-      state.personalInforamtions = state?.personalInforamtions?.filter(
+      state.personalInformation = state?.personalInformation?.filter(
         (a) => a.applicantId !== applicantId
       );
     },
 
     addOrUpdateWorkInformation: (state, action) => {
       const { applicantId, data } = action.payload;
-      const index = state?.workInformations?.findIndex(
+      const index = state?.workInformation?.findIndex(
         (a) => a.applicantId === applicantId
       );
 
       if (index !== -1) {
-        state.workInformations[index] = {
-          ...state.workInformations[index],
+        state.workInformation[index] = {
+          ...state.workInformation[index],
           ...data,
         };
       } else {
-        state.workInformations.push({ ...data, applicantId: applicantId });
+        state.workInformation.push({ ...data, applicantId: applicantId });
       }
     },
 
     removeWorkInformation: (state, action) => {
         const { applicantId } = action.payload;
-        state.workInformations = state?.workInformations?.filter(
+        state.workInformation = state?.workInformation?.filter(
           (a) => a.applicantId !== applicantId
         );
     },
 
-    addOrUpdateFinantialInformation: (state, action) => {
+    addOrUpdateFinancialInformation: (state, action) => {
       const { applicantId, data } = action.payload;
-      const index = state?.finantialInformations?.findIndex(
+      const index = state?.financialInformation?.findIndex(
         (a) => a.applicantId === applicantId
       );
 
       if (index !== -1) {
-        state.finantialInformations[index] = {
-          ...state.finantialInformations[index],
+        state.financialInformation[index] = {
+          ...state.financialInformation[index],
           ...data,
         };
       } else {
-        state.finantialInformations.push({ ...data, applicantId: applicantId });
+        state.financialInformation.push({ ...data, applicantId: applicantId });
       }
     },
 
-    removeFinantialInformation: (state, action) => {
+    removeFinancialInformation: (state, action) => {
       const { applicantId } = action.payload;
-      state.finantialInformations = state?.finantialInformations?.filter(
+      state.financialInformation = state?.financialInformation?.filter(
         (a) => a.applicantId !== applicantId
       );
     },
@@ -167,32 +183,32 @@ export const applicationSlice = createSlice({
       state.generalInformation = undefined;
     },
 
-    resetPersonalInforamtions: (state) => {
-      state.personalInforamtions = [];
+    resetPersonalInformation: (state) => {
+      state.personalInformation = [];
     },
 
-    resetWorkInforamtions: (state) => {
-      state.workInformations = [];
+    resetWorkInformation: (state) => {
+      state.workInformation = [];
     },
 
-    resetFinantialInforamtions: (state) => {
-      state.finantialInformations = [];
+    resetFinancialInformation: (state) => {
+      state.financialInformation = [];
     },
     
   },
 });
 
 export const {
-  resetPersonalInforamtions,
+  resetPersonalInformation,
   setJoinLoanApplication,
-  addOrUpdatePersonalInforamtions,
+  addOrUpdatePersonalInformation,
   addOrUpdateWorkInformation,
   removePersonalInformation,
-  resetWorkInforamtions,
+  resetWorkInformation,
   removeWorkInformation,
-  addOrUpdateFinantialInformation,
+  addOrUpdateFinancialInformation,
   resetGeneralInformation,
   addOrUpdateGeneralInformation,
-  resetFinantialInforamtions
+  resetFinancialInformation
 } = applicationSlice.actions;
 export default applicationSlice.reducer;

@@ -61,9 +61,9 @@ const GeneralInformationTab = forwardRef(
         >
           Number of dependents between applicants*
         </Typography>
-        <FormControl fullWidth error={Boolean(errors.numberOfDependants)}>
+        <FormControl fullWidth error={Boolean(errors.numberOfDependant)}>
           <Controller
-            name="numberOfDependants"
+            name="numberOfDependant"
             control={control}
             rules={{ required: "Number of dependant is required" }}
             render={({ field }) => (
@@ -73,7 +73,7 @@ const GeneralInformationTab = forwardRef(
                 size="small"
                 decimalScale={0}
                 customInput={TextField}
-                error={!!errors.numberOfDependants}
+                error={!!errors.numberOfDependant}
                 placeholder={"Number of dependant"}
                 slotProps={{
                   input: {
@@ -87,9 +87,9 @@ const GeneralInformationTab = forwardRef(
               />
             )}
           />
-          {errors.numberOfDependants && (
+          {errors.numberOfDependant && (
             <FormHelperText>
-              {String(errors.numberOfDependants.message)}
+              {String(errors.numberOfDependant.message)}
             </FormHelperText>
           )}
         </FormControl>
@@ -183,12 +183,12 @@ const GeneralInformationTab = forwardRef(
           size="small"
           fullWidth
           sx={{ marginTop: "5px" }}
-          {...register("referalOption", {
+          {...register("referralOption", {
             required: "Who refer us to you is required",
           })}
-          error={!!errors.referalOption}
+          error={!!errors.referralOption}
           helperText={
-            errors.referalOption ? String(errors.referalOption.message) : ""
+            errors.referralOption ? String(errors.referralOption.message) : ""
           }
           placeholder={"How did you hear about us"}
         />

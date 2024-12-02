@@ -1,15 +1,12 @@
 import {
-  BottomNavigation,
-  BottomNavigationAction,
   Box,
   Grid2 as Grid,
   IconButton,
   Typography,
 } from "@mui/material";
-import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import { Link } from "react-router-dom";
 
-export const ApplicatiopnFooterComponenet: React.FC<any> = () => {
+export const ApplicationFooterComponent: React.FC<any> = () => {
   return (
     <Box
       sx={{

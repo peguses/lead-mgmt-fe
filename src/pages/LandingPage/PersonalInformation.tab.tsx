@@ -17,7 +17,7 @@ import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import { forwardRef, useEffect, useImperativeHandle } from "react";
 import { useAppSelector } from "../../shared/redux/hooks";
 import { PersonalInformation } from "../../shared/redux/applicant.slice";
-import { AustralienState } from "../../shared/constants/AustralienState.constant";
+import { AustralianState } from "../../shared/constants/AustralianState.constant";
 
 interface PersonalInformationProps {
   applicant: number;
@@ -29,7 +29,7 @@ const PersonalInformationTab = forwardRef(
   ({ applicant, onSubmit, onValid }: PersonalInformationProps, ref) => {
     const applicantInformation = useAppSelector(
       (state): PersonalInformation | undefined => {
-        return state?.application?.personalInforamtions?.find(
+        return state?.application?.personalInformation?.find(
           (app) => app.applicantId === applicant
         );
       }
@@ -39,15 +39,15 @@ const PersonalInformationTab = forwardRef(
       control,
       register,
       handleSubmit,
-      formState: { errors, isValid, isDirty },
+      formState: { errors, isValid },
       clearErrors,
     } = useForm<any>({
       mode: "all",
       defaultValues: applicantInformation,
     });
 
-    const residancyStatus = [
-      { code: "AC", name: "Austrailen Citizen" },
+    const residencyStatus = [
+      { code: "AC", name: "Australian Citizen" },
       { code: "PR", name: "Permanent Resident" },
     ];
 
@@ -63,7 +63,7 @@ const PersonalInformationTab = forwardRef(
       { code: "buy_investment_property", name: "Buy an investment property" },
       {
         code: "refinance_existing_mortgage",
-        name: "Refinancing an exsting mortgage",
+        name: "Refinancing an existing mortgage",
       },
     ];
 
@@ -154,7 +154,7 @@ const PersonalInformationTab = forwardRef(
             required: "Mobile is required",
             pattern: {
               value: /^(04\d{8}|(02|03|07|08)\d{8})$/,
-              message: "Enter valied australien mobile number",
+              message: "Enter valid australian mobile number",
             },
           })}
           error={!!errors.mobile}
@@ -238,7 +238,7 @@ const PersonalInformationTab = forwardRef(
                   field.onChange(e);
                 }}
               >
-                {AustralienState.map((stateObj) => (
+                {AustralianState.map((stateObj) => (
                   <MenuItem key={stateObj.code} value={stateObj.code}>
                     {stateObj.name}
                   </MenuItem>
@@ -254,29 +254,29 @@ const PersonalInformationTab = forwardRef(
           fullWidth
           size="small"
           sx={{ marginTop: "20px" }}
-          error={Boolean(errors.residancyStatus)}
+          error={Boolean(errors.residencyStatus)}
         >
-          <InputLabel htmlFor="residancyStatus-label" id="residancyStatus" shrink>
+          <InputLabel htmlFor="residencyStatus-label" id="residencyStatus" shrink>
             Select Residency Status
           </InputLabel>
           <Controller
-            name="residancyStatus"
+            name="residencyStatus"
             control={control}
             defaultValue=""
-            rules={{ required: "Residancy status is required" }}
+            rules={{ required: "Residency status is required" }}
             render={({ field }) => (
               <Select
-                id="residancyStatus"
-                labelId="residancyStatus-label"
+                id="residencyStatus"
+                labelId="residencyStatus-label"
                 label="Select Residency Status"
                 {...field}
                 displayEmpty
                 onChange={(e) => {
-                  clearErrors("residancyStatus");
+                  clearErrors("residencyStatus");
                   field.onChange(e);
                 }}
               >
-                {residancyStatus.map((stateObj) => (
+                {residencyStatus.map((stateObj) => (
                   <MenuItem key={stateObj.code} value={stateObj.code}>
                     {stateObj.name}
                   </MenuItem>
@@ -284,9 +284,9 @@ const PersonalInformationTab = forwardRef(
               </Select>
             )}
           />
-          {errors.residancyStatus && (
+          {errors.residencyStatus && (
             <FormHelperText>
-              {String(errors.residancyStatus?.message)}
+              {String(errors.residencyStatus?.message)}
             </FormHelperText>
           )}
         </FormControl>
@@ -294,7 +294,7 @@ const PersonalInformationTab = forwardRef(
           sx={{ marginTop: "20px", fontSize: "14px", fontWeight: 700 }}
         >
           Are you buying a home to live in, an investment property or
-          refinanceing an exising mortgage ?
+          refinancing an existing mortgage ?
         </Typography>
 
         <FormControl

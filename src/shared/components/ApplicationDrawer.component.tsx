@@ -100,11 +100,11 @@ export const ApplicationDrawerComponent: React.FC<any> = ({
           {menuOpen && <ListItemText primary="Home" />}
         </ListItem>
 
-        <ListItem component={Link} to="/inquery-status">
+        <ListItem component={Link} to="/inquiry-status">
           <ListItemIcon>
             <HelpOutlineOutlinedIcon />
           </ListItemIcon>
-          {menuOpen && <ListItemText primary="Inquery Status" />}
+          {menuOpen && <ListItemText primary="Inquiry Status" />}
         </ListItem>
 
         <ListItem component={Link} to="/lead-view">
@@ -114,11 +114,11 @@ export const ApplicationDrawerComponent: React.FC<any> = ({
           {menuOpen && <ListItemText primary="Leads" />}
         </ListItem>
 
-        <ListItem component={Link} to="/referal-manager-view">
+        <ListItem component={Link} to="/referral-manager-view">
           <ListItemIcon>
             <FavoriteBorderSharpIcon />
           </ListItemIcon>
-          {menuOpen && <ListItemText primary="Referals" />}
+          {menuOpen && <ListItemText primary="Referrals" />}
         </ListItem>
 
         <ListItem component={Link} to="/user-view">

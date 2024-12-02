@@ -10,7 +10,7 @@ import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import { useAppSelector } from "../redux/hooks";
 import { SubmitHandler, useForm } from "react-hook-form";
 
-export const SubscriptionComponenet: React.FC<any> = () => {
+export const SubscriptionComponent: React.FC<any> = () => {
   const {
     control,
     register,

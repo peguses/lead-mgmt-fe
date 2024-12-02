@@ -1,4 +1,4 @@
-export const AustralienState = [
+export const AustralianState = [
     { code: "NSW", name: "New South Wales" },
     { code: "VIC", name: "Victoria" },
     { code: "QLD", name: "Queensland" },

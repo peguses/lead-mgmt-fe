@@ -3,7 +3,6 @@ import {
   Button,
   FormControl,
   Grid2 as Grid,
-  IconButton,
   InputLabel,
   MenuItem,
   Select,
@@ -12,12 +11,11 @@ import {
   Stepper,
 } from "@mui/material";
 import React, { Fragment, useEffect, useRef, useState } from "react";
-import { SubscriptionComponenet } from "../../shared/components/Subscription.component";
 import WorkInformationTab from "./WorkInformation.tab";
 import {
-  addOrUpdateFinantialInformation,
+  addOrUpdateFinancialInformation,
   addOrUpdateGeneralInformation,
-  addOrUpdatePersonalInforamtions,
+  addOrUpdatePersonalInformation,
   addOrUpdateWorkInformation,
   PersonalInformation,
   removePersonalInformation,
@@ -28,8 +26,6 @@ import {
 } from "../../shared/redux/applicant.slice";
 import PersonalInformationTab from "./PersonalInformation.tab";
 import { batch, useDispatch } from "react-redux";
-import { useAppSelector } from "../../shared/redux/hooks";
-import FinantialInformationTab from "./FinantialInformation.tab";
 import GeneralInformationTab from "./GeneralInformation.tab";
 import ArrowCircleRightOutlinedIcon from "@mui/icons-material/ArrowCircleRightOutlined";
 import ArrowCircleLeftOutlinedIcon from "@mui/icons-material/ArrowCircleLeftOutlined";
@@ -38,6 +34,8 @@ import PersonIcon from "@mui/icons-material/Person";
 import WorkIcon from "@mui/icons-material/Work";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import InfoIcon from "@mui/icons-material/Info";
+import FinancialInformationTab from "./FinancialInformation.tab"
+import { SubscriptionComponent } from "../../shared/components/Subscription.component";
 
 interface Step {
   id: number;
@@ -63,10 +61,10 @@ export const LandingPageContainer: React.FC<any> = () => {
   const [applicantTwoWorkInfoValid, setApplicantTwoWorkInfoValid] =
     useState<boolean>(false);
 
-  const [applicationOneFinantialValid, setApplicationOneFinantialValid] =
+  const [applicationOneFinancialValid, setApplicationOneFinancialValid] =
     useState<boolean>(false);
 
-  const [applicationTwoFinantialValid, setApplicationTwoFinantialValid] =
+  const [applicationTwoFinancialValid, setApplicationTwoFinancialValid] =
     useState<boolean>(false);
 
   const [applicationGeneralInfoValid, setApplicationGeneralInfoValid] =
@@ -80,17 +78,17 @@ export const LandingPageContainer: React.FC<any> = () => {
 
   const [allowSubmit, setAllowSubmit] = useState<boolean>(false);
 
-  const applicantOnePersonalInforamtionRef = useRef<any>();
+  const applicantOnePersonalInformationRef = useRef<any>();
 
-  const applicantTwoPersonalInforamtionRef = useRef<any>();
+  const applicantTwoPersonalInformationRef = useRef<any>();
 
   const applicantOneWorkInfoRef = useRef<any>();
 
   const applicantTwoWorkInfoRef = useRef<any>();
 
-  const applicationOneFinantialInfoRef = useRef<any>();
+  const applicationOneFinancialInfoRef = useRef<any>();
 
-  const applicationTwoFinantialInfoRef = useRef<any>();
+  const applicationTwoFinancialInfoRef = useRef<any>();
 
   const applicationGeneralInfoRef = useRef<any>();
 
@@ -105,14 +103,14 @@ export const LandingPageContainer: React.FC<any> = () => {
 
   useEffect(() => {
     if (jointLoan) {
-      const valid = applicationOneFinantialValid && applicationTwoFinantialValid
+      const valid = applicationOneFinancialValid && applicationTwoFinancialValid
       setAllowGeneralTab(valid);
       setCompletedStep(2, valid);
     } else {
-      setAllowGeneralTab(applicationOneFinantialValid);
-      setCompletedStep(2, applicationOneFinantialValid);
+      setAllowGeneralTab(applicationOneFinancialValid);
+      setCompletedStep(2, applicationOneFinancialValid);
     }
-  }, [applicationOneFinantialValid, applicationTwoFinantialValid, jointLoan]);
+  }, [applicationOneFinancialValid, applicationTwoFinancialValid, jointLoan]);
 
   useEffect(() => {
     if (jointLoan) {
@@ -141,14 +139,14 @@ export const LandingPageContainer: React.FC<any> = () => {
     { code: "2APP", name: "2 Applicants" },
   ];
 
-  const handlePersonalInforamtionSubmit = () => {
+  const handlePersonalInformationSubmit = () => {
     batch(() => {
-      if (applicantOnePersonalInforamtionRef?.current) {
-        applicantOnePersonalInforamtionRef.current.triggerSubmit();
+      if (applicantOnePersonalInformationRef?.current) {
+        applicantOnePersonalInformationRef.current.triggerSubmit();
       }
 
-      if (applicantTwoPersonalInforamtionRef?.current) {
-        applicantTwoPersonalInforamtionRef.current.triggerSubmit();
+      if (applicantTwoPersonalInformationRef?.current) {
+        applicantTwoPersonalInformationRef.current.triggerSubmit();
       }
     });
     setActiveStep(1);
@@ -168,14 +166,14 @@ export const LandingPageContainer: React.FC<any> = () => {
     setActiveStep(2);
   };
 
-  const handleFinantialInformationSubmit = () => {
+  const handleFinancialInformationSubmit = () => {
     batch(() => {
-      if (applicationOneFinantialInfoRef?.current) {
-        applicationOneFinantialInfoRef.current.triggerSubmit();
+      if (applicationOneFinancialInfoRef?.current) {
+        applicationOneFinancialInfoRef.current.triggerSubmit();
       }
 
-      if (applicationTwoFinantialInfoRef?.current) {
-        applicationTwoFinantialInfoRef.current.triggerSubmit();
+      if (applicationTwoFinancialInfoRef?.current) {
+        applicationTwoFinancialInfoRef.current.triggerSubmit();
       }
     });
 
@@ -204,29 +202,29 @@ export const LandingPageContainer: React.FC<any> = () => {
     applicant: number,
     data: PersonalInformation
   ) => {
-    dispatch(addOrUpdatePersonalInforamtions({ applicantId: applicant, data }));
+    dispatch(addOrUpdatePersonalInformation({ applicantId: applicant, data }));
   };
 
   const onWorkInfoSubmit = (applicant: number, data: WorkInformation) => {
     dispatch(addOrUpdateWorkInformation({ applicantId: applicant, data }));
   };
 
-  const onFinantialInfoSubmit = (applicant: number, data: WorkInformation) => {
-    dispatch(addOrUpdateFinantialInformation({ applicantId: applicant, data }));
+  const onFinancialInfoSubmit = (applicant: number, data: WorkInformation) => {
+    dispatch(addOrUpdateFinancialInformation({ applicantId: applicant, data }));
   };
 
   const onGeneralInfoInfoSubmit = (data: WorkInformation) => {
     dispatch(addOrUpdateGeneralInformation(data));
   };
 
-  const handleSingleApplicantio = () => {
+  const handleSingleApplication = () => {
     setJointLoan(false);
     setApplicantOnePersonalInfoValid(false);
     setApplicantTwoPersonalInfoValid(true);
     setApplicantOneWorkInfoValid(false);
     setApplicantTwoWorkInfoValid(true);
-    setApplicationOneFinantialValid(false);
-    setApplicationTwoFinantialValid(true);
+    setApplicationOneFinancialValid(false);
+    setApplicationTwoFinancialValid(true);
     dispatch(setJoinLoanApplication(false));
     dispatch(removePersonalInformation({ applicantId: 2 }));
     dispatch(removeWorkInformation({ applicantId: 2 }));
@@ -239,8 +237,8 @@ export const LandingPageContainer: React.FC<any> = () => {
     setApplicantOnePersonalInfoValid(false);
     setApplicantOneWorkInfoValid(false);
     setApplicantTwoWorkInfoValid(false);
-    setApplicationOneFinantialValid(false);
-    setApplicationTwoFinantialValid(false);
+    setApplicationOneFinancialValid(false);
+    setApplicationTwoFinancialValid(false);
     dispatch(setJoinLoanApplication(true));
     dispatch(resetGeneralInformation());
   };
@@ -316,7 +314,7 @@ export const LandingPageContainer: React.FC<any> = () => {
               Work
             </StepLabel>
           </Step>
-          <Step key={"finantial"} completed={isStepCompleted(2)}>
+          <Step key={"financial"} completed={isStepCompleted(2)}>
             <StepLabel
               icon={<AttachMoneyIcon />}
               sx={{
@@ -416,7 +414,7 @@ export const LandingPageContainer: React.FC<any> = () => {
                     if (event.target.value === "2APP") {
                       handleJointApplication();
                     } else {
-                      handleSingleApplicantio();
+                      handleSingleApplication();
                     }
                   }}
                 >
@@ -438,7 +436,7 @@ export const LandingPageContainer: React.FC<any> = () => {
                       setApplicantOnePersonalInfoValid(isValid)
                     }
                     onSubmit={(data) => onPersonalInformationSubmit(1, data)}
-                    ref={applicantOnePersonalInforamtionRef}
+                    ref={applicantOnePersonalInformationRef}
                   />
                 </Grid>
                 <Grid size={5.5} offset={1}>
@@ -449,7 +447,7 @@ export const LandingPageContainer: React.FC<any> = () => {
                       setApplicantTwoPersonalInfoValid(isValid)
                     }
                     onSubmit={(data) => onPersonalInformationSubmit(2, data)}
-                    ref={applicantTwoPersonalInforamtionRef}
+                    ref={applicantTwoPersonalInformationRef}
                   />
                 </Grid>
               </Grid>
@@ -458,7 +456,7 @@ export const LandingPageContainer: React.FC<any> = () => {
                 applicant={1}
                 onValid={(isValid) => setApplicantOnePersonalInfoValid(isValid)}
                 onSubmit={(data) => onPersonalInformationSubmit(1, data)}
-                ref={applicantOnePersonalInforamtionRef}
+                ref={applicantOnePersonalInformationRef}
               />
             )}
             <Grid
@@ -467,7 +465,7 @@ export const LandingPageContainer: React.FC<any> = () => {
               sx={{ marginTop: "20px" }}
             >
               <Button
-                onClick={handlePersonalInforamtionSubmit}
+                onClick={handlePersonalInformationSubmit}
                 variant="contained"
                 color="primary"
                 fullWidth
@@ -533,34 +531,34 @@ export const LandingPageContainer: React.FC<any> = () => {
             {jointLoan ? (
               <Grid container size={8} offset={1.5}>
                 <Grid size={5.5}>
-                  <FinantialInformationTab
+                  <FinancialInformationTab
                     key={1}
                     applicant={1}
                     onValid={(isValid) =>
-                      setApplicationOneFinantialValid(isValid)
+                      setApplicationOneFinancialValid(isValid)
                     }
-                    onSubmit={(data) => onFinantialInfoSubmit(1, data)}
-                    ref={applicationOneFinantialInfoRef}
+                    onSubmit={(data) => onFinancialInfoSubmit(1, data)}
+                    ref={applicationOneFinancialInfoRef}
                   />
                 </Grid>
                 <Grid size={5.5} offset={1}>
-                  <FinantialInformationTab
+                  <FinancialInformationTab
                     key={2}
                     applicant={2}
                     onValid={(isValid) =>
-                      setApplicationTwoFinantialValid(isValid)
+                      setApplicationTwoFinancialValid(isValid)
                     }
-                    onSubmit={(data) => onFinantialInfoSubmit(2, data)}
-                    ref={applicationTwoFinantialInfoRef}
+                    onSubmit={(data) => onFinancialInfoSubmit(2, data)}
+                    ref={applicationTwoFinancialInfoRef}
                   />
                 </Grid>
               </Grid>
             ) : (
-              <FinantialInformationTab
+              <FinancialInformationTab
                 applicant={1}
-                onValid={(isValid) => setApplicationOneFinantialValid(isValid)}
-                onSubmit={(data) => onFinantialInfoSubmit(1, data)}
-                ref={applicationOneFinantialInfoRef}
+                onValid={(isValid) => setApplicationOneFinancialValid(isValid)}
+                onSubmit={(data) => onFinancialInfoSubmit(1, data)}
+                ref={applicationOneFinancialInfoRef}
               />
             )}
             <Grid
@@ -569,7 +567,7 @@ export const LandingPageContainer: React.FC<any> = () => {
               sx={{ marginTop: "20px" }}
             >
               <Button
-                onClick={handleFinantialInformationSubmit}
+                onClick={handleFinancialInformationSubmit}
                 variant="contained"
                 color="primary"
                 fullWidth
@@ -609,7 +607,7 @@ export const LandingPageContainer: React.FC<any> = () => {
         )}
       </Grid>
       <Grid size={12} offset={1}>
-        <SubscriptionComponenet />
+        <SubscriptionComponent />
       </Grid>
     </Grid>
   );

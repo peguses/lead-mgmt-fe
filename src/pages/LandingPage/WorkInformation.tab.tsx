@@ -18,25 +18,25 @@ import BusinessIcon from "@mui/icons-material/Business";
 import PhoneIcon from "@mui/icons-material/Phone";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import { Business, LocationOn, MailOutline } from "@mui/icons-material";
-import { AustralienState } from "../../shared/constants/AustralienState.constant";
 import { forwardRef, useEffect, useImperativeHandle } from "react";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers";
 import { useAppSelector } from "../../shared/redux/hooks";
 import { WorkInformation } from "../../shared/redux/applicant.slice";
+import { AustralianState } from "../../shared/constants/AustralianState.constant";
 
-interface WorkInforamtionProps {
+interface WorkInformationProps {
   applicant: number;
   onSubmit: (data: any) => void;
   onValid: (isValid: boolean) => void;
 }
 
 const WorkInformationTab = forwardRef(
-  ({ applicant, onSubmit, onValid }: WorkInforamtionProps, ref) => {
+  ({ applicant, onSubmit, onValid }: WorkInformationProps, ref) => {
     const workInformation = useAppSelector(
       (state): WorkInformation | undefined => {
-        return state?.application?.workInformations?.find(
+        return state?.application?.workInformation?.find(
           (app) => app.applicantId === applicant
         );
       }
@@ -81,26 +81,26 @@ const WorkInformationTab = forwardRef(
           fullWidth
           size="small"
           sx={{ marginTop: "20px" }}
-          error={Boolean(errors.employementType)}
+          error={Boolean(errors.employmentType)}
         >
-          <InputLabel htmlFor="employementType-label" id="employementType" shrink>
-            Employement type
+          <InputLabel htmlFor="employmentType-label" id="employmentType" shrink>
+            Employment type
           </InputLabel>
           <Controller
-            name="employementType"
+            name="employmentType"
             control={control}
             defaultValue=""
-            rules={{ required: "Employement type is requried" }}
+            rules={{ required: "Employment type is required" }}
             render={({ field }) => (
               <Select
-                id="employementType"
-                labelId="employementType-label"
-                label="Employement type"
+                id="employmentType"
+                labelId="employmentType-label"
+                label="Employment type"
                 {...field}
                 displayEmpty
                 style={{ height: "36px" }}
                 onChange={(e) => {
-                  clearErrors("employementType");
+                  clearErrors("employmentType");
                   field.onChange(e);
                 }}
               >
@@ -112,9 +112,9 @@ const WorkInformationTab = forwardRef(
               </Select>
             )}
           />
-          {errors.employementType && (
+          {errors.employmentType && (
             <FormHelperText>
-              {String(errors.employementType?.message)}
+              {String(errors.employmentType?.message)}
             </FormHelperText>
           )}
         </FormControl>
@@ -227,7 +227,7 @@ const WorkInformationTab = forwardRef(
             required: "Employer phone number is required",
             pattern: {
               value: /^(04\d{8}|(02|03|07|08)\d{8})$/,
-              message: "Enter valied australien phone number",
+              message: "Enter valid australian phone number",
             },
           })}
           error={!!errors.employerPhoneNumber}
@@ -295,9 +295,9 @@ const WorkInformationTab = forwardRef(
           variant="outlined"
           fullWidth
           size="small"
-          label="Australien ABN"
+          label="Australian ABN"
           {...register("employerABN", {
-            required: "Australien ABN is required",
+            required: "Australian ABN is required",
             pattern: {
               value: /^\d{11}$/,
               message: "Entered value does not match ABN format",
@@ -307,7 +307,7 @@ const WorkInformationTab = forwardRef(
           helperText={
             errors.employerABN ? String(errors.employerABN.message) : ""
           }
-          placeholder={"Australien ABN"}
+          placeholder={"Australian ABN"}
           slotProps={{
             input: {
               startAdornment: (
@@ -333,7 +333,7 @@ const WorkInformationTab = forwardRef(
           size="small"
           label="Employer Address"
           {...register("employerAddress", {
-            required: "Employee address is requried",
+            required: "Employee address is required",
           })}
           error={!!errors.employerAddress}
           helperText={
@@ -365,7 +365,7 @@ const WorkInformationTab = forwardRef(
           size="small"
           label="Employer suburb"
           {...register("employerSuburb", {
-            required: "Employee suburb is requried",
+            required: "Employee suburb is required",
           })}
           error={!!errors.employerSuburb}
           helperText={
@@ -417,7 +417,7 @@ const WorkInformationTab = forwardRef(
                   field.onChange(e);
                 }}
               >
-                {AustralienState.map((stateObj) => (
+                {AustralianState.map((stateObj) => (
                   <MenuItem key={stateObj.code} value={stateObj.code}>
                     {stateObj.name}
                   </MenuItem>
@@ -436,7 +436,7 @@ const WorkInformationTab = forwardRef(
           fullWidth
           size="small"
           {...register("employerPostCode", {
-            required: "Post code is requried",
+            required: "Post code is required",
           })}
           error={!!errors.employerPostCode}
           helperText={
@@ -462,29 +462,29 @@ const WorkInformationTab = forwardRef(
           fullWidth
           size="small"
           sx={{ marginTop: "20px" }}
-          error={Boolean(errors.currentEmployementStartDate)}
+          error={Boolean(errors.currentEmploymentStartDate)}
         >
           <LocalizationProvider dateAdapter={AdapterDateFns}>
             <Controller
               defaultValue=""
-              name="currentEmployementStartDate"
+              name="currentEmploymentStartDate"
               control={control}
-              rules={{ required: "Employement start date is required" }}
+              rules={{ required: "Employment start date is required" }}
               render={({ field }) => (
                 <DatePicker
                   {...field}
-                  label="Employement start date"
+                  label="Employment start date"
                   value={field.value}
                   onChange={(e) => {
-                    clearErrors("currentEmployementStartDate");
+                    clearErrors("currentEmploymentStartDate");
                     field.onChange(e);
                   }}
                 />
               )}
             />
-            {errors.currentEmployementStartDate && (
+            {errors.currentEmploymentStartDate && (
               <FormHelperText>
-                {String(errors.currentEmployementStartDate?.message)}
+                {String(errors.currentEmploymentStartDate?.message)}
               </FormHelperText>
             )}
           </LocalizationProvider>
@@ -492,7 +492,7 @@ const WorkInformationTab = forwardRef(
         <Typography
           sx={{ marginTop: "20px", fontSize: "14px", fontWeight: 700 }}
         >
-          Probaton
+          Probation
         </Typography>
         <FormControl error={Boolean(errors.probationaryEmployee)}>
           <Controller

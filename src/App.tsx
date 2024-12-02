@@ -2,26 +2,26 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Box } from "@mui/material";
 import './App.css';
 import { useEffect, useState } from 'react';
-import { ApplicationNavbarComponent } from "./shared/components/ApplicationNavbar.componenet";
 import { ApplicationDrawerComponent } from "./shared/components/ApplicationDrawer.component";
 import { LandingPageContainer } from "./pages/LandingPage/LandingPage.container";
-import { InqueryStatusViewContainer } from "./pages/InqueryStatusView.container";
-import { LeadViewContainer } from "./pages/LeadView.container";
+import { ApplicationListContainer } from "./pages/Applications/ApplicationList.container";
 import { UserViewContainer } from "./pages/UserView.container";
-import { ReferalManagerViewContainer } from "./pages/ReferalManagerView.container";
-import { ApplicatiopnFooterComponenet } from "./shared/components/ApplicationFooter.component";
 import { useDispatch } from "react-redux";
-import { resetFinantialInforamtions, resetGeneralInformation, resetPersonalInforamtions, resetWorkInforamtions } from "./shared/redux/applicant.slice";
+import { resetFinancialInformation, resetGeneralInformation, resetPersonalInformation, resetWorkInformation } from "./shared/redux/applicant.slice";
+import { InquiryStatusViewContainer } from "./pages/InquiryStatusView.container";
+import { ReferralManagerViewContainer } from "./pages/ReferralManagerView.container";
+import { ApplicationNavbarComponent } from "./shared/components/ApplicationNavbar.component";
+import { ApplicationFooterComponent } from "./shared/components/ApplicationFooter.component";
 
 function App() {
   const [open, setOpen] = useState(false);
 
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(resetPersonalInforamtions());
-    dispatch(resetPersonalInforamtions());
-    dispatch(resetWorkInforamtions());
-    dispatch(resetFinantialInforamtions());
+    dispatch(resetPersonalInformation());
+    dispatch(resetPersonalInformation());
+    dispatch(resetWorkInformation());
+    dispatch(resetFinancialInformation());
     dispatch(resetGeneralInformation())
   }, [dispatch]);
   
@@ -33,13 +33,13 @@ function App() {
         <Box component="main" sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 ,  marginTop: "74px", marginBottom: "74px", zIndex: 0 }}>
           <Routes>
             <Route path="/" element={<LandingPageContainer />} />
-            <Route path="/inquery-status" element={<InqueryStatusViewContainer />} />
-            <Route path="/lead-view" element={<LeadViewContainer />} />
+            <Route path="/inquiry-status" element={<InquiryStatusViewContainer />} />
+            <Route path="/lead-view" element={<ApplicationListContainer />} />
             <Route path="/user-view" element={<UserViewContainer />} />
-            <Route path="/referal-manager-view" element={<ReferalManagerViewContainer />} />
+            <Route path="/referral-manager-view" element={<ReferralManagerViewContainer />} />
           </Routes>
         </Box>
-        <ApplicatiopnFooterComponenet/>
+        <ApplicationFooterComponent/>
       </Box>
     </Router>
   );
