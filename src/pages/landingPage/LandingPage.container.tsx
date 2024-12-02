@@ -1,12 +1,14 @@
 import {
+  Box,
   Button,
   FormControl,
   Grid2 as Grid,
+  IconButton,
   InputLabel,
   MenuItem,
   Select,
   Step,
-  StepButton,
+  StepLabel,
   Stepper,
 } from "@mui/material";
 import React, { Fragment, useEffect, useRef, useState } from "react";
@@ -30,7 +32,17 @@ import { useAppSelector } from "../../shared/redux/hooks";
 import FinantialInformationTab from "./FinantialInformation.tab";
 import GeneralInformationTab from "./GeneralInformation.tab";
 import ArrowCircleRightOutlinedIcon from "@mui/icons-material/ArrowCircleRightOutlined";
+import ArrowCircleLeftOutlinedIcon from "@mui/icons-material/ArrowCircleLeftOutlined";
 import CheckCircleOutlineOutlinedIcon from "@mui/icons-material/CheckCircleOutlineOutlined";
+import PersonIcon from "@mui/icons-material/Person";
+import WorkIcon from "@mui/icons-material/Work";
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import InfoIcon from "@mui/icons-material/Info";
+
+interface Step {
+  id: number;
+  completed: boolean;
+}
 
 export const LandingPageContainer: React.FC<any> = () => {
   const dispatch = useDispatch();
@@ -82,50 +94,44 @@ export const LandingPageContainer: React.FC<any> = () => {
 
   const applicationGeneralInfoRef = useRef<any>();
 
-  const steps = ["Personal", "Work", "Financial", "General"];
-
-  const [completed, setCompleted] = React.useState<{
-    [k: number]: boolean;
-  }>({});
-
-  const applicants = useAppSelector((state): WorkInformation[] => {
-    return state.application.workInformations;
-  });
-
-  useEffect(() => {
-    console.log(applicants);
-  }, [applicants]);
+  const [completed, setCompleted] = useState<Step[]>(
+    [{id: 0, completed: false}, {id: 1, completed: false}, {id: 2, completed: false}, {id: 3, completed: false}]
+  );
 
   useEffect(() => {
     setAllowSubmit(applicationGeneralInfoValid);
+    setCompletedStep(3, applicationGeneralInfoValid);
   }, [applicationGeneralInfoValid]);
 
   useEffect(() => {
     if (jointLoan) {
-      setAllowGeneralTab(
-        applicationOneFinantialValid && applicationTwoFinantialValid
-      );
+      const valid = applicationOneFinantialValid && applicationTwoFinantialValid
+      setAllowGeneralTab(valid);
+      setCompletedStep(2, valid);
     } else {
       setAllowGeneralTab(applicationOneFinantialValid);
+      setCompletedStep(2, applicationOneFinantialValid);
     }
   }, [applicationOneFinantialValid, applicationTwoFinantialValid, jointLoan]);
 
   useEffect(() => {
     if (jointLoan) {
-      setAllowFinancialTab(
-        applicantOneWorkInfoValid && applicantTwoWorkInfoValid
-      );
+      const valid = applicantOneWorkInfoValid && applicantTwoWorkInfoValid;
+      setAllowFinancialTab(valid);
+      setCompletedStep(1, valid);
     } else {
+      setCompletedStep(1, applicantOneWorkInfoValid);
       setAllowFinancialTab(applicantOneWorkInfoValid);
     }
   }, [applicantOneWorkInfoValid, applicantTwoWorkInfoValid, jointLoan]);
 
   useEffect(() => {
     if (jointLoan) {
-      setAllowWorkTab(
-        applicantOnePersonalInfoValid && applicantTwoPersonalInfoValid
-      );
+      const valid = applicantOnePersonalInfoValid && applicantTwoPersonalInfoValid
+      setAllowWorkTab(valid);
+      setCompletedStep(0, valid);
     } else {
+      setCompletedStep(0, applicantOnePersonalInfoValid);
       setAllowWorkTab(applicantOnePersonalInfoValid);
     }
   }, [applicantOnePersonalInfoValid, applicantTwoPersonalInfoValid, jointLoan]);
@@ -134,14 +140,6 @@ export const LandingPageContainer: React.FC<any> = () => {
     { code: "1APP", name: "1 Applicant" },
     { code: "2APP", name: "2 Applicants" },
   ];
-
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
-    setActiveStep(newValue);
-  };
-
-  const handleStep = (step: number) => () => {
-    setActiveStep(step);
-  };
 
   const handlePersonalInforamtionSubmit = () => {
     batch(() => {
@@ -182,6 +180,16 @@ export const LandingPageContainer: React.FC<any> = () => {
     });
 
     setActiveStep(3);
+  };
+
+  const setCompletedStep = (step: number, state: boolean) => {
+    const steps = completed.map((s: Step) => {
+      if (s.id === step) {
+        return {...s, completed: state};
+      }
+      return s;
+    });
+    setCompleted(steps);
   };
 
   const handleSubmit = () => {
@@ -237,27 +245,152 @@ export const LandingPageContainer: React.FC<any> = () => {
     dispatch(resetGeneralInformation());
   };
 
+  const handleBack = () => {
+    setActiveStep(activeStep !== 0 ? activeStep-1 : 0);
+  }
+
+  const stepColor = (step: number) => {
+    let color: string = "text.secondary";
+    if (activeStep === step) {
+      color = "primary.main";
+    }
+
+    if (isStepCompleted(step)) {
+      color = "success.main";
+    }
+
+    return {
+      color,
+      ".MuiStepLabel-label.Mui-active": {
+        color,
+      },
+      ".MuiStepLabel-label.Mui-completed": {
+        color,
+      },
+    };
+  };
+
+  const isStepCompleted =(step: number): boolean | undefined => {
+    return completed.find((s) => s.id === step)?.completed;
+  }
+
   return (
     <Grid container size={jointLoan ? 12 : 4} offset={jointLoan ? 12 : 4}>
-      <Grid 
-       size={jointLoan ? 12 : { xl: 5, lg: 6, md: 6, sm: 8, xs: 8 }}
-       offset={jointLoan ? 1 : { xl: 3.5, lg: 3, md: 3, sm: 2, xs: 2 }}
-       sx={{ marginTop: "5px", marginBottom: "20px" }}
+      <Grid
+        size={
+          jointLoan && activeStep !== 3
+            ? 7.5
+            : { xl: 5, lg: 6, md: 6, sm: 8, xs: 8 }
+        }
+        offset={
+          jointLoan && activeStep !== 3
+            ? 2.25
+            : { xl: 3.5, lg: 3, md: 3, sm: 2, xs: 2 }
+        }
+        sx={{ marginTop: "5px", marginBottom: "20px" }}
       >
         <Stepper nonLinear activeStep={activeStep}>
-          {steps.map((label, index) => (
-            <Step key={label} completed={completed[index]}>
-              <StepButton color="inherit" onClick={handleStep(index)}>
-                {label}
-              </StepButton>
-            </Step>
-          ))}
+          <Step key={"personal"} completed={isStepCompleted(0)}>
+            <StepLabel
+              icon={<PersonIcon />}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                ...stepColor(0),
+              }}
+            >
+              Personal
+            </StepLabel>
+          </Step>
+          <Step key={"work"} completed={isStepCompleted(1)}>
+            <StepLabel
+              icon={<WorkIcon />}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                ...stepColor(1),
+              }}
+            >
+              Work
+            </StepLabel>
+          </Step>
+          <Step key={"finantial"} completed={isStepCompleted(2)}>
+            <StepLabel
+              icon={<AttachMoneyIcon />}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                ...stepColor(2),
+              }}
+            >
+              Financial
+            </StepLabel>
+          </Step>
+          <Step key={"general"} completed={isStepCompleted(3)}>
+            <StepLabel
+              icon={<InfoIcon />}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                ...stepColor(3),
+              }}
+            >
+              General
+            </StepLabel>
+          </Step>
         </Stepper>
       </Grid>
       <Grid
-        sx={{marginTop: "20px"}}
-        size={jointLoan ? 12 : { xl: 5, lg: 6, md: 6, sm: 8, xs: 8 }}
-        offset={jointLoan ? 1 : { xl: 3.5, lg: 3, md: 3, sm: 2, xs: 2 }}
+        sx={{ marginTop: "5px" }}
+        size={
+          jointLoan
+            ? 7.5
+            : { xl: 5, lg: 6, md: 6, sm: 8, xs: 8 }
+        }
+        offset={
+          jointLoan
+            ? 2.25
+            : { xl: 3.5, lg: 3, md: 3, sm: 2, xs: 2 }
+        }
+      >
+        <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
+          <Button 
+             sx={{
+              textTransform: 'none',
+              color: 'primary.main'
+            }}
+            startIcon={<ArrowCircleLeftOutlinedIcon />} 
+            variant="text"
+            disableRipple
+            onClick={handleBack}
+            >
+          Back
+          </Button>
+          <Box
+            sx={{
+              flexGrow: 1,
+              height: "1px",
+              backgroundColor: "gray",
+            }}
+          />
+        </Box>
+      </Grid>
+      <Grid
+        sx={{ marginTop: "20px" }}
+        size={
+          jointLoan && activeStep !== 3
+            ? 12
+            : { xl: 5, lg: 6, md: 6, sm: 8, xs: 8 }
+        }
+        offset={
+          jointLoan && activeStep !== 3
+            ? 1
+            : { xl: 3.5, lg: 3, md: 3, sm: 2, xs: 2 }
+        }
       >
         {activeStep === 0 && (
           <Fragment>

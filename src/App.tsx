@@ -19,6 +19,7 @@ function App() {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(resetPersonalInforamtions());
+    dispatch(resetPersonalInforamtions());
     dispatch(resetWorkInforamtions());
     dispatch(resetFinantialInforamtions());
     dispatch(resetGeneralInformation())
