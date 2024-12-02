@@ -18,13 +18,13 @@ import { GeneralInformation } from "../redux/application.slice";
 import { useAppSelector } from "../redux/hooks";
 
 interface GeneralInformationProps {
-  applicant: number;
-  onSubmit: (data: any) => void;
-  onValid: (isValid: boolean) => void;
+  onSubmit?: (data: any) => void;
+  onValid?: (isValid: boolean) => void;
+  readonly?: boolean;
 }
 
 const GeneralInformationTab = forwardRef(
-  ({ applicant, onSubmit, onValid }: GeneralInformationProps, ref) => {
+  ({ onSubmit, onValid, readonly = false}: GeneralInformationProps, ref) => {
 
     const [hasOfferForProperty, setHasOfferForProperty] =
       useState<boolean>(false);
@@ -43,7 +43,9 @@ const GeneralInformationTab = forwardRef(
     });
 
     const triggerSubmit = () => {
-      handleSubmit(onSubmit)();
+      if (!readonly && onSubmit) {
+        handleSubmit(onSubmit)();
+      }
     };
 
     useImperativeHandle(ref, () => ({
@@ -51,7 +53,9 @@ const GeneralInformationTab = forwardRef(
     }));
 
     useEffect(() => {
-      onValid(isValid && !!errors);
+      if (!readonly && onValid) {
+        onValid(isValid && !!errors);
+      }
     }, [isValid, errors]);
 
     return (

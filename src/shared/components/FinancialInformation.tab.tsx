@@ -21,8 +21,8 @@ import { useAppSelector } from "../redux/hooks";
 
 interface FinancialInformationProps {
   applicant: string;
-  onSubmit: (data: any) => void;
-  onValid: (isValid: boolean) => void;
+  onSubmit?: (data: any) => void;
+  onValid?: (isValid: boolean) => void;
   readonly?: boolean
 }
 
@@ -48,7 +48,9 @@ const FinancialInformationTab = forwardRef(
     const [hasDefaulted, setHasDefaulted] = useState<boolean>(false);
 
     const triggerSubmit = () => {
-      handleSubmit(onSubmit)();
+      if (!readonly && onSubmit) {
+        handleSubmit(onSubmit)();
+      }
     };
 
     useImperativeHandle(ref, () => ({
@@ -56,7 +58,9 @@ const FinancialInformationTab = forwardRef(
     }));
 
     useEffect(() => {
-      onValid(isValid && !!errors);
+      if (!readonly && onValid) {
+        onValid(isValid && !!errors);
+      }
     }, [isValid, errors]);
 
     return (

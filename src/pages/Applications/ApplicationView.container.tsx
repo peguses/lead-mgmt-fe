@@ -22,9 +22,9 @@ import PersonIcon from "@mui/icons-material/Person";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import InfoIcon from "@mui/icons-material/Info";
 import FinancialInformationTab from "../../shared/components/FinancialInformation.tab"
-import { SubscriptionComponent } from "../../shared/components/Subscription.component";
 import { useParams } from 'react-router-dom';
 import { setJoinLoanApplication, WorkInformation } from "../../shared/redux/application.slice";
+import { useAppSelector } from "../../shared/redux/hooks";
 
 interface Step {
   id: number;
@@ -38,7 +38,9 @@ export const ApplicationViewContainer: React.FC<any> = () => {
 
   const [activeStep, setActiveStep] = useState<number>(0);
 
-  const [jointLoan, setJointLoan] = useState<boolean>(false);
+  const jointLoan = useAppSelector((state) => {
+    return state.application.jointLoan
+  });
 
   const [applicantOnePersonalInfoValid, setApplicantOnePersonalInfoValid] =
     useState<boolean>(false);
@@ -68,18 +70,6 @@ export const ApplicationViewContainer: React.FC<any> = () => {
   const [allowGeneralTab, setAllowGeneralTab] = useState<boolean>(false);
 
   const [allowSubmit, setAllowSubmit] = useState<boolean>(false);
-
-  const applicantOnePersonalInformationRef = useRef<any>();
-
-  const applicantTwoPersonalInformationRef = useRef<any>();
-
-  const applicantOneWorkInfoRef = useRef<any>();
-
-  const applicantTwoWorkInfoRef = useRef<any>();
-
-  const applicationOneFinancialInfoRef = useRef<any>();
-
-  const applicationTwoFinancialInfoRef = useRef<any>();
 
   const applicationGeneralInfoRef = useRef<any>();
 
@@ -131,43 +121,14 @@ export const ApplicationViewContainer: React.FC<any> = () => {
   ];
 
   const handlePersonalInformationSubmit = () => {
-    batch(() => {
-      if (applicantOnePersonalInformationRef?.current) {
-        applicantOnePersonalInformationRef.current.triggerSubmit();
-      }
-
-      if (applicantTwoPersonalInformationRef?.current) {
-        applicantTwoPersonalInformationRef.current.triggerSubmit();
-      }
-    });
     setActiveStep(1);
   };
 
   const handleWorkInformationSubmit = () => {
-    batch(() => {
-      if (applicantOneWorkInfoRef?.current) {
-        applicantOneWorkInfoRef.current.triggerSubmit();
-      }
-
-      if (applicantTwoWorkInfoRef?.current) {
-        applicantTwoWorkInfoRef.current.triggerSubmit();
-      }
-    });
-
     setActiveStep(5);
   };
 
   const handleFinancialInformationSubmit = () => {
-    batch(() => {
-      if (applicationOneFinancialInfoRef?.current) {
-        applicationOneFinancialInfoRef.current.triggerSubmit();
-      }
-
-      if (applicationTwoFinancialInfoRef?.current) {
-        applicationTwoFinancialInfoRef.current.triggerSubmit();
-      }
-    });
-
     setActiveStep(2);
   };
 
@@ -187,40 +148,6 @@ export const ApplicationViewContainer: React.FC<any> = () => {
         applicationGeneralInfoRef.current.triggerSubmit();
       }
     });
-  };
-
-  const onFinancialInfoSubmit = (applicant: number, data: WorkInformation) => {
-    // dispatch(addOrUpdateFinancialInformation({ applicantId: applicant, data }));
-  };
-
-  const onGeneralInfoInfoSubmit = (data: WorkInformation) => {
-    // dispatch(addOrUpdateGeneralInformation(data));
-  };
-
-  const handleSingleApplication = () => {
-    setJointLoan(false);
-    setApplicantOnePersonalInfoValid(false);
-    setApplicantTwoPersonalInfoValid(true);
-    setApplicantOneWorkInfoValid(false);
-    setApplicantTwoWorkInfoValid(true);
-    setApplicationOneFinancialValid(false);
-    setApplicationTwoFinancialValid(true);
-    dispatch(setJoinLoanApplication(false));
-    // dispatch(removePersonalInformation({ applicantId: 2 }));
-    // dispatch(removeWorkInformation({ applicantId: 2 }));
-    // dispatch(resetGeneralInformation());
-  };
-
-  const handleJointApplication = () => {
-    setJointLoan(true);
-    setApplicantTwoPersonalInfoValid(false);
-    setApplicantOnePersonalInfoValid(false);
-    setApplicantOneWorkInfoValid(false);
-    setApplicantTwoWorkInfoValid(false);
-    setApplicationOneFinancialValid(false);
-    setApplicationTwoFinancialValid(false);
-    dispatch(setJoinLoanApplication(true));
-    // dispatch(resetGeneralInformation());
   };
 
   const handleBack = () => {
@@ -377,13 +304,6 @@ export const ApplicationViewContainer: React.FC<any> = () => {
                   value={jointLoan === true ? "2APP" : "1APP"}
                   displayEmpty
                   style={{ height: "36px" }}
-                  onChange={(event) => {
-                    if (event.target.value === "2APP") {
-                      handleJointApplication();
-                    } else {
-                      handleSingleApplication();
-                    }
-                  }}
                 >
                   {applicantStatus.map((stateObj) => (
                     <MenuItem key={stateObj.code} value={stateObj.code}>
@@ -485,31 +405,18 @@ export const ApplicationViewContainer: React.FC<any> = () => {
                   <FinancialInformationTab
                     key={1}
                     applicant={"primaryApplicant"}
-                    onValid={(isValid) =>
-                      setApplicationOneFinancialValid(isValid)
-                    }
-                    onSubmit={(data) => onFinancialInfoSubmit(1, data)}
-                    ref={applicationOneFinancialInfoRef}
                   />
                 </Grid>
                 <Grid size={5.5} offset={1}>
                   <FinancialInformationTab
                     key={2}
                     applicant={"secondaryApplicant"}
-                    onValid={(isValid) =>
-                      setApplicationTwoFinancialValid(isValid)
-                    }
-                    onSubmit={(data) => onFinancialInfoSubmit(2, data)}
-                    ref={applicationTwoFinancialInfoRef}
                   />
                 </Grid>
               </Grid>
             ) : (
               <FinancialInformationTab
                 applicant={"primaryApplicant"}
-                onValid={(isValid) => setApplicationOneFinancialValid(isValid)}
-                onSubmit={(data) => onFinancialInfoSubmit(1, data)}
-                ref={applicationOneFinancialInfoRef}
               />
             )}
             <Grid
@@ -532,12 +439,7 @@ export const ApplicationViewContainer: React.FC<any> = () => {
         )}
         {activeStep === 2 && (
           <Fragment>
-            <GeneralInformationTab
-              applicant={1}
-              onValid={(isValid) => setApplicationGeneralInfoValid(isValid)}
-              onSubmit={(data) => onGeneralInfoInfoSubmit(data)}
-              ref={applicationGeneralInfoRef}
-            />
+            <GeneralInformationTab/>
             <Grid
               size={jointLoan ? 2 : 3}
               offset={jointLoan ? 10 : 9}

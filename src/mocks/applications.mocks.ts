@@ -4,8 +4,8 @@ export const data = [
     referrer: "Yashith",
     referrerId: "001",
     jointLoan: true,
-    personalInformation: [
-        {
+    primaryApplicant: {
+        personalInformation: {
             firstName: "Jayan",
             lastName: "Wadusinghearachchi",
             mobile: "0412345678",
@@ -16,25 +16,8 @@ export const data = [
             firstTimeBuyer: true,
             stateCapitalCityBuyer: true,
             buyerAgreedToConnectWithAgent: false,
-            applicantId: 1,
         },
-        {
-            firstName: "Prabashi",
-            lastName: "Thennakoon",
-            mobile: "0412345678",
-            email: "prabashi.aye@gmail.com",
-            state: "NSW",
-            residencyStatus: "AC",
-            investmentType: "buy_established_home_to_live",
-            firstTimeBuyer: true,
-            stateCapitalCityBuyer: true,
-            buyerAgreedToConnectWithAgent: false,
-            applicantId: 2,
-        }
-    ],
-    financialInformation: [
-        {
-            applicantId: 1,
+        financialInformation: {
             annualIncome: 35000,
             lengthOfEmployment: 5,
             totalAmountSaved: 50000,
@@ -50,9 +33,22 @@ export const data = [
             wereBankrupted: false,
             hasDefaulted: true,
             defaultedReason: "test",
+        }
+    },
+    secondaryApplicant: {
+        personalInformation: {
+            firstName: "Prabashi",
+            lastName: "Thennakoon",
+            mobile: "0412345678",
+            email: "prabashi.aye@gmail.com",
+            state: "NSW",
+            residencyStatus: "AC",
+            investmentType: "buy_established_home_to_live",
+            firstTimeBuyer: true,
+            stateCapitalCityBuyer: true,
+            buyerAgreedToConnectWithAgent: false,
         },
-         {
-            applicantId: 2,
+        financialInformation: {
             annualIncome: 35000,
             lengthOfEmployment: 5,
             totalAmountSaved: 60000,
@@ -69,7 +65,7 @@ export const data = [
             hasDefaulted: false,
             defaultedReason: null,
         }
-    ],
+    },
     generalInformation: {
         numberOfDependant: 2,
         hasPropertyOffer: true,
@@ -85,8 +81,8 @@ export const data = [
     referrer: "Lochana",
     referrerId: "001",
     jointLoan: true,
-    personalInformation: [
-        {
+    primaryApplicant: {
+        personalInformation: {
             firstName: "Jayan",
             lastName: "Wadusinghearachchi",
             mobile: "0412345678",
@@ -97,25 +93,8 @@ export const data = [
             firstTimeBuyer: true,
             stateCapitalCityBuyer: true,
             buyerAgreedToConnectWithAgent: false,
-            applicantId: 1,
         },
-        {
-            firstName: "Prabashi",
-            lastName: "Thennakoon",
-            mobile: "0412345678",
-            email: "prabashi.aye@gmail.com",
-            state: "NSW",
-            residencyStatus: "AC",
-            investmentType: "buy_established_home_to_live",
-            firstTimeBuyer: true,
-            stateCapitalCityBuyer: true,
-            buyerAgreedToConnectWithAgent: false,
-            applicantId: 2,
-        }
-    ],
-    financialInformation: [
-        {
-            applicantId: 1,
+        financialInformation: {
             annualIncome: 35000,
             lengthOfEmployment: 5,
             totalAmountSaved: 50000,
@@ -131,9 +110,22 @@ export const data = [
             wereBankrupted: false,
             hasDefaulted: true,
             defaultedReason: "test",
+        }
+    },
+    secondaryApplicant: {
+        personalInformation: {
+            firstName: "Prabashi",
+            lastName: "Thennakoon",
+            mobile: "0412345678",
+            email: "prabashi.aye@gmail.com",
+            state: "NSW",
+            residencyStatus: "AC",
+            investmentType: "buy_established_home_to_live",
+            firstTimeBuyer: true,
+            stateCapitalCityBuyer: true,
+            buyerAgreedToConnectWithAgent: false,
         },
-         {
-            applicantId: 2,
+        financialInformation: {
             annualIncome: 35000,
             lengthOfEmployment: 5,
             totalAmountSaved: 60000,
@@ -150,7 +142,7 @@ export const data = [
             hasDefaulted: false,
             defaultedReason: null,
         }
-    ],
+    },
     generalInformation: {
         numberOfDependant: 2,
         hasPropertyOffer: true,

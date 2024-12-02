@@ -602,7 +602,6 @@ export const LandingPageContainer: React.FC<any> = () => {
         {activeStep === 2 && (
           <Fragment>
             <GeneralInformationTab
-              applicant={1}
               onValid={(isValid) => setApplicationGeneralInfoValid(isValid)}
               onSubmit={(data) => onGeneralInfoInfoSubmit(data)}
               ref={applicationGeneralInfoRef}

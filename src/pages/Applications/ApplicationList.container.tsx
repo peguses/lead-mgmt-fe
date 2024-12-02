@@ -141,8 +141,7 @@ export const ApplicationListContainer: React.FC<any> = () => {
                     </TableCell>
                     <TableCell align="left">
                       {
-                        row.personalInformation.find((p) => p.applicantId === 1)
-                          ?.firstName
+                       `${ row.primaryApplicant.personalInformation.firstName} ${ row.primaryApplicant.personalInformation.lastName}`
                       }
                     </TableCell>
                     <TableCell align="left">{row.referrer}</TableCell>
