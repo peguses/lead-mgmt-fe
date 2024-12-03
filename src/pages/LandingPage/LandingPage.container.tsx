@@ -39,6 +39,7 @@ import {
   setJoinLoanApplication,
   WorkInformation,
 } from "../../shared/redux/application.slice";
+import { useAppSelector } from "../../shared/redux/hooks";
 
 interface Step {
   id: number;
@@ -101,6 +102,16 @@ export const LandingPageContainer: React.FC<any> = () => {
     { id: 2, completed: false },
     { id: 3, completed: false },
   ]);
+
+  const applicantInformation = useAppSelector(
+    (state): PersonalInformation | undefined => {
+      return state?.loan.application.primaryApplicant?.personalInformation
+    }
+  );
+
+  useEffect(() => {
+    console.log(applicantInformation);
+  },[applicantInformation]);
 
   useEffect(() => {
     setAllowSubmit(applicationGeneralInfoValid);
@@ -292,12 +303,12 @@ export const LandingPageContainer: React.FC<any> = () => {
     <Grid container size={jointLoan ? 12 : 4} offset={jointLoan ? 12 : 4}>
       <Grid
         size={
-          jointLoan && activeStep !== 3
+          jointLoan && activeStep !== 2
             ? 7.5
             : { xl: 5, lg: 6, md: 6, sm: 8, xs: 8 }
         }
         offset={
-          jointLoan && activeStep !== 3
+          jointLoan && activeStep !== 2
             ? 2.25
             : { xl: 3.5, lg: 3, md: 3, sm: 2, xs: 2 }
         }
@@ -361,12 +372,12 @@ export const LandingPageContainer: React.FC<any> = () => {
       <Grid
         sx={{ marginTop: "5px" }}
         size={
-          jointLoan && activeStep !== 3
+          jointLoan && activeStep !== 2
             ? 7.5
             : { xl: 5, lg: 6, md: 6, sm: 8, xs: 8 }
         }
         offset={
-          jointLoan && activeStep !== 3
+          jointLoan && activeStep !== 2
             ? 2.25
             : { xl: 3.5, lg: 3, md: 3, sm: 2, xs: 2 }
         }
@@ -396,12 +407,12 @@ export const LandingPageContainer: React.FC<any> = () => {
       <Grid
         sx={{ marginTop: "20px" }}
         size={
-          jointLoan && activeStep !== 3
+          jointLoan && activeStep !== 2
             ? 12
             : { xl: 5, lg: 6, md: 6, sm: 8, xs: 8 }
         }
         offset={
-          jointLoan && activeStep !== 3
+          jointLoan && activeStep !== 2
             ? 1
             : { xl: 3.5, lg: 3, md: 3, sm: 2, xs: 2 }
         }

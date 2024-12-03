@@ -24,12 +24,17 @@ interface GeneralInformationProps {
 }
 
 const GeneralInformationTab = forwardRef(
-  ({ onSubmit, onValid, readonly = false}: GeneralInformationProps, ref) => {
-
+  ({ onSubmit, onValid, readonly = false }: GeneralInformationProps, ref) => {
     const [hasOfferForProperty, setHasOfferForProperty] =
       useState<boolean>(false);
 
-    const generalInformation = useAppSelector((state): GeneralInformation | undefined =>  state?.loan.application?.generalInformation);
+    const [hasAcceptAgreement, setHasAcceptAgreement] =
+      useState<boolean>(false);
+
+    const generalInformation = useAppSelector(
+      (state): GeneralInformation | undefined =>
+        state?.loan.application?.generalInformation
+    );
 
     const {
       control,
@@ -39,7 +44,16 @@ const GeneralInformationTab = forwardRef(
       clearErrors,
     } = useForm<any>({
       mode: "all",
-      defaultValues: generalInformation,
+      defaultValues: generalInformation
+        ? generalInformation
+        : {
+            numberOfDependant: "",
+            hasPropertyOffer: "",
+            propertyOfferElaboration: "",
+            applicantOptionalNote: "",
+            referralOption: "",
+            applicantsAgreedOnConditions: "",
+          },
     });
 
     const triggerSubmit = () => {
@@ -48,21 +62,26 @@ const GeneralInformationTab = forwardRef(
       }
     };
 
+    useEffect(() => {
+      setHasOfferForProperty(generalInformation?.hasPropertyOffer || false);
+      setHasAcceptAgreement(
+        generalInformation?.applicantsAgreedOnConditions || false
+      );
+    }, [generalInformation]);
+
     useImperativeHandle(ref, () => ({
       triggerSubmit,
     }));
 
     useEffect(() => {
-      if (!readonly && onValid) {
-        onValid(isValid && !!errors);
+      if (!readonly && hasAcceptAgreement && onValid) {
+        onValid(isValid && !!errors && hasAcceptAgreement);
       }
-    }, [isValid, errors]);
+    }, [isValid, errors, hasAcceptAgreement]);
 
     return (
       <>
-        <Typography
-          sx={{fontSize: "14px", fontWeight: 700 }}
-        >
+        <Typography sx={{ fontSize: "14px", fontWeight: 700 }}>
           Number of dependents between applicants*
         </Typography>
         <FormControl fullWidth error={Boolean(errors.numberOfDependant)}>
@@ -73,10 +92,11 @@ const GeneralInformationTab = forwardRef(
             render={({ field }) => (
               <NumericFormat
                 {...field}
-                variant="outlined"
+                variant={readonly ? "filled" : "outlined"}
                 size="small"
                 decimalScale={0}
                 customInput={TextField}
+                disabled={readonly}
                 error={!!errors.numberOfDependant}
                 placeholder={"Number of dependant"}
                 slotProps={{
@@ -85,7 +105,7 @@ const GeneralInformationTab = forwardRef(
                       <InputAdornment position="start">
                         <GroupIcon />
                       </InputAdornment>
-                    )
+                    ),
                   },
                 }}
               />
@@ -112,7 +132,8 @@ const GeneralInformationTab = forwardRef(
           <Controller
             name="hasPropertyOffer"
             control={control}
-            rules={{ required: "Please select Yes/No" }} // Validation rule
+            rules={{ required: "Please select Yes/No" }}
+            disabled={readonly}
             render={({ field }) => (
               <RadioGroup
                 {...field}
@@ -122,14 +143,40 @@ const GeneralInformationTab = forwardRef(
                 onChange={(e) => {
                   clearErrors("hasPropertyOffer");
                   setHasOfferForProperty(false);
-                  if (e.target.value === "yes") {
+                  if (e.target.value === "true") {
                     setHasOfferForProperty(true);
                   }
                   field.onChange(e);
                 }}
               >
-                <FormControlLabel value="yes" control={<Radio />} label="Yes" />
-                <FormControlLabel value="no" control={<Radio />} label="No" />
+                <FormControlLabel
+                  value={true}
+                  control={
+                    readonly ? (
+                      <Radio
+                        checked={generalInformation?.hasPropertyOffer}
+                        disabled={true}
+                      />
+                    ) : (
+                      <Radio />
+                    )
+                  }
+                  label="Yes"
+                />
+                <FormControlLabel
+                  value={false}
+                  control={
+                    readonly ? (
+                      <Radio
+                        checked={!generalInformation?.hasPropertyOffer}
+                        disabled={true}
+                      />
+                    ) : (
+                      <Radio />
+                    )
+                  }
+                  label="No"
+                />
               </RadioGroup>
             )}
           />
@@ -141,11 +188,12 @@ const GeneralInformationTab = forwardRef(
         </FormControl>
         {hasOfferForProperty && (
           <TextField
-            variant="outlined"
+            variant={readonly ? "filled" : "outlined"}
             size="small"
             multiline
             rows={2}
             fullWidth
+            disabled={readonly}
             {...register("propertyOfferElaboration", {
               required: hasOfferForProperty,
             })}
@@ -167,11 +215,12 @@ const GeneralInformationTab = forwardRef(
 
         <TextField
           sx={{ marginTop: "5px" }}
-          variant="outlined"
           size="small"
           multiline
           rows={2}
+          variant={readonly ? "filled" : "outlined"}
           fullWidth
+          disabled={readonly}
           {...register("applicantOptionalNote", {
             required: false,
           })}
@@ -183,9 +232,10 @@ const GeneralInformationTab = forwardRef(
           How did you hear about us?*
         </Typography>
         <TextField
-          variant="outlined"
+          variant={readonly ? "filled" : "outlined"}
           size="small"
           fullWidth
+          disabled={readonly}
           sx={{ marginTop: "5px" }}
           {...register("referralOption", {
             required: "Who refer us to you is required",
@@ -214,30 +264,65 @@ const GeneralInformationTab = forwardRef(
           Are you agree with terms & privacy conditions? *
         </Typography>
 
-        <FormControl error={Boolean(errors.applicantAgreedOnConditions)}>
+        <FormControl error={Boolean(errors.applicantsAgreedOnConditions)}>
           <Controller
-            name="applicantAgreedOnConditions"
+            name="applicantsAgreedOnConditions"
             control={control}
             rules={{ required: "Please select Yes/No" }}
+            disabled={readonly}
             render={({ field }) => (
               <RadioGroup
                 {...field}
                 row
-                defaultValue=""
-                name="applicantAgreedOnConditions"
+                name="applicantsAgreedOnConditions"
                 onChange={(e) => {
-                  clearErrors("applicantAgreedOnConditions");
+                  clearErrors("applicantsAgreedOnConditions");
                   field.onChange(e);
+                  setHasAcceptAgreement(false);
+                  if (e.target.value === "true") {
+                    console.log(e.target.value)
+                    setHasAcceptAgreement(true);
+                  }
                 }}
               >
-                <FormControlLabel value="yes" control={<Radio />} label="Yes" />
-                <FormControlLabel value="no" control={<Radio />} label="No" />
+                <FormControlLabel
+                  value={true}
+                  control={
+                    readonly ? (
+                      <Radio
+                        checked={
+                          generalInformation?.applicantsAgreedOnConditions
+                        }
+                        disabled={true}
+                      />
+                    ) : (
+                      <Radio />
+                    )
+                  }
+                  label="Yes"
+                />
+                <FormControlLabel
+                  value={false}
+                  control={
+                    readonly ? (
+                      <Radio
+                        checked={
+                          !generalInformation?.applicantsAgreedOnConditions
+                        }
+                        disabled={true}
+                      />
+                    ) : (
+                      <Radio />
+                    )
+                  }
+                  label="No"
+                />
               </RadioGroup>
             )}
           />
-          {errors.applicantAgreedOnConditions && (
+          {errors.applicantsAgreedOnConditions && (
             <FormHelperText>
-              {String(errors.applicantAgreedOnConditions.message)}
+              {String(errors.applicantsAgreedOnConditions.message)}
             </FormHelperText>
           )}
         </FormControl>

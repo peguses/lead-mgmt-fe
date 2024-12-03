@@ -26,7 +26,7 @@ export interface GeneralInformation {
   propertyOfferElaboration: string;
   applicantOptionalNote: string;
   referralOption: string;
-  applicantAgreedOnConditions: boolean;
+  applicantsAgreedOnConditions: boolean;
 
 }
 
@@ -112,15 +112,59 @@ const INITIAL_STATE: Loan = {
     referrerId: "",
     jointLoan: false,
     applicationStatus: ApplicationStatus.Inquiry,
-    primaryApplicant: undefined,
-    secondaryApplicant: undefined,
+    primaryApplicant: {
+      personalInformation: {
+        firstName: "",
+        lastName: "",
+        mobile: "",
+        email: "",
+        state: "",
+        residencyStatus: "",
+        investmentType: "",
+        firstTimeBuyer: false,
+        stateCapitalCityBuyer: false,
+        buyerAgreedToConnectWithAgent: false,
+      },
+      financialInformation: {
+        annualIncome: 0,
+        lengthOfEmployment: 0,
+        totalAmountSaved: 0,
+        parentWillBeGuarantors: false,
+        totalLoanAmount: 0,
+        totalLoanRepayments: 0,
+        helpDebtTotalAmount: 0,
+        totalExistingHomeLoanAmount: 0,
+        totalExistingHomeLoanRepaymentAmt: 0,
+        totalPropertyValue: 0,
+        totalCreditCardLimits: 0,
+        livingExpenses: 0,
+        wereBankrupted: true,
+        hasDefaulted: true,
+        defaultedReason: "",
+      }
+
+    },
+    secondaryApplicant: {
+      personalInformation: {
+        firstName: "",
+        lastName: "",
+        mobile: "",
+        email: "",
+        state: "",
+        residencyStatus: "",
+        investmentType: "",
+        firstTimeBuyer: false,
+        stateCapitalCityBuyer: false,
+        buyerAgreedToConnectWithAgent: false,
+      }
+    },
     generalInformation: {
       numberOfDependant: 0,
       hasPropertyOffer: false,
       propertyOfferElaboration: "",
       applicantOptionalNote: "",
       referralOption: "",
-      applicantAgreedOnConditions: false,
+      applicantsAgreedOnConditions: false,
     },
     isLoading: false,
     loadingFailed: false,

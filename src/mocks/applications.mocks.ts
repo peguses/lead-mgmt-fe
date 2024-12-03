@@ -15,7 +15,7 @@ export const data = [
             investmentType: "buy_established_home_to_live",
             firstTimeBuyer: true,
             stateCapitalCityBuyer: true,
-            buyerAgreedToConnectWithAgent: false,
+            buyerAgreedToConnectWithAgent: true,
         },
         financialInformation: {
             annualIncome: 35000,
@@ -93,6 +93,7 @@ export const data = [
             firstTimeBuyer: true,
             stateCapitalCityBuyer: true,
             buyerAgreedToConnectWithAgent: false,
+            applicantId: 1,
         },
         financialInformation: {
             annualIncome: 35000,
@@ -149,7 +150,7 @@ export const data = [
         propertyOfferElaboration: 'Test',
         applicantOptionalNote: 'Initial Test',
         referralOption: '001',
-        applicantAgreedOnConditions: false
+        applicantAgreedOnConditions: true
     },
     applicationStatus: "INQUIRY",
   },

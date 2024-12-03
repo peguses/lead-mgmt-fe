@@ -23,17 +23,26 @@ interface PersonalInformationProps {
   applicant: string;
   onSubmit?: (data: any) => void;
   onValid?: (isValid: boolean) => void;
-  readonly?: boolean
+  readonly?: boolean;
 }
 
 const PersonalInformationTab = forwardRef(
-  ({ applicant, onSubmit, onValid, readonly = false }: PersonalInformationProps, ref) => {
+  (
+    {
+      applicant,
+      onSubmit,
+      onValid,
+      readonly = false,
+    }: PersonalInformationProps,
+    ref
+  ) => {
     const applicantInformation = useAppSelector(
       (state): PersonalInformation | undefined => {
         return state?.loan.application?.[applicant].personalInformation;
       }
     );
 
+   
     const {
       control,
       register,
@@ -42,7 +51,18 @@ const PersonalInformationTab = forwardRef(
       clearErrors,
     } = useForm<any>({
       mode: "all",
-      defaultValues: applicantInformation,
+      defaultValues: applicantInformation ? applicantInformation : {
+        firstName: "",
+        lastName: "",
+        mobile: "",
+        email: "",
+        state: "",
+        residencyStatus: "",
+        investmentType: "",
+        firstTimeBuyer: "",
+        stateCapitalCityBuyer: "",
+        buyerAgreedToConnectWithAgent: "",
+      },
     });
 
     const residencyStatus = [
@@ -90,10 +110,10 @@ const PersonalInformationTab = forwardRef(
           Applicant {applicant} Details
         </Typography>
         <TextField
-          variant="outlined"
+          variant={readonly ? "filled" : "outlined"}
           size="small"
           fullWidth
-          disabled = {readonly}
+          disabled={readonly}
           label="First Name"
           {...register("firstName", {
             required: "First name is required",
@@ -120,11 +140,11 @@ const PersonalInformationTab = forwardRef(
           }}
         />
         <TextField
-          variant="outlined"
+          variant={readonly ? "filled" : "outlined"}
           fullWidth
           size="small"
           label="Last Name"
-          disabled = {readonly}
+          disabled={readonly}
           placeholder={"Last Name"}
           {...register("lastName", {
             required: "Last name is required",
@@ -150,11 +170,11 @@ const PersonalInformationTab = forwardRef(
           }}
         />
         <TextField
-          variant="outlined"
+          variant={readonly ? "filled" : "outlined"}
           size="small"
           fullWidth
           label="Mobile"
-          disabled = {readonly}
+          disabled={readonly}
           placeholder={"Mobile"}
           {...register("mobile", {
             required: "Mobile is required",
@@ -184,11 +204,11 @@ const PersonalInformationTab = forwardRef(
           }}
         />
         <TextField
-          variant="outlined"
+          variant={readonly ? "filled" : "outlined"}
           fullWidth
           size="small"
           label="Email"
-          disabled = {readonly}
+          disabled={readonly}
           {...register("email", {
             required: "Email is required",
             pattern: {
@@ -218,7 +238,7 @@ const PersonalInformationTab = forwardRef(
           }}
         />
         <FormControl
-          variant="outlined"
+          variant={readonly ? "filled" : "outlined"}
           size="small"
           fullWidth
           sx={{
@@ -226,13 +246,13 @@ const PersonalInformationTab = forwardRef(
           }}
           error={Boolean(errors.state)}
         >
-          <InputLabel htmlFor="state-label" id="state"  shrink>
+          <InputLabel htmlFor="state-label" id="state" shrink>
             State
           </InputLabel>
           <Controller
             name="state"
             control={control}
-            disabled = {readonly}
+            disabled={readonly}
             rules={{ required: "State is required" }}
             render={({ field }) => (
               <Select
@@ -259,18 +279,23 @@ const PersonalInformationTab = forwardRef(
           )}
         </FormControl>
         <FormControl
+          variant={readonly ? "filled" : "outlined"}
           fullWidth
           size="small"
           sx={{ marginTop: "20px" }}
           error={Boolean(errors.residencyStatus)}
         >
-          <InputLabel htmlFor="residencyStatus-label" id="residencyStatus" shrink>
+          <InputLabel
+            htmlFor="residencyStatus-label"
+            id="residencyStatus"
+            shrink
+          >
             Select Residency Status
           </InputLabel>
           <Controller
             name="residencyStatus"
             control={control}
-            disabled = {readonly}
+            disabled={readonly}
             rules={{ required: "Residency status is required" }}
             render={({ field }) => (
               <Select
@@ -306,6 +331,7 @@ const PersonalInformationTab = forwardRef(
         </Typography>
 
         <FormControl
+          variant={readonly ? "filled" : "outlined"}
           fullWidth
           size="small"
           sx={{ marginTop: "20px" }}
@@ -317,7 +343,7 @@ const PersonalInformationTab = forwardRef(
           <Controller
             name="investmentType"
             control={control}
-            disabled = {readonly}
+            disabled={readonly}
             rules={{ required: "Investment type is required" }}
             render={({ field }) => (
               <Select
@@ -356,7 +382,7 @@ const PersonalInformationTab = forwardRef(
           <Controller
             name="firstTimeBuyer"
             control={control}
-            disabled = {readonly}
+            disabled={readonly}
             rules={{ required: "Please select Yes/No" }}
             render={({ field }) => (
               <RadioGroup
@@ -369,8 +395,28 @@ const PersonalInformationTab = forwardRef(
                   field.onChange(e);
                 }}
               >
-                <FormControlLabel value="yes" control={<Radio />} label="Yes" />
-                <FormControlLabel value="no" control={<Radio />} label="No" />
+                <FormControlLabel
+                  value={true}
+                  control={readonly ? (<Radio
+                    checked={
+                      applicantInformation?.firstTimeBuyer
+                    }
+                    disabled={true}
+                  />) : <Radio/>
+                }
+                  label="Yes"
+                />
+                <FormControlLabel
+                  value={false}
+                  control={readonly ? (<Radio
+                    checked={
+                      !applicantInformation?.firstTimeBuyer
+                    }
+                    disabled={true}
+                  />) : <Radio/>
+                }
+                  label="No"
+                />
               </RadioGroup>
             )}
           />
@@ -392,7 +438,7 @@ const PersonalInformationTab = forwardRef(
           <Controller
             name="stateCapitalCityBuyer"
             control={control}
-            disabled = {readonly}
+            disabled={readonly}
             rules={{ required: "Please select Yes/No" }} // Validation rule
             render={({ field }) => (
               <RadioGroup
@@ -405,8 +451,28 @@ const PersonalInformationTab = forwardRef(
                   field.onChange(e);
                 }}
               >
-                <FormControlLabel value="yes" control={<Radio />} label="Yes" />
-                <FormControlLabel value="no" control={<Radio />} label="No" />
+                <FormControlLabel
+                  value={true}
+                  control={readonly ? (<Radio
+                    checked={
+                      applicantInformation?.stateCapitalCityBuyer
+                    }
+                    disabled={true}
+                  />) : <Radio/>
+                }
+                  label="Yes"
+                />
+                <FormControlLabel
+                  value={false}
+                  control={readonly ? (<Radio
+                    checked={
+                      !applicantInformation?.stateCapitalCityBuyer
+                    }
+                    disabled={true}
+                  />) : <Radio/>
+                }
+                  label="No"
+                />
               </RadioGroup>
             )}
           />
@@ -430,7 +496,7 @@ const PersonalInformationTab = forwardRef(
             name="buyerAgreedToConnectWithAgent"
             control={control}
             rules={{ required: "Please select Yes/No" }}
-            disabled = {readonly}
+            disabled={readonly}
             render={({ field }) => (
               <RadioGroup
                 {...field}
@@ -442,8 +508,28 @@ const PersonalInformationTab = forwardRef(
                   field.onChange(e);
                 }}
               >
-                <FormControlLabel value="yes" control={<Radio />} label="Yes" />
-                <FormControlLabel value="no" control={<Radio />} label="No" />
+                <FormControlLabel
+                  value={true}
+                  control={readonly ? (<Radio
+                      checked={
+                        applicantInformation?.buyerAgreedToConnectWithAgent
+                      }
+                      disabled={true}
+                    />) : <Radio/>
+                  }
+                  label="Yes"
+                />
+                <FormControlLabel
+                  value={false}
+                  control={readonly ? (<Radio
+                    checked={
+                      !applicantInformation?.buyerAgreedToConnectWithAgent
+                    }
+                    disabled={true}
+                  />) : <Radio/>
+                }
+                  label="No"
+                />
               </RadioGroup>
             )}
           />

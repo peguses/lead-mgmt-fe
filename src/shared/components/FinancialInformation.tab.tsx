@@ -23,12 +23,19 @@ interface FinancialInformationProps {
   applicant: string;
   onSubmit?: (data: any) => void;
   onValid?: (isValid: boolean) => void;
-  readonly?: boolean
+  readonly?: boolean;
 }
 
 const FinancialInformationTab = forwardRef(
-  ({ applicant, onSubmit, onValid, readonly = false }: FinancialInformationProps, ref) => {
-
+  (
+    {
+      applicant,
+      onSubmit,
+      onValid,
+      readonly = false,
+    }: FinancialInformationProps,
+    ref
+  ) => {
     const financialInformation = useAppSelector(
       (state): FinancialInformation | undefined => {
         return state?.loan.application?.[applicant].financialInformation;
@@ -42,7 +49,25 @@ const FinancialInformationTab = forwardRef(
       clearErrors,
     } = useForm<any>({
       mode: "all",
-      defaultValues: financialInformation,
+      defaultValues: financialInformation
+        ? financialInformation
+        : {
+            annualIncome: "",
+            lengthOfEmployment: "",
+            totalAmountSaved: "",
+            parentWillBeGuarantors: "",
+            totalLoanAmount: "",
+            totalLoanRepayments: "",
+            helpDebtTotalAmount: "",
+            totalExistingHomeLoanAmount: "",
+            totalExistingHomeLoanRepaymentAmt: "",
+            totalPropertyValue: "",
+            totalCreditCardLimits: "",
+            livingExpenses: "",
+            wereBankrupted: "",
+            hasDefaulted: "",
+            defaultedReason: "",
+          },
     });
 
     const [hasDefaulted, setHasDefaulted] = useState<boolean>(false);
@@ -73,7 +98,7 @@ const FinancialInformationTab = forwardRef(
             render={({ field }) => (
               <NumericFormat
                 {...field}
-                variant="outlined"
+                variant={readonly ? "filled" : "outlined"}
                 size="small"
                 disabled={readonly}
                 thousandSeparator=","
@@ -112,7 +137,7 @@ const FinancialInformationTab = forwardRef(
                 {...field}
                 customInput={TextField}
                 size="small"
-                variant="outlined"
+                variant={readonly ? "filled" : "outlined"}
                 disabled={readonly}
                 fullWidth
                 label="Length of employment"
@@ -156,7 +181,7 @@ const FinancialInformationTab = forwardRef(
                 customInput={TextField}
                 thousandSeparator=","
                 decimalScale={2}
-                variant="outlined"
+                variant={readonly ? "filled" : "outlined"}
                 size="small"
                 fullWidth
                 disabled={readonly}
@@ -212,8 +237,34 @@ const FinancialInformationTab = forwardRef(
                   field.onChange(e);
                 }}
               >
-                <FormControlLabel value="yes" control={<Radio />} label="Yes" />
-                <FormControlLabel value="no" control={<Radio />} label="No" />
+                <FormControlLabel
+                  value={true}
+                  control={
+                    readonly ? (
+                      <Radio
+                        checked={financialInformation?.parentWillBeGuarantors}
+                        disabled={true}
+                      />
+                    ) : (
+                      <Radio />
+                    )
+                  }
+                  label="Yes"
+                />
+                <FormControlLabel
+                  value={false}
+                  control={
+                    readonly ? (
+                      <Radio
+                        checked={!financialInformation?.parentWillBeGuarantors}
+                        disabled={true}
+                      />
+                    ) : (
+                      <Radio />
+                    )
+                  }
+                  label="No"
+                />
               </RadioGroup>
             )}
           />
@@ -238,7 +289,7 @@ const FinancialInformationTab = forwardRef(
               <NumericFormat
                 {...field}
                 customInput={TextField}
-                variant="outlined"
+                variant={readonly ? "filled" : "outlined"}
                 size="small"
                 fullWidth
                 disabled={readonly}
@@ -285,7 +336,7 @@ const FinancialInformationTab = forwardRef(
                 customInput={TextField}
                 thousandSeparator=","
                 decimalScale={2}
-                variant="outlined"
+                variant={readonly ? "filled" : "outlined"}
                 size="small"
                 disabled={readonly}
                 fullWidth
@@ -330,7 +381,7 @@ const FinancialInformationTab = forwardRef(
                 customInput={TextField}
                 thousandSeparator=","
                 decimalScale={2}
-                variant="outlined"
+                variant={readonly ? "filled" : "outlined"}
                 size="small"
                 disabled={readonly}
                 error={!!errors.helpDebtTotalAmount}
@@ -377,7 +428,7 @@ const FinancialInformationTab = forwardRef(
                 customInput={TextField}
                 thousandSeparator=","
                 decimalScale={2}
-                variant="outlined"
+                variant={readonly ? "filled" : "outlined"}
                 size="small"
                 fullWidth
                 disabled={readonly}
@@ -427,7 +478,7 @@ const FinancialInformationTab = forwardRef(
                 customInput={TextField}
                 thousandSeparator=","
                 decimalScale={2}
-                variant="outlined"
+                variant={readonly ? "filled" : "outlined"}
                 size="small"
                 fullWidth
                 disabled={readonly}
@@ -472,7 +523,7 @@ const FinancialInformationTab = forwardRef(
                 customInput={TextField}
                 thousandSeparator=","
                 decimalScale={2}
-                variant="outlined"
+                variant={readonly ? "filled" : "outlined"}
                 size="small"
                 fullWidth
                 disabled={readonly}
@@ -517,7 +568,7 @@ const FinancialInformationTab = forwardRef(
                 customInput={TextField}
                 thousandSeparator=","
                 decimalScale={2}
-                variant="outlined"
+                variant={readonly ? "filled" : "outlined"}
                 size="small"
                 fullWidth
                 disabled={readonly}
@@ -563,7 +614,7 @@ const FinancialInformationTab = forwardRef(
                 customInput={TextField}
                 thousandSeparator=","
                 decimalScale={2}
-                variant="outlined"
+                variant={readonly ? "filled" : "outlined"}
                 size="small"
                 fullWidth
                 disabled={readonly}
@@ -614,8 +665,34 @@ const FinancialInformationTab = forwardRef(
                   field.onChange(e);
                 }}
               >
-                <FormControlLabel value="yes" control={<Radio />} label="Yes" />
-                <FormControlLabel value="no" control={<Radio />} label="No" />
+                <FormControlLabel
+                  value={true}
+                  control={
+                    readonly ? (
+                      <Radio
+                        checked={financialInformation?.wereBankrupted}
+                        disabled={true}
+                      />
+                    ) : (
+                      <Radio />
+                    )
+                  }
+                  label="Yes"
+                />
+                <FormControlLabel
+                  value={false}
+                  control={
+                    readonly ? (
+                      <Radio
+                        checked={!financialInformation?.wereBankrupted}
+                        disabled={true}
+                      />
+                    ) : (
+                      <Radio />
+                    )
+                  }
+                  label="No"
+                />
               </RadioGroup>
             )}
           />
@@ -654,8 +731,34 @@ const FinancialInformationTab = forwardRef(
                   field.onChange(e);
                 }}
               >
-                <FormControlLabel value="yes" control={<Radio />} label="Yes" />
-                <FormControlLabel value="no" control={<Radio />} label="No" />
+                <FormControlLabel
+                  value={true}
+                  control={
+                    readonly ? (
+                      <Radio
+                        checked={financialInformation?.hasDefaulted}
+                        disabled={true}
+                      />
+                    ) : (
+                      <Radio />
+                    )
+                  }
+                  label="Yes"
+                />
+                <FormControlLabel
+                  value={false}
+                  control={
+                    readonly ? (
+                      <Radio
+                        checked={!financialInformation?.hasDefaulted}
+                        disabled={true}
+                      />
+                    ) : (
+                      <Radio />
+                    )
+                  }
+                  label="No"
+                />
               </RadioGroup>
             )}
           />
@@ -667,7 +770,7 @@ const FinancialInformationTab = forwardRef(
         </FormControl>
         {hasDefaulted && (
           <TextField
-            variant="outlined"
+            variant={readonly ? "filled" : "outlined"}
             size="small"
             multiline
             rows={2}
@@ -678,7 +781,9 @@ const FinancialInformationTab = forwardRef(
             })}
             error={!!errors.defaltedReason}
             helperText={
-              errors.defaultedReason ? String(errors.defaultedReason.message) : ""
+              errors.defaultedReason
+                ? String(errors.defaultedReason.message)
+                : ""
             }
             placeholder={"Credit history or defaults reason"}
           />
