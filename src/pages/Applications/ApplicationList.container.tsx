@@ -80,7 +80,6 @@ export const ApplicationListContainer: React.FC<any> = () => {
   const handleDelete = () => {};
 
   const handleAssign = (data) => {
-    console.log(data);
   };
 
   const handleNavigate = (applicationId: string) => {
@@ -153,7 +152,6 @@ export const ApplicationListContainer: React.FC<any> = () => {
                           <IconButton
                             color="primary"
                             onClick={() => {
-                              console.log(row.applicationId);
                               handleNavigate(row.applicationId)
                             }}
                           >

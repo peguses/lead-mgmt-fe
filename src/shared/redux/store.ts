@@ -13,7 +13,7 @@ const commonConfig = {
 };
 
 const applicationConfig = {
-  key: "application",
+  key: "loan",
   storage,
 };
 
@@ -23,7 +23,7 @@ const persistedApplication = persistReducer(applicationConfig, applicantSlice);
 export const store = configureStore({
   reducer: {
     common: persistedCommon,
-    application: persistedApplication,
+    loan: persistedApplication,
   },
   devTools: env === "DEVELOPMENT" ? true : false,
   middleware: (getDefaultMiddleware) =>

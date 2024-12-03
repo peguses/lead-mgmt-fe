@@ -30,7 +30,7 @@ const PersonalInformationTab = forwardRef(
   ({ applicant, onSubmit, onValid, readonly = false }: PersonalInformationProps, ref) => {
     const applicantInformation = useAppSelector(
       (state): PersonalInformation | undefined => {
-        return state?.application?.[applicant].personalInformation;
+        return state?.loan.application?.[applicant].personalInformation;
       }
     );
 

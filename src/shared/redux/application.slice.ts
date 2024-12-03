@@ -1,6 +1,8 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { fetchApplication } from "../services/application.service";
 
 export interface WorkInformation {
+
   employmentType: string;
   occupation: string;
   employerContactName: string;
@@ -14,18 +16,22 @@ export interface WorkInformation {
   employerPostCode: string;
   currentEmploymentStartDate: Date;
   probationaryEmployee: boolean;
+
 }
 
 export interface GeneralInformation {
+
   numberOfDependant: number;
   hasPropertyOffer: boolean;
   propertyOfferElaboration: string;
   applicantOptionalNote: string;
   referralOption: string;
   applicantAgreedOnConditions: boolean;
+
 }
 
 export interface FinancialInformation {
+
   annualIncome: number;
   lengthOfEmployment: number;
   totalAmountSaved: number;
@@ -41,9 +47,11 @@ export interface FinancialInformation {
   wereBankrupted: boolean;
   hasDefaulted: boolean;
   defaultedReason: string;
+
 }
 
 export interface PersonalInformation {
+
   firstName: string;
   lastName: string;
   mobile: string;
@@ -54,15 +62,19 @@ export interface PersonalInformation {
   firstTimeBuyer: boolean;
   stateCapitalCityBuyer: boolean;
   buyerAgreedToConnectWithAgent: boolean;
+
 }
 
 export interface Applicant {
+
   personalInformation?: PersonalInformation;
   workInformation?: WorkInformation;
   financialInformation?: FinancialInformation;
+
 }
 
 export interface Application {
+
   applicationId: string | undefined;
   referrer: string | undefined;
   referrerId: string;
@@ -71,9 +83,17 @@ export interface Application {
   applicationStatus: ApplicationStatus;
   primaryApplicant: Applicant | undefined;
   secondaryApplicant: Applicant | undefined;
+  isLoading: boolean;
+  loadingFailed: boolean;
+
+}
+
+export interface Loan {
+    application: Application
 }
 
 export enum ApplicationStatus {
+
   Inquiry = "INQUIRY",
   Deal = "DEAL",
   Processing = "PROCESSING",
@@ -81,87 +101,108 @@ export enum ApplicationStatus {
   Canceled = "CANCELLED",
   Settled = "SETTLED",
   Paid = "PAID",
+
 }
 
-const INITIAL_STATE: Application = {
-  applicationId: "",
-  referrer: "",
-  referrerId: "",
-  jointLoan: false,
-  applicationStatus: ApplicationStatus.Inquiry,
-  primaryApplicant: undefined,
-  secondaryApplicant: undefined,
-  generalInformation: {
-    numberOfDependant: 0,
-    hasPropertyOffer: false,
-    propertyOfferElaboration: "",
-    applicantOptionalNote: "",
-    referralOption: "",
-    applicantAgreedOnConditions: false,
-  },
+const INITIAL_STATE: Loan = {
+
+  application: {
+    applicationId: "",
+    referrer: "",
+    referrerId: "",
+    jointLoan: false,
+    applicationStatus: ApplicationStatus.Inquiry,
+    primaryApplicant: undefined,
+    secondaryApplicant: undefined,
+    generalInformation: {
+      numberOfDependant: 0,
+      hasPropertyOffer: false,
+      propertyOfferElaboration: "",
+      applicantOptionalNote: "",
+      referralOption: "",
+      applicantAgreedOnConditions: false,
+    },
+    isLoading: false,
+    loadingFailed: false,
+  }
+
 };
 
+export const fetchApplicationAsync = createAsyncThunk('application/fetchApplication', async(props: any) => {
+  const { applicationId } = props;
+  const response = await fetchApplication(applicationId);
+  return {
+    application: response.data as any,
+  };
+});
+
 export const applicationSlice = createSlice({
-  name: "application",
+  name: "lead",
   initialState: INITIAL_STATE,
   reducers: {
+
     setJoinLoanApplication: (state, action) => {
-      state.jointLoan = action.payload;
+      state.application.jointLoan = action.payload;
     },
 
+    setApplication: (state, action) => {
+      state.application = action.payload;
+    },
+
+
     addOrUpdatePrimaryApplicantPersonalInformation: (state, action) => {
-      state.primaryApplicant = {
-        ...state.primaryApplicant,
+      state.application.primaryApplicant = {
+        ...state.application.primaryApplicant,
         personalInformation: action.payload,
       };
     },
 
     addOrUpdatePrimaryApplicantWorkInformation: (state, action) => {
-      state.primaryApplicant = {
-        ...state.primaryApplicant,
+      state.application.primaryApplicant = {
+        ...state.application.primaryApplicant,
         workInformation: action.payload,
       };
     },
 
     addOrUpdatePrimaryApplicantFinancialInformation: (state, action) => {
-      state.primaryApplicant = {
-        ...state.primaryApplicant,
+      state.application.primaryApplicant = {
+        ...state.application.primaryApplicant,
         financialInformation: action.payload,
       };
     },
 
     addOrUpdateSecondaryApplicantPersonalInformation: (state, action) => {
-      state.secondaryApplicant = {
-        ...state.secondaryApplicant,
+      state.application.secondaryApplicant = {
+        ...state.application.secondaryApplicant,
         personalInformation: action.payload,
       };
     },
 
     addOrUpdateSecondaryApplicantWorkInformation: (state, action) => {
-      state.secondaryApplicant = {
-        ...state.secondaryApplicant,
+      state.application.secondaryApplicant = {
+        ...state.application.secondaryApplicant,
         workInformation: action.payload,
       };
     },
 
     addOrUpdateSecondaryApplicantFinancialInformation: (state, action) => {
-      state.secondaryApplicant = {
-        ...state.secondaryApplicant,
+      state.application.secondaryApplicant = {
+        ...state.application.secondaryApplicant,
         financialInformation: action.payload,
       };
     },
 
     addOrUpdateGeneralInformation: (state, action) => {
-      state.generalInformation = action.payload;
+      state.application.generalInformation = action.payload;
     },
 
-    removeGeneralInforamtion: (state) => {
-      state.generalInformation = undefined;
+    removeGeneralInformation: (state) => {
+      state.application.generalInformation = undefined;
     },
 
     removePrimaryApplicant: (state) => {
-      state.primaryApplicant = {
-        ...state.primaryApplicant,
+      state.application.primaryApplicant = {
+        ...state.application.primaryApplicant,
         personalInformation: undefined,
         workInformation: undefined,
         financialInformation: undefined,
@@ -169,17 +210,36 @@ export const applicationSlice = createSlice({
     },
 
     removeSecondaryApplicant: (state) => {
-      state.secondaryApplicant = {
-        ...state.secondaryApplicant,
+      state.application.secondaryApplicant = {
+        ...state.application.secondaryApplicant,
         personalInformation: undefined,
         workInformation: undefined,
         financialInformation: undefined,
       };
     },
   },
+
+  extraReducers: (builder) => {
+
+    builder.addCase(fetchApplicationAsync.pending, (state) => {
+      state.application.isLoading = true;
+      state.application.loadingFailed = false;
+    });
+    builder.addCase(fetchApplicationAsync.fulfilled, (state, action) => {
+      state.application = action.payload.application;
+      state.application.isLoading = false;
+      state.application.loadingFailed = false;
+    });
+    builder.addCase(fetchApplicationAsync.rejected, (state) => {
+      state =  {...state};
+      state.application.isLoading = false;
+      state.application.loadingFailed = true;
+    });
+  }
 });
 
 export const {
+  setApplication,
   setJoinLoanApplication,
   addOrUpdatePrimaryApplicantPersonalInformation,
   addOrUpdatePrimaryApplicantWorkInformation,
@@ -188,8 +248,8 @@ export const {
   addOrUpdateSecondaryApplicantWorkInformation,
   addOrUpdateSecondaryApplicantFinancialInformation,
   removeSecondaryApplicant,
-  removeGeneralInforamtion,
+  removeGeneralInformation,
   removePrimaryApplicant,
-  addOrUpdateGeneralInformation
+  addOrUpdateGeneralInformation,
 } = applicationSlice.actions;
 export default applicationSlice.reducer;

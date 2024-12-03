@@ -13,7 +13,7 @@ import {
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import WorkInformationTab from "../../shared/components/WorkInformation.tab";
 import PersonalInformationTab from "../../shared/components/PersonalInformation.tab";
-import { batch, useDispatch } from "react-redux";
+import { batch } from "react-redux";
 import GeneralInformationTab from "../../shared/components/GeneralInformation.tab";
 import ArrowCircleRightOutlinedIcon from "@mui/icons-material/ArrowCircleRightOutlined";
 import ArrowCircleLeftOutlinedIcon from "@mui/icons-material/ArrowCircleLeftOutlined";
@@ -23,8 +23,8 @@ import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import InfoIcon from "@mui/icons-material/Info";
 import FinancialInformationTab from "../../shared/components/FinancialInformation.tab"
 import { useParams } from 'react-router-dom';
-import { setJoinLoanApplication, WorkInformation } from "../../shared/redux/application.slice";
-import { useAppSelector } from "../../shared/redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../shared/redux/hooks";
+import { Application, fetchApplicationAsync } from "../../shared/redux/application.slice";
 
 interface Step {
   id: number;
@@ -32,88 +32,35 @@ interface Step {
 }
 
 export const ApplicationViewContainer: React.FC<any> = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  const { applicantId } = useParams();
+  const { applicationId } = useParams();
+
+  useEffect(() => {
+      dispatch(fetchApplicationAsync({ applicationId }))
+  }, [applicationId]);
+
+  const application = useAppSelector(
+    (state): Application | undefined => {
+      return state?.loan.application;
+    }
+  );
+
+  useEffect(() => {
+
+  }, [application])
 
   const [activeStep, setActiveStep] = useState<number>(0);
 
   const jointLoan = useAppSelector((state) => {
-    return state.application.jointLoan
+    return state.loan.application.jointLoan
   });
-
-  const [applicantOnePersonalInfoValid, setApplicantOnePersonalInfoValid] =
-    useState<boolean>(false);
-
-  const [applicantTwoPersonalInfoValid, setApplicantTwoPersonalInfoValid] =
-    useState<boolean>(false);
-
-  const [applicantOneWorkInfoValid, setApplicantOneWorkInfoValid] =
-    useState<boolean>(false);
-
-  const [applicantTwoWorkInfoValid, setApplicantTwoWorkInfoValid] =
-    useState<boolean>(false);
-
-  const [applicationOneFinancialValid, setApplicationOneFinancialValid] =
-    useState<boolean>(false);
-
-  const [applicationTwoFinancialValid, setApplicationTwoFinancialValid] =
-    useState<boolean>(false);
-
-  const [applicationGeneralInfoValid, setApplicationGeneralInfoValid] =
-    useState<boolean>(false);
-
-  const [allowWorkTab, setAllowWorkTab] = useState<boolean>(false);
-
-  const [allowFinancialTab, setAllowFinancialTab] = useState<boolean>(false);
-
-  const [allowGeneralTab, setAllowGeneralTab] = useState<boolean>(false);
-
-  const [allowSubmit, setAllowSubmit] = useState<boolean>(false);
 
   const applicationGeneralInfoRef = useRef<any>();
 
   const [completed, setCompleted] = useState<Step[]>(
     [{id: 0, completed: false}, {id: 1, completed: false}, {id: 2, completed: false}, {id: 3, completed: false}]
   );
-
-  useEffect(() => {
-    setAllowSubmit(applicationGeneralInfoValid);
-    setCompletedStep(2, applicationGeneralInfoValid);
-  }, [applicationGeneralInfoValid]);
-
-  useEffect(() => {
-    if (jointLoan) {
-      const valid = applicationOneFinancialValid && applicationTwoFinancialValid
-      setAllowGeneralTab(valid);
-      setCompletedStep(1, valid);
-    } else {
-      setAllowGeneralTab(applicationOneFinancialValid);
-      setCompletedStep(1, applicationOneFinancialValid);
-    }
-  }, [applicationOneFinancialValid, applicationTwoFinancialValid, jointLoan]);
-
-  useEffect(() => {
-    if (jointLoan) {
-      const valid = applicantOneWorkInfoValid && applicantTwoWorkInfoValid;
-      setAllowFinancialTab(valid);
-      setCompletedStep(5, valid);
-    } else {
-      setCompletedStep(5, applicantOneWorkInfoValid);
-      setAllowFinancialTab(applicantOneWorkInfoValid);
-    }
-  }, [applicantOneWorkInfoValid, applicantTwoWorkInfoValid, jointLoan]);
-
-  useEffect(() => {
-    if (jointLoan) {
-      const valid = applicantOnePersonalInfoValid && applicantTwoPersonalInfoValid
-      setAllowWorkTab(valid);
-      setCompletedStep(0, valid);
-    } else {
-      setCompletedStep(0, applicantOnePersonalInfoValid);
-      setAllowWorkTab(applicantOnePersonalInfoValid);
-    }
-  }, [applicantOnePersonalInfoValid, applicantTwoPersonalInfoValid, jointLoan]);
 
   const applicantStatus = [
     { code: "1APP", name: "1 Applicant" },
@@ -271,7 +218,7 @@ export const ApplicationViewContainer: React.FC<any> = () => {
           />
         </Box>
       </Grid>
-      <Grid
+      {!application?.isLoading && (<Grid
         sx={{ marginTop: "20px" }}
         size={
           jointLoan && activeStep !== 3
@@ -347,7 +294,6 @@ export const ApplicationViewContainer: React.FC<any> = () => {
                 color="primary"
                 fullWidth
                 endIcon={<ArrowCircleRightOutlinedIcon />}
-                disabled={!allowWorkTab}
               >
                 Next
               </Button>
@@ -390,7 +336,6 @@ export const ApplicationViewContainer: React.FC<any> = () => {
                 color="primary"
                 fullWidth
                 endIcon={<ArrowCircleRightOutlinedIcon />}
-                disabled={!allowFinancialTab}
               >
                 Next
               </Button>
@@ -430,7 +375,6 @@ export const ApplicationViewContainer: React.FC<any> = () => {
                 color="primary"
                 fullWidth
                 endIcon={<ArrowCircleRightOutlinedIcon />}
-                disabled={!allowGeneralTab}
               >
                 Next
               </Button>
@@ -451,14 +395,13 @@ export const ApplicationViewContainer: React.FC<any> = () => {
                 color="primary"
                 fullWidth
                 startIcon={<CheckCircleOutlineOutlinedIcon />}
-                disabled={!allowSubmit}
               >
                 Submit
               </Button>
             </Grid>
           </Fragment>
         )}
-      </Grid>
+      </Grid>)}
     </Grid>
   );
 };

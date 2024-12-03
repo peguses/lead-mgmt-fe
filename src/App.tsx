@@ -12,7 +12,7 @@ import { ReferralManagerViewContainer } from "./pages/ReferralManagerView.contai
 import { ApplicationNavbarComponent } from "./shared/components/ApplicationNavbar.component";
 import { ApplicationFooterComponent } from "./shared/components/ApplicationFooter.component";
 import { ApplicationViewContainer } from "./pages/Applications/ApplicationView.container";
-import { removeGeneralInforamtion, removePrimaryApplicant, removeSecondaryApplicant } from "./shared/redux/application.slice";
+import { removeGeneralInformation, removePrimaryApplicant, removeSecondaryApplicant } from "./shared/redux/application.slice";
 
 function App() {
   const [open, setOpen] = useState(false);
@@ -21,7 +21,7 @@ function App() {
   useEffect(() => {
     dispatch(removeSecondaryApplicant());
     dispatch(removePrimaryApplicant());
-    dispatch(removeGeneralInforamtion())
+    dispatch(removeGeneralInformation())
   }, [dispatch]);
   
   return (

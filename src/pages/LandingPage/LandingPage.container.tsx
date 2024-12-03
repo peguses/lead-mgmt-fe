@@ -34,7 +34,7 @@ import {
   FinancialInformation,
   GeneralInformation,
   PersonalInformation,
-  removeGeneralInforamtion,
+  removeGeneralInformation,
   removeSecondaryApplicant,
   setJoinLoanApplication,
   WorkInformation,
@@ -244,7 +244,7 @@ export const LandingPageContainer: React.FC<any> = () => {
     setApplicationTwoFinancialValid(true);
     dispatch(setJoinLoanApplication(false));
     dispatch(removeSecondaryApplicant());
-    dispatch(removeGeneralInforamtion());
+    dispatch(removeGeneralInformation());
   };
 
   const handleJointApplication = () => {
@@ -256,7 +256,7 @@ export const LandingPageContainer: React.FC<any> = () => {
     setApplicationOneFinancialValid(false);
     setApplicationTwoFinancialValid(false);
     dispatch(setJoinLoanApplication(true));
-    dispatch(removeGeneralInforamtion());
+    dispatch(removeGeneralInformation());
   };
 
   const handleBack = () => {

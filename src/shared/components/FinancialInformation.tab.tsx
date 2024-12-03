@@ -31,7 +31,7 @@ const FinancialInformationTab = forwardRef(
 
     const financialInformation = useAppSelector(
       (state): FinancialInformation | undefined => {
-        return state?.application?.[applicant].financialInformation;
+        return state?.loan.application?.[applicant].financialInformation;
       }
     );
     const {

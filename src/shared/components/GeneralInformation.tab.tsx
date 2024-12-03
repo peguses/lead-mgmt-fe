@@ -29,7 +29,7 @@ const GeneralInformationTab = forwardRef(
     const [hasOfferForProperty, setHasOfferForProperty] =
       useState<boolean>(false);
 
-    const generalInformation = useAppSelector((state): GeneralInformation | undefined =>  state?.application?.generalInformation);
+    const generalInformation = useAppSelector((state): GeneralInformation | undefined =>  state?.loan.application?.generalInformation);
 
     const {
       control,
