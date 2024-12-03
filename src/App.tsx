@@ -23,6 +23,7 @@ function App() {
     dispatch(removePrimaryApplicant());
     dispatch(removeGeneralInformation())
   }, [dispatch]);
+
   
   return (
     <Router>
