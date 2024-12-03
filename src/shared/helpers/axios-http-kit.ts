@@ -4,7 +4,8 @@ import MockAdapter from 'axios-mock-adapter';
 import { data } from '../../mocks/applications.mocks';
 
 const mock = new MockAdapter(axios);
-mock.onGet('http://localhost:8080/application/001').reply(200, { ...data.find((a) => a.applicationId === "001")});
+mock.onGet('http://localhost:8080/applications/001').reply(200, { ...data.find((a) => a.applicationId === "001")});
+mock.onGet('http://localhost:8080/applications').reply(200,  data);
 export const baseUrl = "http://localhost:8080";
 
 const userName = "test";

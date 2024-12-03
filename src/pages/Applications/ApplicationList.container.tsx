@@ -20,7 +20,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Paper from "@mui/material/Paper";
 import Visibility from "@mui/icons-material/Visibility";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -32,8 +32,12 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import { Controller, useForm } from "react-hook-form";
 import { processingOfficers } from "../../mocks/processing.officers.mocks";
 import { useNavigate } from 'react-router-dom';
+import { Applications, fetchApplicationsAsync } from "../../shared/redux/applications.slice";
+import { useAppDispatch, useAppSelector } from "../../shared/redux/hooks";
 
 export const ApplicationListContainer: React.FC<any> = () => {
+
+  const dispatch = useAppDispatch();
 
   const style = {
     position: "absolute",
@@ -73,6 +77,19 @@ export const ApplicationListContainer: React.FC<any> = () => {
     setPage(0);
   };
 
+  useEffect(() => {
+    dispatch(fetchApplicationsAsync())
+  }, []);
+
+  const applications = useAppSelector(
+    (state): Applications | undefined => {
+      return state?.applications;
+    }
+  );
+
+  // applications?.applications?.forEach((row) => {console.log(row)});
+  // console.log();
+
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
@@ -106,7 +123,7 @@ export const ApplicationListContainer: React.FC<any> = () => {
         />
       </Grid>
       <Grid size={12} sx={{ marginTop: "10px" }}>
-        <Paper sx={{ width: "100%", mb: 2 }}>
+        { !applications?.isLoading && (<Paper sx={{ width: "100%", mb: 2 }}>
           <TableContainer>
             <Table sx={{ minWidth: 650 }} aria-label="lead table">
               <TableHead>
@@ -130,7 +147,7 @@ export const ApplicationListContainer: React.FC<any> = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {data.map((row) => (
+                {applications?.applications?.map((row) => (
                   <TableRow
                     key={row.applicationId}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -140,25 +157,25 @@ export const ApplicationListContainer: React.FC<any> = () => {
                     </TableCell>
                     <TableCell align="left">
                       {
-                       `${ row.primaryApplicant.personalInformation.firstName} ${ row.primaryApplicant.personalInformation.lastName}`
+                       `${ row?.primaryApplicant?.personalInformation?.firstName} ${ row?.primaryApplicant?.personalInformation?.lastName}`
                       }
                     </TableCell>
                     <TableCell align="left">{row.referrer}</TableCell>
                     <TableCell align="left">{row.applicationStatus}</TableCell>
                     <TableCell align="left">{"notes"}</TableCell>
                     <TableCell align="right">
-                      <Grid container size={12} justifyContent="flex-end">
-                        <Grid size={1}>
+                      <Grid container spacing={1} justifyContent="flex-end">
+                        <Grid size={2}>
                           <IconButton
                             color="primary"
                             onClick={() => {
-                              handleNavigate(row.applicationId)
+                              handleNavigate(row?.applicationId || "")
                             }}
                           >
                             <Visibility />
                           </IconButton>
                         </Grid>
-                        <Grid size={1}>
+                        <Grid size={2}>
                           <IconButton
                             color="primary"
                             onClick={() => alert("Home clicked!")}
@@ -166,22 +183,22 @@ export const ApplicationListContainer: React.FC<any> = () => {
                             <UpdateIcon />
                           </IconButton>
                         </Grid>
-                        <Grid size={1}>
+                        <Grid size={2}>
                           <IconButton
                             color="primary"
                             onClick={() => {
-                              setSelectedApplication(row.applicationId);
+                              setSelectedApplication(row?.applicationId || "");
                               setOpenAssign(true);
                             }}
                           >
                             <AssignmentIcon />
                           </IconButton>
                         </Grid>
-                        <Grid size={1}>
+                        <Grid size={2}>
                           <IconButton
                             color="primary"
                             onClick={() => {
-                              setSelectedApplication(row.applicationId);
+                              setSelectedApplication(row?.applicationId || "");
                               setOpenDelete(true);
                             }}
                           >
@@ -205,6 +222,7 @@ export const ApplicationListContainer: React.FC<any> = () => {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Paper>
+        )}
       </Grid>
       <Modal
         open={openDelete}
@@ -356,3 +374,4 @@ export const ApplicationListContainer: React.FC<any> = () => {
     </Grid>
   );
 };
+

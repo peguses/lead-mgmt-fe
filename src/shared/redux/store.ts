@@ -3,7 +3,8 @@ import { configureStore } from "@reduxjs/toolkit";
 import storage from "redux-persist/lib/storage";
 import commonSlice from "./common.slice";
 import { persistReducer, persistStore } from "redux-persist";
-import applicantSlice from "./application.slice";
+import applicationSlice  from "./application.slice";
+import applicationsSlice from "./applications.slice";
 
 const env = process.env.REACT_APP_ENV! as "DEVELOPMENT" | "PRODUCTION" | "QA";
 
@@ -12,18 +13,26 @@ const commonConfig = {
   storage,
 };
 
-const applicationConfig = {
+const loanConfig = {
   key: "loan",
   storage,
 };
 
+const applicationsConfig = {
+  key: "applications",
+  storage,
+};
+
+
 const persistedCommon = persistReducer(commonConfig, commonSlice);
-const persistedApplication = persistReducer(applicationConfig, applicantSlice);
+const persistedLoan = persistReducer(loanConfig, applicationSlice);
+const persistedApplications = persistReducer(applicationsConfig, applicationsSlice);
 
 export const store = configureStore({
   reducer: {
     common: persistedCommon,
-    loan: persistedApplication,
+    loan: persistedLoan,
+    applications: persistedApplications
   },
   devTools: env === "DEVELOPMENT" ? true : false,
   middleware: (getDefaultMiddleware) =>

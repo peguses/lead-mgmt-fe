@@ -44,10 +44,6 @@ export const ApplicationViewContainer: React.FC<any> = () => {
     }
   );
 
-  useEffect(() => {
-
-  }, [application])
-
   const [activeStep, setActiveStep] = useState<number>(0);
 
   const jointLoan = useAppSelector((state) => {
