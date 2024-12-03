@@ -151,7 +151,7 @@ const FinancialInformationTab = forwardRef(
                       </InputAdornment>
                     ),
                     sx: {
-                      marginTop: "20px",
+                      marginTop: !readonly ? "20px" : "",
                     },
                   },
                 }}
@@ -196,7 +196,7 @@ const FinancialInformationTab = forwardRef(
                       </InputAdornment>
                     ),
                     sx: {
-                      marginTop: "20px",
+                      marginTop: !readonly ? "20px" : "",
                     },
                   },
                 }}

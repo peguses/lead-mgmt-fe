@@ -129,7 +129,7 @@ const PersonalInformationTab = forwardRef(
                 </InputAdornment>
               ),
               sx: {
-                marginTop: "20px",
+                 marginTop: !readonly ? "20px" : "",
               },
             },
           }}
@@ -159,7 +159,7 @@ const PersonalInformationTab = forwardRef(
                 </InputAdornment>
               ),
               sx: {
-                marginTop: "20px",
+                marginTop: !readonly ? "20px" : "",
               },
             },
           }}
@@ -193,7 +193,7 @@ const PersonalInformationTab = forwardRef(
                 </InputAdornment>
               ),
               sx: {
-                marginTop: "20px",
+                marginTop: !readonly ? "20px" : "",
               },
             },
           }}
@@ -227,7 +227,7 @@ const PersonalInformationTab = forwardRef(
                 </InputAdornment>
               ),
               sx: {
-                marginTop: "20px",
+                marginTop: !readonly ? "20px" : "",
               },
             },
           }}
@@ -242,7 +242,7 @@ const PersonalInformationTab = forwardRef(
           size="small"
           fullWidth
           sx={{
-            marginTop: "20px",
+            marginTop: !readonly ? "20px" : "",
           }}
           error={Boolean(errors.state)}
         >
@@ -282,7 +282,7 @@ const PersonalInformationTab = forwardRef(
           variant={readonly ? "filled" : "outlined"}
           fullWidth
           size="small"
-          sx={{ marginTop: "20px" }}
+          sx={{ marginTop: !readonly ? "20px" : "" }}
           error={Boolean(errors.residencyStatus)}
         >
           <InputLabel
@@ -290,7 +290,7 @@ const PersonalInformationTab = forwardRef(
             id="residencyStatus"
             shrink
           >
-            Select Residency Status
+            Residency Status
           </InputLabel>
           <Controller
             name="residencyStatus"
@@ -301,7 +301,7 @@ const PersonalInformationTab = forwardRef(
               <Select
                 id="residencyStatus"
                 labelId="residencyStatus-label"
-                label="Select Residency Status"
+                label="Residency Status"
                 {...field}
                 displayEmpty
                 onChange={(e) => {
@@ -337,9 +337,6 @@ const PersonalInformationTab = forwardRef(
           sx={{ marginTop: "20px" }}
           error={Boolean(errors.investmentType)}
         >
-          <InputLabel htmlFor="investmentType-label" id="investmentType" shrink>
-            Select Residency Status
-          </InputLabel>
           <Controller
             name="investmentType"
             control={control}
@@ -349,7 +346,6 @@ const PersonalInformationTab = forwardRef(
               <Select
                 id="investmentType"
                 labelId="investmentType-label"
-                label="Select Residency Status"
                 {...field}
                 displayEmpty
                 onChange={(e) => {
