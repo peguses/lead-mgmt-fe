@@ -3,7 +3,7 @@ export const users = [
     id: 1,
     firstName: "Jayan",
     lastName: "Wadusinghearachchi",
-    userName: "icarus",
+    email: "icarus.202@gamil.com",
     role: {
       role: "ADMIN",
       name: "Admin",
@@ -23,7 +23,7 @@ export const users = [
     id: 2,
     firstName: "Prabashi",
     lastName: "Thennakoon",
-    userName: "pabi",
+    email: "pabi.202@gamil.com",
     role: {
       role: "ADMIN",
       name: "Admin",

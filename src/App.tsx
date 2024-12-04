@@ -39,6 +39,7 @@ function App() {
             <Route path="/lead-view/application-view/:applicationId" element={<ApplicationViewContainer />} />
             <Route path="/users" element={<UsersListContainer />} />
             <Route path="/users/new-user" element={<UserInformationContainer />} />
+            <Route path="/users/view-user/:userId" element={<UserInformationContainer />} />
             <Route path="/referral-manager-view" element={<ReferralManagerViewContainer />} />
           </Routes>
         </Box>

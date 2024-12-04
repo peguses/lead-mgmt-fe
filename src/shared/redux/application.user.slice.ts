@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { fetchUsers } from "../services/users.service";
 import { IRole } from "./role.slice";
-import { User } from "../../interfaces/user.interface";
+import { User } from "../interfaces/user.interface";
 
 export interface ApplicationUser {
 
@@ -19,7 +19,7 @@ const INITIAL_STATE: ApplicationUser = {
       id: 1,
       firstName: "",
       lastName: "",
-      userName: "",
+      email: "",
       password: "",
       role: {
         name: "",

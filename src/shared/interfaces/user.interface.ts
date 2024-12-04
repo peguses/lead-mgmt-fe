@@ -1,11 +1,11 @@
-import { Role } from "../shared/redux/role.slice";
+import { Role } from "../redux/role.slice";
 
 export interface User {
 
     id: number
     firstName: string;
     lastName: string;
-    userName: string;
+    email: string;
     password?: string | undefined;
     role: Role;
 

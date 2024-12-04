@@ -25,6 +25,7 @@ import { useAppDispatch, useAppSelector } from "../../shared/redux/hooks";
 import CancelIcon from "@mui/icons-material/Cancel";
 import GroupIcon from "@mui/icons-material/Group";
 import { useNavigate } from "react-router-dom";
+import { ro } from "date-fns/locale";
 
 export const UsersListContainer: React.FC<any> = () => {
   const style = {
@@ -75,6 +76,14 @@ export const UsersListContainer: React.FC<any> = () => {
   const handleAdd = () => {
     navigate("/users/new-user");
   };
+
+  const handleView = (userId: number) => {
+      navigate(`/users/view-user/${userId}`);
+  }
+
+  const handleUpdate = (userId: number) => {
+      navigate(`/users/view-user/${userId}`);
+  }
 
   return (
     <Grid container size={12}>
@@ -135,14 +144,14 @@ export const UsersListContainer: React.FC<any> = () => {
                 <TableBody>
                   {users?.users?.map((row) => (
                     <TableRow
-                      key={row.userName}
+                      key={row.email}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                     >
                       <TableCell component="th" scope="row">
                         {row.firstName}
                       </TableCell>
                       <TableCell align="left">{row?.lastName}</TableCell>
-                      <TableCell align="left">{row?.userName}</TableCell>
+                      <TableCell align="left">{row?.email}</TableCell>
                       <TableCell align="left">{row?.role?.name}</TableCell>
                       <TableCell align="right">
                         <Grid container spacing={1} justifyContent="flex-end">
@@ -150,7 +159,7 @@ export const UsersListContainer: React.FC<any> = () => {
                             <IconButton
                               color="primary"
                               onClick={() => {
-                                //   handleNavigate(row?.applicationId || "")
+                                  handleView(row?.id);
                               }}
                             >
                               <Visibility />
@@ -159,27 +168,18 @@ export const UsersListContainer: React.FC<any> = () => {
                           <Grid size={2}>
                             <IconButton
                               color="primary"
-                              onClick={() => alert("Home clicked!")}
+                              onClick={() => {
+                                handleUpdate(row?.id);
+                              }}
                             >
                               <EditIcon />
                             </IconButton>
                           </Grid>
-                          {/* <Grid size={2}>
-                          <IconButton
-                            color="primary"
-                            onClick={() => {
-                            //   setSelectedApplication(row?.applicationId || "");
-                            //   setOpenAssign(true);
-                            }}
-                          >
-                            <AssignmentIcon />
-                          </IconButton>
-                        </Grid> */}
                           <Grid size={2}>
                             <IconButton
                               color="primary"
                               onClick={() => {
-                                setSelectedUser(row?.userName || "");
+                                setSelectedUser(row?.email || "");
                                 setOpenDelete(true);
                               }}
                             >

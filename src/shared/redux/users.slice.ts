@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { fetchUsers } from "../services/users.service";
-import { User } from "../../interfaces/user.interface";
+import { User } from "../interfaces/user.interface";
+
 export interface Users {
 
     isLoading: boolean,

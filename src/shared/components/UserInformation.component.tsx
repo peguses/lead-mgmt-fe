@@ -12,24 +12,28 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
-import { useAppDispatch, useAppSelector } from "../../shared/redux/hooks";
-import { fetchRolesAsync, IRole, Role } from "../../shared/redux/role.slice";
+import { useAppDispatch } from "../../shared/redux/hooks";
+import { IRole, Role } from "../../shared/redux/role.slice";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import { User } from "../../interfaces/user.interface";
 import { createUserAsync } from "../../shared/redux/managed.user.slice";
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import KeyIcon from '@mui/icons-material/Key';
+import { User } from "../interfaces/user.interface";
 
 interface UserInformationProps {
   readonly?: boolean;
+  roles: Role[];
+  user?: User;
 }
 
 export const UserInformationComponent: React.FC<UserInformationProps> = ({
   readonly = false,
+  roles,
+  user
 }) => {
   const dispatch = useAppDispatch();
 
@@ -43,26 +47,14 @@ export const UserInformationComponent: React.FC<UserInformationProps> = ({
     clearErrors,
   } = useForm<any>({
     mode: "all",
-    defaultValues: {
+    defaultValues:  user ? user : {
       id: 1,
       firstName: "",
       lastName: "",
-      userName: "",
+      email: "",
       password: "",
-      role: {
-        name: "",
-        role: IRole.referrer,
-        permissions: [],
-      },
+      role: "",
     },
-  });
-
-  useEffect(() => {
-    dispatch(fetchRolesAsync());
-  }, []);
-
-  const roles = useAppSelector((state): Role[] | undefined => {
-    return state?.roles.roles;
   });
 
   const onSubmit = (data: User) => {
