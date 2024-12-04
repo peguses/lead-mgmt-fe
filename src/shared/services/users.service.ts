@@ -9,3 +9,8 @@ export const fetchUsers = async(): Promise<AxiosResponse<User[]>> => {
 export const fetchUser = async(userId: number): Promise<AxiosResponse<User>> => {
     return apiKit.get(`/users/${userId}`)
 }
+
+export const createUser = async(data: User): Promise<AxiosResponse<User>> => {
+    console.log(data)
+    return apiKit.post(`/users`, {data});
+}
