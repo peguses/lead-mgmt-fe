@@ -87,9 +87,6 @@ export const ApplicationListContainer: React.FC<any> = () => {
     }
   );
 
-  // applications?.applications?.forEach((row) => {console.log(row)});
-  // console.log();
-
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
@@ -215,7 +212,7 @@ export const ApplicationListContainer: React.FC<any> = () => {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={data.length}
+            count={applications?.applications.length || 0}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
