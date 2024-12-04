@@ -1,17 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { Role } from "./permission.slice";
 import { fetchUsers } from "../services/users.service";
-
-export interface User {
-
-    firstName: string;
-    lastName: string;
-    userName: string;
-    password?: string | undefined;
-    role: Role;
-
-}
-
+import { User } from "../../interfaces/user.interface";
 export interface Users {
 
     isLoading: boolean,

@@ -121,7 +121,7 @@ export const ApplicationDrawerComponent: React.FC<any> = ({
           {menuOpen && <ListItemText primary="Referrals" />}
         </ListItem>
 
-        <ListItem component={Link} to="/user-view">
+        <ListItem component={Link} to="/users">
           <ListItemIcon>
             <PeopleAltOutlinedIcon />
           </ListItemIcon>

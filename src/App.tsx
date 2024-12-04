@@ -13,6 +13,7 @@ import { ApplicationFooterComponent } from "./shared/components/ApplicationFoote
 import { ApplicationViewContainer } from "./pages/Applications/ApplicationView.container";
 import { removeGeneralInformation, removePrimaryApplicant, removeSecondaryApplicant } from "./shared/redux/application.slice";
 import { UsersListContainer } from "./pages/Users/UsersList.container";
+import { UserInformationContainer } from "./pages/Users/UserInformation.container";
 
 function App() {
   const [open, setOpen] = useState(false);
@@ -36,7 +37,8 @@ function App() {
             <Route path="/inquiry-status" element={<InquiryStatusViewContainer />} />
             <Route path="/lead-view" element={<ApplicationListContainer />} />
             <Route path="/lead-view/application-view/:applicationId" element={<ApplicationViewContainer />} />
-            <Route path="/user-view" element={<UsersListContainer />} />
+            <Route path="/users" element={<UsersListContainer />} />
+            <Route path="/users/new-user" element={<UserInformationContainer />} />
             <Route path="/referral-manager-view" element={<ReferralManagerViewContainer />} />
           </Routes>
         </Box>
