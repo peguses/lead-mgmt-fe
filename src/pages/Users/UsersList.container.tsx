@@ -3,7 +3,6 @@ import {
   Grid2 as Grid,
   IconButton,
   InputAdornment,
-  Modal,
   Paper,
   Table,
   TableBody,
@@ -13,7 +12,6 @@ import {
   TablePagination,
   TableRow,
   TextField,
-  Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
@@ -22,33 +20,17 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { fetchUsersAsync, Users } from "../../shared/redux/users.slice";
 import { useAppDispatch, useAppSelector } from "../../shared/redux/hooks";
-import CancelIcon from "@mui/icons-material/Cancel";
 import GroupIcon from "@mui/icons-material/Group";
 import { useNavigate } from "react-router-dom";
 import { setUserManagementAction, UserManagedAction } from "../../shared/redux/managed.user.slice";
 
 export const UsersListContainer: React.FC<any> = () => {
-  const style = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: 400,
-    bgcolor: "background.paper",
-    border: "2px solid #000",
-    boxShadow: 24,
-    p: 4,
-  };
 
   const dispatch = useAppDispatch();
 
   const [page, setPage] = useState(0);
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
-
-  const [openDelete, setOpenDelete] = useState<boolean>(false);
-
-  const [selectedUser, setSelectedUser] = useState<string>("");
 
   const navigate = useNavigate();
 
@@ -71,8 +53,6 @@ export const UsersListContainer: React.FC<any> = () => {
     setPage(newPage);
   };
 
-  const handleDelete = () => {};
-
   const handleAdd = () => {
     dispatch(setUserManagementAction(UserManagedAction.CREATE_USER))
     navigate("/users/new-user");
@@ -80,11 +60,15 @@ export const UsersListContainer: React.FC<any> = () => {
 
   const handleView = (userId: number) => {
       navigate(`/users/view-user/${userId}`);
-  }
+  };
 
   const handleUpdate = (userId: number) => {
       navigate(`/users/view-user/${userId}`);
-  }
+  };
+
+  const handleDelete = (userId: number) => {
+    navigate(`/users/view-user/${userId}`);
+  };
 
   return (
     <Grid container size={12}>
@@ -183,8 +167,7 @@ export const UsersListContainer: React.FC<any> = () => {
                               color="primary"
                               onClick={() => {
                                 dispatch(setUserManagementAction(UserManagedAction.DELETE_USER))
-                                setSelectedUser(row?.email || "");
-                                setOpenDelete(true);
+                                handleDelete(row?.id);
                               }}
                             >
                               <DeleteIcon />
@@ -209,57 +192,6 @@ export const UsersListContainer: React.FC<any> = () => {
           </Paper>
         )}
       </Grid>
-      <Modal
-        open={openDelete}
-        onClose={() => {}}
-        aria-labelledby="Delete model"
-        aria-describedby="Are you sure you want to delete this lead ?"
-      >
-        <Grid
-          container
-          sx={style}
-          size={{ xl: 12, lg: 12, md: 6, sm: 4, xs: 4 }}
-        >
-          <Grid size={12}>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-              Are you sure you want to delete this lead ?
-            </Typography>
-          </Grid>
-          <Grid
-            sx={{ marginTop: "10px" }}
-            size={{ xl: 3, lg: 3, md: 4, sm: 4, xs: 12 }}
-            offset={{ xl: 4, lg: 4, md: 3, sm: 3, xs: 1 }}
-          >
-            <Button
-              onClick={() => {
-                handleDelete();
-              }}
-              variant="contained"
-              color="primary"
-              fullWidth
-              startIcon={<DeleteIcon />}
-            >
-              Delete
-            </Button>
-          </Grid>
-          <Grid
-            sx={{ marginTop: "10px" }}
-            size={{ xl: 3, lg: 3, md: 4, sm: 4, xs: 12 }}
-            offset={{ xl: 1, lg: 1, md: 1, sm: 1, xs: 1 }}
-          >
-            <Button
-              onClick={() => {
-                setOpenDelete(false);
-              }}
-              variant="outlined"
-              fullWidth
-              startIcon={<CancelIcon />}
-            >
-              Cancel
-            </Button>
-          </Grid>
-        </Grid>
-      </Modal>
     </Grid>
   );
 };

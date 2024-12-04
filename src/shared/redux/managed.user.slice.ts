@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { createUser, fetchUser } from "../services/users.service";
+import { createUser, dropUser, fetchUser, updateUser } from "../services/users.service";
 import { IRole } from "./role.slice";
 import { User } from "../interfaces/user.interface";
 
@@ -58,6 +58,27 @@ export const createUserAsync = createAsyncThunk(
   }
 );
 
+
+export const dropUserAsync = createAsyncThunk(
+  "managedUser/dropUserAsync",
+  async (userId: number) => {
+    const response = await dropUser(userId);
+    return {
+      user: response.data as any,
+    };
+  }
+);
+
+export const updateUserAsync = createAsyncThunk(
+  "managedUser/updateUserAsync",
+  async (data: User) => {
+    const response = await updateUser(data.id, data);
+    return {
+      user: response.data as any,
+    };
+  }
+);
+
 export const managedUserSlice = createSlice({
     name: "managedUser",
     initialState: INITIAL_STATE,
@@ -92,6 +113,36 @@ export const managedUserSlice = createSlice({
         state.loadingFailed = false;
       });
       builder.addCase(createUserAsync.rejected, (state) => {
+        state.user = undefined;
+        state.isLoading = false;
+        state.loadingFailed = true;
+      });
+
+      builder.addCase(dropUserAsync.pending, (state) => {
+        state.isLoading = true;
+        state.loadingFailed = false;
+      });
+      builder.addCase(dropUserAsync.fulfilled, (state, action) => {
+        state.user = undefined;
+        state.isLoading = false;
+        state.loadingFailed = false;
+      });
+      builder.addCase(dropUserAsync.rejected, (state) => {
+        state.user = undefined;
+        state.isLoading = false;
+        state.loadingFailed = true;
+      });
+
+      builder.addCase(updateUserAsync.pending, (state) => {
+        state.isLoading = true;
+        state.loadingFailed = false;
+      });
+      builder.addCase(updateUserAsync.fulfilled, (state, action) => {
+        state.user = action.payload.user;
+        state.isLoading = false;
+        state.loadingFailed = false;
+      });
+      builder.addCase(updateUserAsync.rejected, (state) => {
         state.user = undefined;
         state.isLoading = false;
         state.loadingFailed = true;
