@@ -15,10 +15,10 @@ import {
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
-import { useAppDispatch } from "../../shared/redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../shared/redux/hooks";
 import { IRole, Role } from "../../shared/redux/role.slice";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import { createUserAsync } from "../../shared/redux/managed.user.slice";
+import { createUserAsync, UserManagedAction } from "../../shared/redux/managed.user.slice";
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import KeyIcon from '@mui/icons-material/Key';
@@ -57,21 +57,29 @@ export const UserInformationComponent: React.FC<UserInformationProps> = ({
     },
   });
 
+  const userManagementAction = useAppSelector((state):UserManagedAction => {
+    return state?.managedUser.action;
+  })
+
   const onSubmit = (data: User) => {
     dispatch(createUserAsync(data));
   };
 
   const handleClickShowPassword = () => setShowPassword(!showPassword);
 
+  const hidden = () => {
+    return readonly || userManagementAction === UserManagedAction.UPDATE_USER;
+  }
+
   return (
     <>
       <Grid container justifyContent={"center"}>
         <Grid size={4}>
           <TextField
-            variant={readonly ? "filled" : "outlined"}
+            variant={hidden() ? "filled" : "outlined"}
             size="small"
             fullWidth
-            disabled={readonly}
+            disabled={hidden()}
             label="First Name"
             {...register("firstName", {
               required: "First name is required",
@@ -89,7 +97,7 @@ export const UserInformationComponent: React.FC<UserInformationProps> = ({
                   </InputAdornment>
                 ),
                 sx: {
-                  marginTop: !readonly ? "20px" : "",
+                  marginTop: !hidden() ? "20px" : "",
                 },
               },
             }}
@@ -100,11 +108,11 @@ export const UserInformationComponent: React.FC<UserInformationProps> = ({
             }}
           />
           <TextField
-            variant={readonly ? "filled" : "outlined"}
+            variant={hidden() ? "filled" : "outlined"}
             fullWidth
             size="small"
             label="Last Name"
-            disabled={readonly}
+            disabled={hidden()}
             placeholder={"Last Name"}
             {...register("lastName", {
               required: "Last name is required",
@@ -119,7 +127,7 @@ export const UserInformationComponent: React.FC<UserInformationProps> = ({
                   </InputAdornment>
                 ),
                 sx: {
-                  marginTop: !readonly ? "20px" : "",
+                  marginTop: !hidden() ? "20px" : "",
                 },
               },
             }}
@@ -130,11 +138,11 @@ export const UserInformationComponent: React.FC<UserInformationProps> = ({
             }}
           />
           <TextField
-            variant={readonly ? "filled" : "outlined"}
+            variant={hidden() ? "filled" : "outlined"}
             fullWidth
             size="small"
             label="Email"
-            disabled={readonly}
+            disabled={hidden()}
             {...register("email", {
               required: "Email is required",
               pattern: {
@@ -153,7 +161,7 @@ export const UserInformationComponent: React.FC<UserInformationProps> = ({
                   </InputAdornment>
                 ),
                 sx: {
-                  marginTop: !readonly ? "20px" : "",
+                  marginTop: !hidden() ? "20px" : "",
                 },
               },
             }}

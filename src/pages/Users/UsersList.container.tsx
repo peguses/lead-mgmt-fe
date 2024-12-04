@@ -25,7 +25,7 @@ import { useAppDispatch, useAppSelector } from "../../shared/redux/hooks";
 import CancelIcon from "@mui/icons-material/Cancel";
 import GroupIcon from "@mui/icons-material/Group";
 import { useNavigate } from "react-router-dom";
-import { ro } from "date-fns/locale";
+import { setUserManagementAction, UserManagedAction } from "../../shared/redux/managed.user.slice";
 
 export const UsersListContainer: React.FC<any> = () => {
   const style = {
@@ -74,6 +74,7 @@ export const UsersListContainer: React.FC<any> = () => {
   const handleDelete = () => {};
 
   const handleAdd = () => {
+    dispatch(setUserManagementAction(UserManagedAction.CREATE_USER))
     navigate("/users/new-user");
   };
 
@@ -159,6 +160,7 @@ export const UsersListContainer: React.FC<any> = () => {
                             <IconButton
                               color="primary"
                               onClick={() => {
+                                  dispatch(setUserManagementAction(UserManagedAction.VIEW_USER));
                                   handleView(row?.id);
                               }}
                             >
@@ -169,6 +171,7 @@ export const UsersListContainer: React.FC<any> = () => {
                             <IconButton
                               color="primary"
                               onClick={() => {
+                                dispatch(setUserManagementAction(UserManagedAction.UPDATE_USER))
                                 handleUpdate(row?.id);
                               }}
                             >
@@ -179,6 +182,7 @@ export const UsersListContainer: React.FC<any> = () => {
                             <IconButton
                               color="primary"
                               onClick={() => {
+                                dispatch(setUserManagementAction(UserManagedAction.DELETE_USER))
                                 setSelectedUser(row?.email || "");
                                 setOpenDelete(true);
                               }}

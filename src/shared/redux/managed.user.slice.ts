@@ -3,11 +3,18 @@ import { createUser, fetchUser } from "../services/users.service";
 import { IRole } from "./role.slice";
 import { User } from "../interfaces/user.interface";
 
+export enum UserManagedAction {
+  CREATE_USER = "CREATE_USER",
+  UPDATE_USER = "UPDATE_USER",
+  VIEW_USER = "VIEW_USER",
+  DELETE_USER = "DELETE_USER"
+}
 export interface ManagedUser {
 
     isLoading: boolean,
     loadingFailed: boolean,
     user: User | undefined,
+    action: UserManagedAction
 
 }
 
@@ -27,6 +34,7 @@ const INITIAL_STATE: ManagedUser = {
         permissions: []
       },
     },
+    action: UserManagedAction.VIEW_USER
 
 };
 
@@ -54,6 +62,9 @@ export const managedUserSlice = createSlice({
     name: "managedUser",
     initialState: INITIAL_STATE,
     reducers: {
+        setUserManagementAction: (state, action) => {
+          state.action = action.payload
+        }
     },
     extraReducers: (builder) => {
       builder.addCase(fetchUserAsync.pending, (state) => {
@@ -88,4 +99,5 @@ export const managedUserSlice = createSlice({
     },
 });
 
+export const { setUserManagementAction } = managedUserSlice.actions;
 export default managedUserSlice.reducer;
