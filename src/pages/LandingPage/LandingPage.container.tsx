@@ -105,7 +105,7 @@ export const LandingPageContainer: React.FC<any> = () => {
 
   const applicantInformation = useAppSelector(
     (state): PersonalInformation | undefined => {
-      return state?.loan.application.primaryApplicant?.personalInformation
+      return state?.managedApplication.application.primaryApplicant?.personalInformation
     }
   );
 

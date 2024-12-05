@@ -40,14 +40,14 @@ export const ApplicationViewContainer: React.FC<any> = () => {
 
   const application = useAppSelector(
     (state): Application | undefined => {
-      return state?.loan.application;
+      return state?.managedApplication.application;
     }
   );
 
   const [activeStep, setActiveStep] = useState<number>(0);
 
   const jointLoan = useAppSelector((state) => {
-    return state.loan.application.jointLoan
+    return state.managedApplication.application.jointLoan
   });
 
   const applicantStatus = [
@@ -248,7 +248,7 @@ export const ApplicationViewContainer: React.FC<any> = () => {
                 variant="contained"
                 color="primary"
                 fullWidth
-                endIcon={<ArrowCircleRightOutlinedIcon />}
+                startIcon={<CheckCircleOutlineOutlinedIcon />}
               >
                 Update
               </Button>
@@ -290,7 +290,7 @@ export const ApplicationViewContainer: React.FC<any> = () => {
                 variant="contained"
                 color="primary"
                 fullWidth
-                endIcon={<ArrowCircleRightOutlinedIcon />}
+                startIcon={<CheckCircleOutlineOutlinedIcon />}
               >
                 Update
               </Button>

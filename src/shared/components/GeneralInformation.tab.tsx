@@ -33,7 +33,7 @@ const GeneralInformationTab = forwardRef(
 
     const generalInformation = useAppSelector(
       (state): GeneralInformation | undefined =>
-        state?.loan.application?.generalInformation
+        state?.managedApplication.application?.generalInformation
     );
 
     const {

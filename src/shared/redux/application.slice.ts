@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { fetchApplication } from "../services/application.service";
+import { fetchApplication, updateApplication } from "../services/application.service";
 
 export interface WorkInformation {
 
@@ -75,11 +75,11 @@ export interface Applicant {
 
 export interface Application {
 
-  applicationId: string | undefined;
+  applicationId: number;
   referrer: string | undefined;
   referrerId: string;
   processingOfficer: string;
-  processingOfficerId: string;
+  processingOfficerId: number;
   jointLoan: boolean;
   generalInformation: GeneralInformation | undefined;
   applicationStatus: ApplicationStatus;
@@ -88,11 +88,12 @@ export interface Application {
   isLoading: boolean;
   loadingFailed: boolean;
   createDateTime: Date | undefined;
+  loaded: boolean;
 
 }
 
-export interface Loan {
-    application: Application
+export interface ManagedApplication {
+    application: Application;
 }
 
 export enum ApplicationStatus {
@@ -107,15 +108,16 @@ export enum ApplicationStatus {
 
 }
 
-const INITIAL_STATE: Loan = {
+const INITIAL_STATE: ManagedApplication = {
 
   application: {
-    applicationId: "",
+    applicationId: 0,
     referrer: "",
     referrerId: "",
     processingOfficer: "",
-    processingOfficerId: "",
+    processingOfficerId: 0,
     jointLoan: false,
+    loaded: false,
     applicationStatus: ApplicationStatus.Inquiry,
     createDateTime: undefined,
     primaryApplicant: {
@@ -186,17 +188,29 @@ export const fetchApplicationAsync = createAsyncThunk('application/fetchApplicat
   };
 });
 
+export const updateApplicationAsync = createAsyncThunk(
+  "managedUser/updateUserAsync",
+  async (data: Application) => {
+    const response = await updateApplication(data.applicationId, data);
+    return {
+      application: response.data as any,
+    };
+  }
+);
+
 export const applicationSlice = createSlice({
-  name: "lead",
+  name: "managedApplication",
   initialState: INITIAL_STATE,
   reducers: {
 
     setJoinLoanApplication: (state, action) => {
       state.application.jointLoan = action.payload;
+      state.application.loaded = false;
     },
 
     setApplication: (state, action) => {
       state.application = action.payload;
+      state.application.loaded = false;
     },
 
 
@@ -267,6 +281,10 @@ export const applicationSlice = createSlice({
         financialInformation: undefined,
       };
     },
+
+    resetApplication: (state) => {
+      state.application = INITIAL_STATE.application
+    }
   },
 
   extraReducers: (builder) => {
@@ -279,8 +297,25 @@ export const applicationSlice = createSlice({
       state.application = action.payload.application;
       state.application.isLoading = false;
       state.application.loadingFailed = false;
+      state.application.loaded = true;
     });
     builder.addCase(fetchApplicationAsync.rejected, (state) => {
+      state =  {...state};
+      state.application.isLoading = false;
+      state.application.loadingFailed = true;
+    });
+
+    builder.addCase(updateApplicationAsync.pending, (state) => {
+      state.application.isLoading = true;
+      state.application.loadingFailed = false;
+    });
+    builder.addCase(updateApplicationAsync.fulfilled, (state, action) => {
+      state.application = action.payload.application;
+      state.application.isLoading = false;
+      state.application.loadingFailed = false;
+      state.application.loaded = false;
+    });
+    builder.addCase(updateApplicationAsync.rejected, (state) => {
       state =  {...state};
       state.application.isLoading = false;
       state.application.loadingFailed = true;
@@ -301,5 +336,6 @@ export const {
   removeGeneralInformation,
   removePrimaryApplicant,
   addOrUpdateGeneralInformation,
+  resetApplication
 } = applicationSlice.actions;
 export default applicationSlice.reducer;

@@ -37,7 +37,7 @@ const WorkInformationTab = forwardRef(
   ({ applicant, onSubmit, onValid, readonly = false }: WorkInformationProps, ref) => {
     const workInformation = useAppSelector(
       (state): WorkInformation | undefined => {
-        return state?.loan.application?.[applicant].workInformation;
+        return state?.managedApplication.application?.[applicant].workInformation;
       }
     );
 

@@ -26,7 +26,7 @@ export const fetchApplicationsAsync = createAsyncThunk(
 
 export const dropApplicationAsync = createAsyncThunk(
   "applications/dropApplicationAsync",
-  async (applicationId: string) => {
+  async (applicationId: number) => {
     const response = await dropApplication(applicationId);
     if (response.status === 204) {
       return {

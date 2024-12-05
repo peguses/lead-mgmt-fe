@@ -17,8 +17,8 @@ const commonConfig = {
   storage,
 };
 
-const loanConfig = {
-  key: "loan",
+const managedApplicationConfig = {
+  key: "managedApplication",
   storage,
 };
 
@@ -49,7 +49,7 @@ const rolesConfig = {
 
 
 const persistedCommon = persistReducer(commonConfig, commonSlice);
-const persistedLoan = persistReducer(loanConfig, applicationSlice);
+const persistedManagedApplication = persistReducer(managedApplicationConfig, applicationSlice);
 const persistedApplications = persistReducer(applicationsConfig, applicationsSlice);
 const persistedUsers = persistReducer(usersConfig, userSlice);
 const persistedManagedUser = persistReducer(managedUserConfig, managedUserSlice);
@@ -59,7 +59,7 @@ const persistedRoles = persistReducer(rolesConfig, roleSlice)
 export const store = configureStore({
   reducer: {
     common: persistedCommon,
-    loan: persistedLoan,
+    managedApplication: persistedManagedApplication,
     applications: persistedApplications,
     users: persistedUsers,
     roles: persistedRoles,

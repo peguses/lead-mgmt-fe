@@ -1,6 +1,6 @@
 export const data = [
   {
-    applicationId: "001",
+    applicationId: 1,
     referrer: "Yashith",
     referrerId: "001",
     jointLoan: true,
@@ -80,7 +80,7 @@ export const data = [
     applicationStatus: "INQUIRY",
   },
   {
-    applicationId: "003",
+    applicationId: 3,
     referrer: "Lochana",
     referrerId: "001",
     processingOfficer: "Jayan Wadusinghearach",

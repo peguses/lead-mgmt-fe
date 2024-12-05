@@ -28,15 +28,13 @@ import UpdateIcon from "@mui/icons-material/Update";
 import SearchIcon from "@mui/icons-material/Search";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { Controller, useForm } from "react-hook-form";
-import { processingOfficers } from "../../mocks/processing.officers.mocks";
 import { useNavigate } from 'react-router-dom';
 import { Applications, dropApplicationAsync, fetchApplicationsAsync } from "../../shared/redux/applications.slice";
 import { useAppDispatch, useAppSelector } from "../../shared/redux/hooks";
 import Moment from "react-moment";
 import { fetchUsersAsync, Users } from "../../shared/redux/users.slice";
-import { User } from "../../shared/interfaces/user.interface";
 import { IRole } from "../../shared/redux/role.slice";
-import { Application } from "../../shared/redux/application.slice";
+import { Application, fetchApplicationAsync, resetApplication, updateApplicationAsync } from "../../shared/redux/application.slice";
 
 export const ApplicationListContainer: React.FC<any> = () => {
 
@@ -71,7 +69,7 @@ export const ApplicationListContainer: React.FC<any> = () => {
 
   const [openAssign, setOpenAssign] = useState<boolean>(false);
 
-  const [selectedApplication, setSelectedApplication] = useState<string>("");
+  const [selectedApplication, setSelectedApplication] = useState<number>();
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -82,14 +80,19 @@ export const ApplicationListContainer: React.FC<any> = () => {
 
   useEffect(() => {
     dispatch(fetchApplicationsAsync());
-    dispatch(fetchUsersAsync())
+    dispatch(fetchUsersAsync());
+    dispatch(resetApplication())
   }, []);
-
-  
 
   const applications = useAppSelector(
     (state): Applications | undefined => {
       return state?.applications;
+    }
+  );
+
+  const managedApplication = useAppSelector(
+    (state): Application | undefined => {
+      return state?.managedApplication.application
     }
   );
 
@@ -103,17 +106,32 @@ export const ApplicationListContainer: React.FC<any> = () => {
     setPage(newPage);
   };
 
-  const handleDelete = (applicationId: string) => {
+  const handleDelete = (applicationId: number) => {
       dispatch(dropApplicationAsync(applicationId));
   };
 
-  const handleAssign = (data: string) => {
-
+  const handleAssign = (officer: any) => {
+    const { processingOfficer } = officer;
+    if (managedApplication) {
+      dispatch(updateApplicationAsync( {...managedApplication, processingOfficerId: processingOfficer}));
+    }
   };
 
-  const handleNavigate = (applicationId: string) => {
+  const handleNavigate = (applicationId: number) => {
     navigate(`/applications/${applicationId}`);
   };
+
+  useEffect(() => {
+
+    if (!managedApplication?.isLoading && !managedApplication?.loadingFailed && managedApplication?.loaded) {
+      setOpenAssign(true);
+    }
+
+    if (!managedApplication?.loaded) {
+      setOpenAssign(false);
+    }
+
+  }, [managedApplication, managedApplication?.isLoading, managedApplication?.loadingFailed, managedApplication?.loaded])
 
   return (
     <Grid container size={12}>
@@ -167,23 +185,23 @@ export const ApplicationListContainer: React.FC<any> = () => {
               <TableBody>
                 {applications?.applications?.map((row) => (
                   <TableRow
-                    key={row.applicationId}
+                    key={row?.applicationId}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
                     <TableCell component="th" scope="row">
-                      {row.applicationId}
+                      {row?.applicationId}
                     </TableCell>
                     <TableCell align="left">
                       {
                        `${ row?.primaryApplicant?.personalInformation?.firstName} ${ row?.primaryApplicant?.personalInformation?.lastName}`
                       }
                     </TableCell>
-                    <TableCell align="left">{row.referrer}</TableCell>
-                    <TableCell align="left">{row.processingOfficer}</TableCell>
-                    <TableCell align="left">{row.applicationStatus}</TableCell>
+                    <TableCell align="left">{row?.referrer}</TableCell>
+                    <TableCell align="left">{row?.processingOfficer}</TableCell>
+                    <TableCell align="left">{row?.applicationStatus}</TableCell>
                     <TableCell align="left">
                         <Moment format="YYYY-MM-DD HH:MM">
-                            {row.createDateTime}
+                            {row?.createDateTime}
                         </Moment>
                     </TableCell>
                     <TableCell align="left">{"notes"}</TableCell>
@@ -193,7 +211,7 @@ export const ApplicationListContainer: React.FC<any> = () => {
                           <IconButton
                             color="primary"
                             onClick={() => {
-                              handleNavigate(row?.applicationId || "")
+                              handleNavigate(row?.applicationId || 0)
                             }}
                           >
                             <Visibility />
@@ -211,8 +229,8 @@ export const ApplicationListContainer: React.FC<any> = () => {
                           <IconButton
                             color="primary"
                             onClick={() => {
-                              setSelectedApplication(row?.applicationId || "");
-                              setOpenAssign(true);
+                              setSelectedApplication(row?.applicationId || 0);
+                              dispatch(fetchApplicationAsync({applicationId: row?.applicationId}));
                             }}
                           >
                             <AssignmentIcon />
@@ -222,7 +240,7 @@ export const ApplicationListContainer: React.FC<any> = () => {
                           <IconButton
                             color="primary"
                             onClick={() => {
-                              setSelectedApplication(row?.applicationId || "");
+                              setSelectedApplication(row?.applicationId || 0);
                               setOpenDelete(true);
                             }}
                           >
@@ -271,7 +289,7 @@ export const ApplicationListContainer: React.FC<any> = () => {
           >
             <Button
               onClick={() => {
-                handleDelete(selectedApplication);
+                handleDelete(selectedApplication || 0);
               }}
               variant="contained"
               color="primary"
@@ -364,8 +382,8 @@ export const ApplicationListContainer: React.FC<any> = () => {
           </Grid>
           <Grid
             sx={{ marginTop: "10px" }}
-            size={{ xl: 3, lg: 3, md: 4, sm: 4, xs: 12 }}
-            offset={{ xl: 4, lg: 4, md: 3, sm: 3, xs: 1 }}
+            size={{ xl: 4, lg: 4, md: 4, sm: 4, xs: 12 }}
+            offset={{ xl: 3, lg: 3, md: 3, sm: 3, xs: 1 }}
           >
             <Button
               onClick={handleSubmit(handleAssign)}
@@ -379,7 +397,7 @@ export const ApplicationListContainer: React.FC<any> = () => {
           </Grid>
           <Grid
             sx={{ marginTop: "10px" }}
-            size={{ xl: 3, lg: 3, md: 4, sm: 4, xs: 12 }}
+            size={{ xl: 4, lg: 4, md: 4, sm: 4, xs: 12 }}
             offset={{ xl: 1, lg: 1, md: 1, sm: 1, xs: 1 }}
           >
             <Button
