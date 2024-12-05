@@ -42,7 +42,6 @@ const PersonalInformationTab = forwardRef(
       }
     );
 
-   
     const {
       control,
       register,

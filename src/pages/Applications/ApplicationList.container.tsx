@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   FormControl,
   FormHelperText,
@@ -27,7 +26,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import UpdateIcon from "@mui/icons-material/Update";
 import SearchIcon from "@mui/icons-material/Search";
-import { data } from "../../mocks/applications.mocks";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { Controller, useForm } from "react-hook-form";
 import { processingOfficers } from "../../mocks/processing.officers.mocks";

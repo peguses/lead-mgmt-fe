@@ -11,6 +11,7 @@ mock.onGet('http://localhost:8080/applications').reply(200,  data);
 mock.onGet('http://localhost:8080/users').reply(200,  users);
 mock.onGet('http://localhost:8080/users/1').reply(200,  users.find((u) => u.id === 1));
 mock.onPost('http://localhost:8080/users').reply(200,  users.find((u) => u.id === 1));
+mock.onPost('http://localhost:8080/login').reply(200,  users.find((u) => u.id === 1));
 mock.onGet('http://localhost:8080/roles').reply(200,  roles);
 export const baseUrl = "http://localhost:8080";
 

@@ -21,3 +21,7 @@ export const dropUser = async(userId: number): Promise<AxiosResponse<any>> => {
 export const updateUser = async(userId: number, data: User): Promise<AxiosResponse<User>> => {
     return apiKit.patch(`/users/${userId}`, {...data});
 }
+
+export const login = async(data: User): Promise<AxiosResponse<User>> => {
+    return apiKit.post(`/login`, {...data});
+}
