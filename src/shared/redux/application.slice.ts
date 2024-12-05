@@ -85,6 +85,7 @@ export interface Application {
   secondaryApplicant: Applicant | undefined;
   isLoading: boolean;
   loadingFailed: boolean;
+  createDateTime: Date | undefined;
 
 }
 
@@ -112,6 +113,7 @@ const INITIAL_STATE: Loan = {
     referrerId: "",
     jointLoan: false,
     applicationStatus: ApplicationStatus.Inquiry,
+    createDateTime: undefined,
     primaryApplicant: {
       personalInformation: {
         firstName: "",

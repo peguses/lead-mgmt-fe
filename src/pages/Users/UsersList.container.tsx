@@ -55,19 +55,19 @@ export const UsersListContainer: React.FC<any> = () => {
 
   const handleAdd = () => {
     dispatch(setUserManagementAction(UserManagedAction.CREATE_USER))
-    navigate("/users/new-user");
+    navigate("/users/user");
   };
 
   const handleView = (userId: number) => {
-      navigate(`/users/view-user/${userId}`);
+      navigate(`/users/user/${userId}`);
   };
 
   const handleUpdate = (userId: number) => {
-      navigate(`/users/view-user/${userId}`);
+      navigate(`/users/user/${userId}`);
   };
 
   const handleDelete = (userId: number) => {
-    navigate(`/users/view-user/${userId}`);
+    navigate(`/users/user/${userId}`);
   };
 
   return (

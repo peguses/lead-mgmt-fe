@@ -14,6 +14,7 @@ import { ApplicationViewContainer } from "./pages/Applications/ApplicationView.c
 import { removeGeneralInformation, removePrimaryApplicant, removeSecondaryApplicant } from "./shared/redux/application.slice";
 import { UsersListContainer } from "./pages/Users/UsersList.container";
 import { UserInformationContainer } from "./pages/Users/UserInformation.container";
+import { ApplicationStatusContainer } from "./pages/Applications/ApplicationStaus.container";
 
 function App() {
   const [open, setOpen] = useState(false);
@@ -34,12 +35,12 @@ function App() {
         <Box component="main" sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 ,  marginTop: "74px", marginBottom: "74px", zIndex: 0 }}>
           <Routes>
             <Route path="/" element={<LandingPageContainer />} />
-            <Route path="/inquiry-status" element={<InquiryStatusViewContainer />} />
-            <Route path="/lead-view" element={<ApplicationListContainer />} />
-            <Route path="/lead-view/application-view/:applicationId" element={<ApplicationViewContainer />} />
+            <Route path="/applications/status" element={<ApplicationStatusContainer />} />
+            <Route path="/applications" element={<ApplicationListContainer />} />
+            <Route path="/applications/:applicationId" element={<ApplicationViewContainer />} />
             <Route path="/users" element={<UsersListContainer />} />
-            <Route path="/users/new-user" element={<UserInformationContainer />} />
-            <Route path="/users/view-user/:userId" element={<UserInformationContainer />} />
+            <Route path="/users/user" element={<UserInformationContainer />} />
+            <Route path="/users/user/:userId" element={<UserInformationContainer />} />
             <Route path="/referral-manager-view" element={<ReferralManagerViewContainer />} />
           </Routes>
         </Box>

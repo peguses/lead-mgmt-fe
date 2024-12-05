@@ -32,6 +32,7 @@ import { processingOfficers } from "../../mocks/processing.officers.mocks";
 import { useNavigate } from 'react-router-dom';
 import { Applications, fetchApplicationsAsync } from "../../shared/redux/applications.slice";
 import { useAppDispatch, useAppSelector } from "../../shared/redux/hooks";
+import Moment from "react-moment";
 
 export const ApplicationListContainer: React.FC<any> = () => {
 
@@ -95,7 +96,7 @@ export const ApplicationListContainer: React.FC<any> = () => {
   };
 
   const handleNavigate = (applicationId: string) => {
-    navigate(`/lead-view/application-view/${applicationId}`);
+    navigate(`/applications/${applicationId}`);
   };
 
   return (
@@ -134,6 +135,9 @@ export const ApplicationListContainer: React.FC<any> = () => {
                     Status
                   </TableCell>
                   <TableCell sx={{ fontWeight: 700 }} align="left">
+                    Request Date
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: 700 }} align="left">
                     Notes
                   </TableCell>
                   <TableCell sx={{ fontWeight: 700 }} align="right">
@@ -157,6 +161,11 @@ export const ApplicationListContainer: React.FC<any> = () => {
                     </TableCell>
                     <TableCell align="left">{row.referrer}</TableCell>
                     <TableCell align="left">{row.applicationStatus}</TableCell>
+                    <TableCell align="left">
+                        <Moment format="YYYY-MM-DD HH:MM">
+                            {row.createDateTime}
+                        </Moment>
+                    </TableCell>
                     <TableCell align="left">{"notes"}</TableCell>
                     <TableCell align="right">
                       <Grid container spacing={1} justifyContent="flex-end">

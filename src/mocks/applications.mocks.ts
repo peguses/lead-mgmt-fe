@@ -4,6 +4,7 @@ export const data = [
     referrer: "Yashith",
     referrerId: "001",
     jointLoan: true,
+    createDateTime: new Date(),
     primaryApplicant: {
         personalInformation: {
             firstName: "Jayan",
@@ -81,6 +82,7 @@ export const data = [
     referrer: "Lochana",
     referrerId: "001",
     jointLoan: true,
+    createDateTime: new Date(),
     primaryApplicant: {
         personalInformation: {
             firstName: "Jayan",

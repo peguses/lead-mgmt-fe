@@ -100,18 +100,18 @@ export const ApplicationDrawerComponent: React.FC<any> = ({
           {menuOpen && <ListItemText primary="Home" />}
         </ListItem>
 
-        <ListItem component={Link} to="/inquiry-status">
+        <ListItem component={Link} to="/applications/status">
           <ListItemIcon>
             <HelpOutlineOutlinedIcon />
           </ListItemIcon>
           {menuOpen && <ListItemText primary="Inquiry Status" />}
         </ListItem>
 
-        <ListItem component={Link} to="/lead-view">
+        <ListItem component={Link} to="/applications">
           <ListItemIcon>
             <NotificationsNoneRoundedIcon />
           </ListItemIcon>
-          {menuOpen && <ListItemText primary="Leads" />}
+          {menuOpen && <ListItemText primary="Applications" />}
         </ListItem>
 
         <ListItem component={Link} to="/referral-manager-view">
