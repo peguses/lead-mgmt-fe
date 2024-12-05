@@ -78,6 +78,8 @@ export interface Application {
   applicationId: string | undefined;
   referrer: string | undefined;
   referrerId: string;
+  processingOfficer: string;
+  processingOfficerId: string;
   jointLoan: boolean;
   generalInformation: GeneralInformation | undefined;
   applicationStatus: ApplicationStatus;
@@ -111,6 +113,8 @@ const INITIAL_STATE: Loan = {
     applicationId: "",
     referrer: "",
     referrerId: "",
+    processingOfficer: "",
+    processingOfficerId: "",
     jointLoan: false,
     applicationStatus: ApplicationStatus.Inquiry,
     createDateTime: undefined,

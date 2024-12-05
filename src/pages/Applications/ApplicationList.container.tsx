@@ -148,6 +148,9 @@ export const ApplicationListContainer: React.FC<any> = () => {
                     Referrer
                   </TableCell>
                   <TableCell sx={{ fontWeight: 700 }} align="left">
+                    Processing Officer
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: 700 }} align="left">
                     Status
                   </TableCell>
                   <TableCell sx={{ fontWeight: 700 }} align="left">
@@ -176,6 +179,7 @@ export const ApplicationListContainer: React.FC<any> = () => {
                       }
                     </TableCell>
                     <TableCell align="left">{row.referrer}</TableCell>
+                    <TableCell align="left">{row.processingOfficer}</TableCell>
                     <TableCell align="left">{row.applicationStatus}</TableCell>
                     <TableCell align="left">
                         <Moment format="YYYY-MM-DD HH:MM">

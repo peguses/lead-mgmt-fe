@@ -5,6 +5,8 @@ export const data = [
     referrerId: "001",
     jointLoan: true,
     createDateTime: new Date(),
+    processingOfficer: "Jayan Wadusinghearach",
+    processingOfficerId: "12",
     primaryApplicant: {
         personalInformation: {
             firstName: "Jayan",
@@ -81,6 +83,8 @@ export const data = [
     applicationId: "003",
     referrer: "Lochana",
     referrerId: "001",
+    processingOfficer: "Jayan Wadusinghearach",
+    processingOfficerId: "12",
     jointLoan: true,
     createDateTime: new Date(),
     primaryApplicant: {
