@@ -77,7 +77,20 @@ export const data = [
         referralOption: '001',
         applicantAgreedOnConditions: false
     },
-    applicationStatus: "INQUIRY",
+    applicationStatus: [
+        {
+            note: "test1",
+            status: "INQUIRY",
+            userId: 1,
+            createDateTime: new Date()
+        },
+        {
+            note: "test2",
+            status: "DEAL",
+            userId: 1,
+            createDateTime: new Date().setDate(2)
+        }
+    ],
   },
   {
     applicationId: 3,
@@ -158,6 +171,19 @@ export const data = [
         referralOption: '001',
         applicantAgreedOnConditions: true
     },
-    applicationStatus: "INQUIRY",
+    applicationStatus: [
+        {
+            note: "test1",
+            status: "INQUIRY",
+            userId: 1,
+            createDateTime: new Date()
+        },
+        {
+            note: "test2",
+            status: "CANCELLED",
+            userId: 1,
+            createDateTime: new Date().setDate(2)
+        }
+    ],
   },
 ];

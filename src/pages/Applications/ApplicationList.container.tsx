@@ -35,6 +35,7 @@ import Moment from "react-moment";
 import { fetchUsersAsync, Users } from "../../shared/redux/users.slice";
 import { IRole } from "../../shared/redux/role.slice";
 import { Application, fetchApplicationAsync, resetApplication, updateApplicationAsync } from "../../shared/redux/application.slice";
+import { findLatestStatus } from "../../shared/utils/find.application.status.util";
 
 export const ApplicationListContainer: React.FC<any> = () => {
 
@@ -92,7 +93,7 @@ export const ApplicationListContainer: React.FC<any> = () => {
 
   const managedApplication = useAppSelector(
     (state): Application | undefined => {
-      return state?.managedApplication.application
+      return state?.managedApplication.application;
     }
   );
 
@@ -131,7 +132,7 @@ export const ApplicationListContainer: React.FC<any> = () => {
       setOpenAssign(false);
     }
 
-  }, [managedApplication, managedApplication?.isLoading, managedApplication?.loadingFailed, managedApplication?.loaded])
+  }, [managedApplication, managedApplication?.isLoading, managedApplication?.loadingFailed, managedApplication?.loaded]);
 
   return (
     <Grid container size={12}>
@@ -198,13 +199,13 @@ export const ApplicationListContainer: React.FC<any> = () => {
                     </TableCell>
                     <TableCell align="left">{row?.referrer}</TableCell>
                     <TableCell align="left">{row?.processingOfficer}</TableCell>
-                    <TableCell align="left">{row?.applicationStatus}</TableCell>
+                    <TableCell align="left">{findLatestStatus(row?.applicationStatus).status}</TableCell>
                     <TableCell align="left">
                         <Moment format="YYYY-MM-DD HH:MM">
                             {row?.createDateTime}
                         </Moment>
                     </TableCell>
-                    <TableCell align="left">{"notes"}</TableCell>
+                    <TableCell align="left">{findLatestStatus(row?.applicationStatus).note}</TableCell>
                     <TableCell align="right">
                       <Grid container spacing={1} justifyContent="flex-end">
                         <Grid size={2}>

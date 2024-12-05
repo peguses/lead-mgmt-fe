@@ -86,7 +86,7 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
         <Grid size={4}>
           {!application.isLoading && (
             <Typography sx={{ marginTop: "20px" }}>
-              {application.applicationStatus}
+              {/* {application.applicationStatus} */}
             </Typography>
           )}
         </Grid>

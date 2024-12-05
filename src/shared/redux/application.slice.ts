@@ -66,6 +66,13 @@ export interface Applicant {
   financialInformation?: FinancialInformation;
 }
 
+export interface Status {
+  note: string;
+  status: ApplicationStatus;
+  userId: number;
+  createDateTime: Date;
+}
+
 export interface Application {
   applicationId: number;
   referrer: string | undefined;
@@ -74,7 +81,7 @@ export interface Application {
   processingOfficerId: number;
   jointLoan: boolean;
   generalInformation: GeneralInformation | undefined;
-  applicationStatus: ApplicationStatus;
+  applicationStatus: Status[];
   primaryApplicant: Applicant | undefined;
   secondaryApplicant: Applicant | undefined;
   isLoading: boolean;
@@ -106,7 +113,7 @@ const INITIAL_STATE: ManagedApplication = {
     processingOfficerId: 0,
     jointLoan: false,
     loaded: false,
-    applicationStatus: ApplicationStatus.Inquiry,
+    applicationStatus: [],
     createDateTime: undefined,
     primaryApplicant: {
       personalInformation: {
