@@ -103,16 +103,6 @@ export const LandingPageContainer: React.FC<any> = () => {
     { id: 3, completed: false },
   ]);
 
-  const applicantInformation = useAppSelector(
-    (state): PersonalInformation | undefined => {
-      return state?.managedApplication.application.primaryApplicant?.personalInformation
-    }
-  );
-
-  useEffect(() => {
-    console.log(applicantInformation);
-  },[applicantInformation]);
-
   useEffect(() => {
     setAllowSubmit(applicationGeneralInfoValid);
     setCompletedStep(2, applicationGeneralInfoValid);

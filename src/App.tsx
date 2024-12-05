@@ -11,7 +11,7 @@ import { ReferralManagerViewContainer } from "./pages/ReferralManagerView.contai
 import { ApplicationNavbarComponent } from "./shared/components/ApplicationNavbar.component";
 import { ApplicationFooterComponent } from "./shared/components/ApplicationFooter.component";
 import { ApplicationViewContainer } from "./pages/Applications/ApplicationView.container";
-import { removeGeneralInformation, removePrimaryApplicant, removeSecondaryApplicant } from "./shared/redux/application.slice";
+import { removeGeneralInformation, removePrimaryApplicant, removeSecondaryApplicant, resetApplication } from "./shared/redux/application.slice";
 import { UsersListContainer } from "./pages/Users/UsersList.container";
 import { UserInformationContainer } from "./pages/Users/UserInformation.container";
 import { ApplicationStatusContainer } from "./pages/Applications/ApplicationStaus.container";
@@ -23,7 +23,8 @@ function App() {
   useEffect(() => {
     dispatch(removeSecondaryApplicant());
     dispatch(removePrimaryApplicant());
-    dispatch(removeGeneralInformation())
+    dispatch(removeGeneralInformation());
+    dispatch(resetApplication());
   }, [dispatch]);
 
   

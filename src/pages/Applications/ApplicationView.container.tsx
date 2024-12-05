@@ -20,7 +20,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import InfoIcon from "@mui/icons-material/Info";
 import FinancialInformationTab from "../../shared/components/FinancialInformation.tab"
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from "../../shared/redux/hooks";
 import { Application, fetchApplicationAsync } from "../../shared/redux/application.slice";
 
@@ -30,7 +30,10 @@ interface Step {
 }
 
 export const ApplicationViewContainer: React.FC<any> = () => {
+
   const dispatch = useAppDispatch();
+
+  const navigate = useNavigate();
 
   const { applicationId } = useParams();
 
@@ -64,6 +67,9 @@ export const ApplicationViewContainer: React.FC<any> = () => {
   }
 
   const handleBack = () => {
+    if (activeStep === 0) {
+      navigate("/applications");
+    }
     setActiveStep(activeStep-1);
   }
 
@@ -143,7 +149,7 @@ export const ApplicationViewContainer: React.FC<any> = () => {
             startIcon={<ArrowCircleLeftOutlinedIcon />} 
             variant="text"
             disableRipple
-            disabled={activeStep === 0}
+            // disabled={activeStep === 0}
             onClick={handleBack}
             >
           Back

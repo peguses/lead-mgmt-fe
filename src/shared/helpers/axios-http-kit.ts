@@ -8,6 +8,7 @@ import { roles } from '../../mocks/roles.mocks';
 const mock = new MockAdapter(axios);
 mock.onGet('http://localhost:8080/applications/1').reply(200, { ...data.find((a) => a.applicationId === 1)});
 mock.onPatch('http://localhost:8080/applications/1').reply(200, { ...data.find((a) => a.applicationId === 1)});
+mock.onGet('http://localhost:8080/applications?applicationId=1').reply(200, { ...data.find((a) => a.applicationId === 1)});
 mock.onGet('http://localhost:8080/applications').reply(200,  data);
 mock.onGet('http://localhost:8080/users').reply(200,  users);
 mock.onGet('http://localhost:8080/users/1').reply(200,  users.find((u) => u.id === 1));

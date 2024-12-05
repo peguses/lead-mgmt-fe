@@ -2,7 +2,17 @@ import { AxiosResponse } from 'axios';
 import apiKit from '../helpers/axios-http-kit';
 import { Application } from '../redux/application.slice';
 
-export const fetchApplication = async (applicationId: number): Promise <AxiosResponse<Application>> => {
+export interface Filer {
+    applicationId?: number;
+    filterBy?: string;
+    filter?: string;
+}
+
+export const fetchApplication = async ({applicationId, filterBy , filter}: Filer): Promise <AxiosResponse<Application>> => {
+    if (filterBy && filter) {
+        console.log(`/applications?${filterBy}=${filter}`)
+        return apiKit.get(`/applications?${filterBy}=${filter}`);
+    }
     return apiKit.get(`/applications/${applicationId}`);
 }
 

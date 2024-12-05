@@ -1,8 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { fetchApplication, updateApplication } from "../services/application.service";
+import {
+  fetchApplication,
+  updateApplication,
+} from "../services/application.service";
 
 export interface WorkInformation {
-
   employmentType: string;
   occupation: string;
   employerContactName: string;
@@ -16,22 +18,18 @@ export interface WorkInformation {
   employerPostCode: string;
   currentEmploymentStartDate: Date;
   probationaryEmployee: boolean;
-
 }
 
 export interface GeneralInformation {
-
   numberOfDependant: number;
   hasPropertyOffer: boolean;
   propertyOfferElaboration: string;
   applicantOptionalNote: string;
   referralOption: string;
   applicantsAgreedOnConditions: boolean;
-
 }
 
 export interface FinancialInformation {
-
   annualIncome: number;
   lengthOfEmployment: number;
   totalAmountSaved: number;
@@ -47,11 +45,9 @@ export interface FinancialInformation {
   wereBankrupted: boolean;
   hasDefaulted: boolean;
   defaultedReason: string;
-
 }
 
 export interface PersonalInformation {
-
   firstName: string;
   lastName: string;
   mobile: string;
@@ -62,19 +58,15 @@ export interface PersonalInformation {
   firstTimeBuyer: boolean;
   stateCapitalCityBuyer: boolean;
   buyerAgreedToConnectWithAgent: boolean;
-
 }
 
 export interface Applicant {
-
   personalInformation?: PersonalInformation;
   workInformation?: WorkInformation;
   financialInformation?: FinancialInformation;
-
 }
 
 export interface Application {
-
   applicationId: number;
   referrer: string | undefined;
   referrerId: string;
@@ -89,15 +81,13 @@ export interface Application {
   loadingFailed: boolean;
   createDateTime: Date | undefined;
   loaded: boolean;
-
 }
 
 export interface ManagedApplication {
-    application: Application;
+  application: Application;
 }
 
 export enum ApplicationStatus {
-
   Inquiry = "INQUIRY",
   Deal = "DEAL",
   Processing = "PROCESSING",
@@ -105,11 +95,9 @@ export enum ApplicationStatus {
   Canceled = "CANCELLED",
   Settled = "SETTLED",
   Paid = "PAID",
-
 }
 
 const INITIAL_STATE: ManagedApplication = {
-
   application: {
     applicationId: 0,
     referrer: "",
@@ -149,8 +137,7 @@ const INITIAL_STATE: ManagedApplication = {
         wereBankrupted: true,
         hasDefaulted: true,
         defaultedReason: "",
-      }
-
+      },
     },
     secondaryApplicant: {
       personalInformation: {
@@ -164,7 +151,7 @@ const INITIAL_STATE: ManagedApplication = {
         firstTimeBuyer: false,
         stateCapitalCityBuyer: false,
         buyerAgreedToConnectWithAgent: false,
-      }
+      },
     },
     generalInformation: {
       numberOfDependant: 0,
@@ -176,20 +163,22 @@ const INITIAL_STATE: ManagedApplication = {
     },
     isLoading: false,
     loadingFailed: false,
-  }
-
+  },
 };
 
-export const fetchApplicationAsync = createAsyncThunk('application/fetchApplication', async(props: any) => {
-  const { applicationId } = props;
-  const response = await fetchApplication(applicationId);
-  return {
-    application: response.data as any,
-  };
-});
+export const fetchApplicationAsync = createAsyncThunk(
+  "managedApplication/fetchApplication",
+  async (props: any) => {
+    const { applicationId, filterBy, filter } = props;
+    const response = await fetchApplication({applicationId, filterBy, filter});
+    return {
+      application: response.data as any,
+    };
+  }
+);
 
 export const updateApplicationAsync = createAsyncThunk(
-  "managedUser/updateUserAsync",
+  "managedApplication/updateApplication",
   async (data: Application) => {
     const response = await updateApplication(data.applicationId, data);
     return {
@@ -202,7 +191,6 @@ export const applicationSlice = createSlice({
   name: "managedApplication",
   initialState: INITIAL_STATE,
   reducers: {
-
     setJoinLoanApplication: (state, action) => {
       state.application.jointLoan = action.payload;
       state.application.loaded = false;
@@ -212,7 +200,6 @@ export const applicationSlice = createSlice({
       state.application = action.payload;
       state.application.loaded = false;
     },
-
 
     addOrUpdatePrimaryApplicantPersonalInformation: (state, action) => {
       state.application.primaryApplicant = {
@@ -283,12 +270,11 @@ export const applicationSlice = createSlice({
     },
 
     resetApplication: (state) => {
-      state.application = INITIAL_STATE.application
-    }
+      state.application = INITIAL_STATE.application;
+    },
   },
 
   extraReducers: (builder) => {
-
     builder.addCase(fetchApplicationAsync.pending, (state) => {
       state.application.isLoading = true;
       state.application.loadingFailed = false;
@@ -300,7 +286,7 @@ export const applicationSlice = createSlice({
       state.application.loaded = true;
     });
     builder.addCase(fetchApplicationAsync.rejected, (state) => {
-      state =  {...state};
+      state = { ...state };
       state.application.isLoading = false;
       state.application.loadingFailed = true;
     });
@@ -316,11 +302,11 @@ export const applicationSlice = createSlice({
       state.application.loaded = false;
     });
     builder.addCase(updateApplicationAsync.rejected, (state) => {
-      state =  {...state};
+      state = { ...state };
       state.application.isLoading = false;
       state.application.loadingFailed = true;
     });
-  }
+  },
 });
 
 export const {
@@ -336,6 +322,6 @@ export const {
   removeGeneralInformation,
   removePrimaryApplicant,
   addOrUpdateGeneralInformation,
-  resetApplication
+  resetApplication,
 } = applicationSlice.actions;
 export default applicationSlice.reducer;
