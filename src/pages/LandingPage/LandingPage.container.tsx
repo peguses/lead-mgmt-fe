@@ -392,6 +392,7 @@ export const LandingPageContainer: React.FC<any> = () => {
             variant="text"
             disableRipple
             onClick={handleBack}
+            disabled={activeStep === 0}
           >
             Back
           </Button>

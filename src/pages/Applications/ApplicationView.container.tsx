@@ -55,20 +55,16 @@ export const ApplicationViewContainer: React.FC<any> = () => {
     { code: "2APP", name: "2 Applicants" },
   ];
 
-  const handlePersonalInformationSubmit = () => {
-    setActiveStep(1);
-  };
-
-  const handleFinancialInformationSubmit = () => {
-    setActiveStep(2);
-  };
-
   const handleSubmit = () => {
    
   };
 
+  const handleNext = () => {
+    setActiveStep(activeStep+1);
+  }
+
   const handleBack = () => {
-    setActiveStep(activeStep !== 0 ? activeStep-1 : 0);
+    setActiveStep(activeStep-1);
   }
 
   return (
@@ -147,6 +143,7 @@ export const ApplicationViewContainer: React.FC<any> = () => {
             startIcon={<ArrowCircleLeftOutlinedIcon />} 
             variant="text"
             disableRipple
+            disabled={activeStep === 0}
             onClick={handleBack}
             >
           Back
@@ -158,6 +155,19 @@ export const ApplicationViewContainer: React.FC<any> = () => {
               backgroundColor: "gray",
             }}
           />
+          <Button 
+             sx={{
+              textTransform: 'none',
+              color: 'primary.main'
+            }}
+            endIcon={<ArrowCircleRightOutlinedIcon />} 
+            variant="text"
+            disableRipple
+            onClick={handleNext}
+            disabled={activeStep === 2}
+            >
+          Next
+          </Button>
         </Box>
       </Grid>
       {!application?.isLoading && (<Grid
@@ -234,13 +244,13 @@ export const ApplicationViewContainer: React.FC<any> = () => {
               sx={{ marginTop: "20px" }}
             >
               <Button
-                onClick={handlePersonalInformationSubmit}
+                onClick={handleSubmit}
                 variant="contained"
                 color="primary"
                 fullWidth
                 endIcon={<ArrowCircleRightOutlinedIcon />}
               >
-                Next
+                Update
               </Button>
             </Grid>
           </Fragment>
@@ -276,13 +286,13 @@ export const ApplicationViewContainer: React.FC<any> = () => {
               sx={{ marginTop: "20px" }}
             >
               <Button
-                onClick={handleFinancialInformationSubmit}
+                onClick={handleSubmit}
                 variant="contained"
                 color="primary"
                 fullWidth
                 endIcon={<ArrowCircleRightOutlinedIcon />}
               >
-                Next
+                Update
               </Button>
             </Grid>
           </Fragment>
@@ -302,7 +312,7 @@ export const ApplicationViewContainer: React.FC<any> = () => {
                 fullWidth
                 startIcon={<CheckCircleOutlineOutlinedIcon />}
               >
-                Submit
+                Update
               </Button>
             </Grid>
           </Fragment>

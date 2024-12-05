@@ -30,9 +30,13 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import { Controller, useForm } from "react-hook-form";
 import { processingOfficers } from "../../mocks/processing.officers.mocks";
 import { useNavigate } from 'react-router-dom';
-import { Applications, fetchApplicationsAsync } from "../../shared/redux/applications.slice";
+import { Applications, dropApplicationAsync, fetchApplicationsAsync } from "../../shared/redux/applications.slice";
 import { useAppDispatch, useAppSelector } from "../../shared/redux/hooks";
 import Moment from "react-moment";
+import { fetchUsersAsync, Users } from "../../shared/redux/users.slice";
+import { User } from "../../shared/interfaces/user.interface";
+import { IRole } from "../../shared/redux/role.slice";
+import { Application } from "../../shared/redux/application.slice";
 
 export const ApplicationListContainer: React.FC<any> = () => {
 
@@ -77,8 +81,11 @@ export const ApplicationListContainer: React.FC<any> = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchApplicationsAsync())
+    dispatch(fetchApplicationsAsync());
+    dispatch(fetchUsersAsync())
   }, []);
+
+  
 
   const applications = useAppSelector(
     (state): Applications | undefined => {
@@ -86,13 +93,22 @@ export const ApplicationListContainer: React.FC<any> = () => {
     }
   );
 
+  const users = useAppSelector(
+    (state): Users | undefined => {
+      return state?.users;
+    }
+  );
+
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
 
-  const handleDelete = () => {};
+  const handleDelete = (applicationId: string) => {
+      dispatch(dropApplicationAsync(applicationId));
+  };
 
-  const handleAssign = (data) => {
+  const handleAssign = (data: string) => {
+
   };
 
   const handleNavigate = (applicationId: string) => {
@@ -251,7 +267,7 @@ export const ApplicationListContainer: React.FC<any> = () => {
           >
             <Button
               onClick={() => {
-                handleDelete();
+                handleDelete(selectedApplication);
               }}
               variant="contained"
               color="primary"
@@ -327,11 +343,11 @@ export const ApplicationListContainer: React.FC<any> = () => {
                       field.onChange(e);
                     }}
                   >
-                    {processingOfficers.map((stateObj) => (
-                      <MenuItem key={stateObj.id} value={stateObj.name}>
-                        {stateObj.name}
+                    { users && !users?.isLoading && users.users.filter((s) => s.role.role === IRole.processingOfficer).map((stateObj) => (
+                      <MenuItem key={stateObj.email} value={stateObj.id}>
+                        {`${stateObj.firstName} ${stateObj.lastName}`}
                       </MenuItem>
-                    ))}
+                    ))};
                   </Select>
                 )}
               />

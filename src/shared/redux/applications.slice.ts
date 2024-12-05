@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { Application } from "./application.slice";
-import { fetchApplications } from "../services/application.service";
+import { dropApplication, fetchApplications } from "../services/application.service";
 
 export interface Applications {
   isLoading: boolean;
@@ -24,6 +24,21 @@ export const fetchApplicationsAsync = createAsyncThunk(
   }
 );
 
+export const dropApplicationAsync = createAsyncThunk(
+  "applications/dropApplicationAsync",
+  async (applicationId: string) => {
+    const response = await dropApplication(applicationId);
+    if (response.status === 204) {
+      return {
+        applicationId : applicationId,
+      };
+    }
+    return {
+      applicationId : "",
+    };
+  }
+);
+
 export const applicationsSlice = createSlice({
   name: "applications",
   initialState: INITIAL_STATE,
@@ -43,6 +58,21 @@ export const applicationsSlice = createSlice({
       state.loadingFailed = false;
     });
     builder.addCase(fetchApplicationsAsync.rejected, (state) => {
+      state.applications = [];
+      state.isLoading = false;
+      state.loadingFailed = true;
+    });
+
+    builder.addCase(dropApplicationAsync.pending, (state) => {
+      state.isLoading = true;
+      state.loadingFailed = false;
+    });
+    builder.addCase(dropApplicationAsync.fulfilled, (state, action) => {
+      state.applications = {...state, ...state.applications.filter((a) => a.applicationId === action.payload.applicationId)};
+      state.isLoading = false;
+      state.loadingFailed = false;
+    });
+    builder.addCase(dropApplicationAsync.rejected, (state) => {
       state.applications = [];
       state.isLoading = false;
       state.loadingFailed = true;
