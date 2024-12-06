@@ -201,7 +201,7 @@ export const ApplicationListContainer: React.FC<any> = () => {
                     <TableCell align="left">{row?.processingOfficer}</TableCell>
                     <TableCell align="left">{findLatestStatus(row?.applicationStatus).status}</TableCell>
                     <TableCell align="left">
-                        <Moment format="YYYY-MM-DD HH:MM">
+                    <Moment format="YYYY-MM-DD HH:MM">
                             {row?.createDateTime}
                         </Moment>
                     </TableCell>
@@ -391,6 +391,7 @@ export const ApplicationListContainer: React.FC<any> = () => {
               variant="contained"
               color="primary"
               fullWidth
+              disabled={!isValid}
               startIcon={<AssignmentIcon />}
             >
               Assign

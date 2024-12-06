@@ -22,12 +22,19 @@ import { Controller, useForm } from "react-hook-form";
 import { FilterList } from "@mui/icons-material";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { useNavigate } from "react-router-dom";
-import { Applications } from "../../shared/redux/applications.slice";
+import { findLatestStatus } from "../../shared/utils/find.application.status.util";
+import moment from "moment";
+import UploadIcon from '@mui/icons-material/Upload';
+import { FileUploadComponent } from "../../shared/components/FileUpload.component";
 
 export const ApplicationStatusContainer: React.FC<any> = () => {
-  const [openAssign, setOpenAssign] = useState<boolean>(true);
+
+  const [viewStatusModelOpen, setViewStatusModelOpen] = useState<boolean>(true);
 
   const navigate = useNavigate();
+
+  const [uploadDocumentModelOpen, setUploadDocumentModelOpen] =
+  useState<boolean>(false);
 
   const {
     control,
@@ -76,26 +83,136 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
 
   useEffect(() => {
     if (!application.isLoading && application.loaded) {
-      setOpenAssign(false);
+      setViewStatusModelOpen(false);
     }
   }, [application.isLoading, application]);
 
   return (
     <>
       <Grid container justifyContent={"center"}>
-        <Grid size={4}>
+        <Grid size={{xl: 5, lg: 5, md: 5, sm: 10, xs: 10}}>
           {!application.isLoading && (
-            <Typography sx={{ marginTop: "20px" }}>
-              {/* {application.applicationStatus} */}
-            </Typography>
+            <>
+              <TextField
+                size="small"
+                label="Inquiry Status"
+                variant={"filled"}
+                fullWidth
+                value={findLatestStatus(application.applicationStatus)?.status}
+                disabled={true}
+                {...register("applicantOptionalNote", {
+                  required: false,
+                })}
+                slotProps={{
+                  inputLabel: {
+                    shrink: true,
+                  },
+                }}
+                sx={{
+                  ".MuiInputLabel-outlined": {
+                    lineHeight: "70px",
+                  },
+                }}
+              />
+
+              <TextField
+                size="small"
+                label="Last updated"
+                variant={"filled"}
+                fullWidth
+                slotProps={{
+                  inputLabel: {
+                    shrink: true,
+                  },
+                }}
+                value={moment(
+                  findLatestStatus(application.applicationStatus)
+                    ?.createDateTime
+                ).format("yyyy-MM-DD:HH:hh")}
+                disabled={true}
+                {...register("applicantOptionalNote", {
+                  required: false,
+                })}
+              />
+
+              <TextField
+                size="small"
+                label="Processing officer"
+                variant={"filled"}
+                fullWidth
+                slotProps={{
+                  inputLabel: {
+                    shrink: true,
+                  },
+                }}
+                value={application.processingOfficer}
+                disabled={true}
+                {...register("applicantOptionalNote", {
+                  required: false,
+                })}
+              />
+
+              <TextField
+                size="small"
+                label="Your referrer"
+                variant={"filled"}
+                fullWidth
+                slotProps={{
+                  inputLabel: {
+                    shrink: true,
+                  },
+                }}
+                value={application.referrer}
+                disabled={true}
+                {...register("applicantOptionalNote", {
+                  required: false,
+                })}
+              />
+
+              <TextField
+                size="small"
+                multiline
+                label="Note"
+                rows={2}
+                variant={"filled"}
+                slotProps={{
+                  inputLabel: {
+                    shrink: true,
+                  },
+                }}
+                fullWidth
+                value={findLatestStatus(application.applicationStatus)?.note}
+                disabled={true}
+                {...register("applicantOptionalNote", {
+                  required: false,
+                })}
+              />
+            </>
           )}
+          <Grid>
+
+          </Grid>
+          <Grid
+            sx={{ marginTop: "10px" }}
+            size={{ xl: 4, lg: 6, md: 12, sm: 12, xs: 12 }}
+          >
+            <Button
+              onClick={() => setUploadDocumentModelOpen(true)}
+              variant="contained"
+              color="primary"
+              fullWidth
+              startIcon={<UploadIcon />}
+            >
+              UPLOAD DOCUMENT
+            </Button>
+          </Grid>
         </Grid>
 
         <Modal
-          open={openAssign}
+          open={viewStatusModelOpen}
           onClose={() => {}}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
+          aria-labelledby="upload document"
+          aria-describedby="upload document"
         >
           <Grid
             container
@@ -103,7 +220,7 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
             size={{ xl: 12, lg: 12, md: 6, sm: 4, xs: 4 }}
           >
             <Grid size={12}>
-              <Typography id="modal-modal-title" variant="h6" component="h2">
+              <Typography id="upload-document-title" variant="h6" component="h2">
                 View my application
               </Typography>
             </Grid>
@@ -203,7 +320,7 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
             >
               <Button
                 onClick={() => {
-                  setOpenAssign(false);
+                  setViewStatusModelOpen(false);
                   navigate("/");
                 }}
                 variant="outlined"
@@ -215,6 +332,7 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
             </Grid>
           </Grid>
         </Modal>
+        <FileUploadComponent open={uploadDocumentModelOpen}/>
       </Grid>
     </>
   );

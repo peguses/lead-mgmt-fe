@@ -73,6 +73,12 @@ export interface Status {
   createDateTime: Date;
 }
 
+export interface Document {
+  remark: string;
+  name: string;
+  path: string;
+}
+
 export interface Application {
   applicationId: number;
   referrer: string | undefined;
@@ -88,6 +94,7 @@ export interface Application {
   loadingFailed: boolean;
   createDateTime: Date | undefined;
   loaded: boolean;
+  documents: Document[]
 }
 
 export interface ManagedApplication {
@@ -170,6 +177,7 @@ const INITIAL_STATE: ManagedApplication = {
     },
     isLoading: false,
     loadingFailed: false,
+    documents: []
   },
 };
 
