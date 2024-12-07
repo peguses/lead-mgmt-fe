@@ -8,8 +8,16 @@ import {
   MenuItem,
   Modal,
   Select,
+  styled,
+  Table,
+  TableBody,
+  TableCell,
+  tableCellClasses,
+  TableContainer,
+  TableHead,
+  TableRow,
   TextField,
-  Typography,
+  Typography
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import {
@@ -26,6 +34,7 @@ import { findLatestStatus } from "../../shared/utils/find.application.status.uti
 import moment from "moment";
 import UploadIcon from '@mui/icons-material/Upload';
 import { FileUploadModal } from "../../shared/components/FileUpload.modal";
+import CheckCircleOutlineOutlinedIcon from "@mui/icons-material/CheckCircleOutlineOutlined";
 
 export const ApplicationStatusContainer: React.FC<any> = () => {
 
@@ -49,6 +58,27 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
       filterValue: ""
     },
   });
+
+  const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    [`&.${tableCellClasses.head}`]: {
+      backgroundColor: theme.palette.common.black,
+      color: theme.palette.common.white,
+    },
+    [`&.${tableCellClasses.body}`]: {
+      fontSize: 14,
+    },
+    whiteSpace: 'normal', wordWrap: 'break-word' 
+  }));
+  
+  const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    '&:nth-of-type(odd)': {
+      backgroundColor: theme.palette.action.hover,
+    },
+    // hide last border
+    '&:last-child td, &:last-child th': {
+      border: 0,
+    },
+  }));
 
   const dispatch = useAppDispatch();
 
@@ -177,23 +207,74 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
               />
             </>
           )}
-          <Grid>
+          <Grid container sx={{marginTop: "20px"}} size={12}>
+          {application.documents.length !== 0 && (<TableContainer>
+            <Table sx={{ minWidth: 650 }} aria-label="lead table">
+              <TableHead>
+                <StyledTableRow>
+                  <StyledTableCell sx={{ fontWeight: 700 }}>Document</StyledTableCell>
+                  <StyledTableCell sx={{ fontWeight: 700 }} align="left">
+                    Remark
+                  </StyledTableCell>
+                  <StyledTableCell sx={{ fontWeight: 700 }} align="left">
+                    Url
+                  </StyledTableCell>
+                </StyledTableRow>
+              </TableHead>
+              <TableBody>
+                {application?.documents?.map((row, index) => (
+                  <StyledTableRow
+                    key={`${row.name}${index}`}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  >
+                    <StyledTableCell component="th" scope="row">
+                      {row?.name}
+                    </StyledTableCell>
+                    <StyledTableCell align="left">
+                     {row?.remark}
+                    </StyledTableCell>
+                    <StyledTableCell align="left">
+                      {row?.path}
+                    </StyledTableCell>
+                  </StyledTableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          )}
+          </Grid>
+          <Grid  
+              container
+              spacing={2}>
+            <Grid
+              size={{ xl: 4, lg: 6, md: 12, sm: 12, xs: 12 }}
 
-          </Grid>
-          <Grid
-            sx={{ marginTop: "10px" }}
-            size={{ xl: 4, lg: 6, md: 12, sm: 12, xs: 12 }}
-          >
-            <Button
-              onClick={() => setUploadDocumentModelOpen(true)}
-              variant="contained"
-              color="primary"
-              fullWidth
-              startIcon={<UploadIcon />}
             >
-              UPLOAD DOCUMENT
-            </Button>
-          </Grid>
+              <Button
+                onClick={() => setViewStatusModelOpen(true)}
+                variant="contained"
+                color="primary"
+                fullWidth
+                startIcon={<CheckCircleOutlineOutlinedIcon />}
+              >
+                VIEW STATUS
+              </Button>
+            </Grid>
+            { application.applicationId !== 0 && !application.isLoading && (
+              <Grid
+              size={{ xl: 4, lg: 6, md: 12, sm: 12, xs: 12 }}
+            >
+              <Button
+                onClick={() => setUploadDocumentModelOpen(true)}
+                variant="contained"
+                color="primary"
+                fullWidth
+                startIcon={<UploadIcon />}
+              >
+                UPLOAD DOCUMENT
+              </Button>
+            </Grid>)}
+            </Grid>
         </Grid>
 
         <Modal

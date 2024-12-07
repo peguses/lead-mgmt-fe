@@ -91,6 +91,18 @@ export const data = [
             createDateTime: new Date().setDate(2)
         }
     ],
+    documents: [
+        {
+            name: "birth_certificate_jayan",
+            path: "birth_certificate_1",
+            remark: "test1"
+        },
+        {
+            name: "birth_certificate_P",
+            path: "birth_certificate_1",
+            remark: "test1"
+        }
+    ]
   },
   {
     applicationId: 3,

@@ -9,15 +9,18 @@ import {
   MenuItem,
   Modal,
   Select,
+  styled,
   Table,
   TableBody,
   TableCell,
+  tableCellClasses,
   TableContainer,
   TableHead,
   TablePagination,
   TableRow,
   TextField,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import Paper from "@mui/material/Paper";
@@ -40,6 +43,8 @@ export const ApplicationListContainer: React.FC<any> = () => {
 
   const dispatch = useAppDispatch();
 
+  const isSmallScreen = useMediaQuery('(max-width: 900px)');
+
   const style = {
     position: "absolute",
     top: "50%",
@@ -51,6 +56,26 @@ export const ApplicationListContainer: React.FC<any> = () => {
     boxShadow: 24,
     p: 4,
   };
+
+  const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    [`&.${tableCellClasses.head}`]: {
+      backgroundColor: theme.palette.common.black,
+      color: theme.palette.common.white,
+    },
+    [`&.${tableCellClasses.body}`]: {
+      fontSize: 14,
+    },
+    whiteSpace: 'normal', wordWrap: 'break-word' 
+  }));
+  
+  const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    '&:nth-of-type(odd)': {
+      backgroundColor: theme.palette.action.hover,
+    },
+    '&:last-child td, &:last-child th': {
+      border: 0,
+    },
+  }));
 
   const navigate = useNavigate();
 
@@ -157,55 +182,55 @@ export const ApplicationListContainer: React.FC<any> = () => {
           <TableContainer>
             <Table sx={{ minWidth: 650 }} aria-label="lead table">
               <TableHead>
-                <TableRow>
-                  <TableCell sx={{ fontWeight: 700 }}>Lead ID</TableCell>
-                  <TableCell sx={{ fontWeight: 700 }} align="left">
+                <StyledTableRow>
+                  {!isSmallScreen && (<StyledTableCell sx={{ fontWeight: 700 }}>Lead ID</StyledTableCell>)}
+                  <StyledTableCell sx={{ fontWeight: 700 }} align="left">
                     Lead Name
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: 700 }} align="left">
+                  </StyledTableCell>
+                  {!isSmallScreen && (<StyledTableCell sx={{ fontWeight: 700 }} align="left">
                     Referrer
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: 700 }} align="left">
+                  </StyledTableCell>)}
+                  {!isSmallScreen && (<StyledTableCell sx={{ fontWeight: 700 }} align="left">
                     Processing Officer
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: 700 }} align="left">
+                  </StyledTableCell>)}
+                  <StyledTableCell sx={{ fontWeight: 700 }} align="left">
                     Status
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: 700 }} align="left">
+                  </StyledTableCell>
+                  {!isSmallScreen &&  (<StyledTableCell sx={{ fontWeight: 700 }} align="left">
                     Request Date
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: 700 }} align="left">
+                  </StyledTableCell>)}
+                  <StyledTableCell sx={{ fontWeight: 700 }} align="left">
                     Notes
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: 700 }} align="right">
+                  </StyledTableCell>
+                  <StyledTableCell sx={{ fontWeight: 700, minWidth: "200px" }} align="right">
                     Actions
-                  </TableCell>
-                </TableRow>
+                  </StyledTableCell>
+                </StyledTableRow>
               </TableHead>
               <TableBody>
                 {applications?.applications?.map((row) => (
-                  <TableRow
+                  <StyledTableRow
                     key={row?.applicationId}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
-                    <TableCell component="th" scope="row">
+                    {!isSmallScreen && (<StyledTableCell component="th" scope="row">
                       {row?.applicationId}
-                    </TableCell>
-                    <TableCell align="left">
+                    </StyledTableCell>)}
+                    <StyledTableCell align="left">
                       {
                        `${ row?.primaryApplicant?.personalInformation?.firstName} ${ row?.primaryApplicant?.personalInformation?.lastName}`
                       }
-                    </TableCell>
-                    <TableCell align="left">{row?.referrer}</TableCell>
-                    <TableCell align="left">{row?.processingOfficer}</TableCell>
-                    <TableCell align="left">{findLatestStatus(row?.applicationStatus).status.name}</TableCell>
-                    <TableCell align="left">
+                    </StyledTableCell>
+                    {!isSmallScreen && (<StyledTableCell align="left">{row?.referrer}</StyledTableCell>)}
+                    {!isSmallScreen && (<StyledTableCell align="left">{row?.processingOfficer}</StyledTableCell>)}
+                    <StyledTableCell align="left">{findLatestStatus(row?.applicationStatus).status.name}</StyledTableCell>
+                    {!isSmallScreen && (<StyledTableCell align="left">
                     <Moment format="YYYY-MM-DD HH:MM">
                             {row?.createDateTime}
                         </Moment>
-                    </TableCell>
-                    <TableCell align="left">{findLatestStatus(row?.applicationStatus).note}</TableCell>
-                    <TableCell align="right">
+                    </StyledTableCell>)}
+                    <StyledTableCell align="left">{findLatestStatus(row?.applicationStatus).note}</StyledTableCell>
+                    <StyledTableCell align="right" sx={{minWidth: "200px"}}>
                       <Grid container spacing={1} justifyContent="flex-end">
                         <Grid size={2}>
                           <IconButton
@@ -240,8 +265,8 @@ export const ApplicationListContainer: React.FC<any> = () => {
                           </IconButton>
                         </Grid>
                       </Grid>
-                    </TableCell>
-                  </TableRow>
+                    </StyledTableCell>
+                  </StyledTableRow>
                 ))}
               </TableBody>
             </Table>

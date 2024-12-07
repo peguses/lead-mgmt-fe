@@ -39,7 +39,6 @@ import {
   setJoinLoanApplication,
   WorkInformation,
 } from "../../shared/redux/application.slice";
-import { useAppSelector } from "../../shared/redux/hooks";
 
 interface Step {
   id: number;
