@@ -160,22 +160,30 @@ export const ApplicationListContainer: React.FC<any> = () => {
 
   return (
     <Grid container size={12}>
-      <Grid size={3}>
-        <TextField
-          label="Search"
-          variant="outlined"
-          size="small"
-          fullWidth
-          slotProps={{
-            input: {
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon />
-                </InputAdornment>
-              ),
-            },
-          }}
-        />
+      <Grid container size={12} spacing={2}>
+        <Grid size={{xl:6, lg: 6, md: 6, sm:12, xs: 12}}>
+          <Typography sx={{fontSize:"24px", fontWeight: 700}}>Applications</Typography>
+        </Grid>
+        <Grid container size={{xl:6, lg: 6, md: 6, sm:12, xs: 12}} justifyContent={"end"}>
+          <Grid size={{xl: 3, lg: 3, md: 6, sm: 12, xs: 12}}>
+          <TextField
+            sx={{ justifySelf:"end"}}
+            label="Search"
+            variant="outlined"
+            size="small"
+            fullWidth
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              },
+            }}
+          />
+          </Grid>
+        </Grid>
       </Grid>
       <Grid size={12} sx={{ marginTop: "10px" }}>
         { !applications?.isLoading && (<Paper sx={{ width: "100%", mb: 2 }}>
@@ -223,7 +231,7 @@ export const ApplicationListContainer: React.FC<any> = () => {
                     </StyledTableCell>
                     {!isSmallScreen && (<StyledTableCell align="left">{row?.referrer}</StyledTableCell>)}
                     {!isSmallScreen && (<StyledTableCell align="left">{row?.processingOfficer}</StyledTableCell>)}
-                    <StyledTableCell align="left">{findLatestStatus(row?.applicationStatus).status.name}</StyledTableCell>
+                    <StyledTableCell align="left">{findLatestStatus(row?.applicationStatus)?.status?.name}</StyledTableCell>
                     {!isSmallScreen && (<StyledTableCell align="left">
                     <Moment format="YYYY-MM-DD HH:MM">
                             {row?.createDateTime}

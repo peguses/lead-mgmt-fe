@@ -445,7 +445,7 @@ export const LandingPageContainer: React.FC<any> = () => {
             </Grid>
             {jointLoan ? (
               <Grid container size={8} offset={1.5}>
-                <Grid size={5.5}>
+                <Grid size={{xl: 5.5, lg: 5.5, md: 5.5, sm: 12, xs: 12}}>
                   <PersonalInformationTab
                     key={1}
                     applicant={"primaryApplicant"}
@@ -458,7 +458,7 @@ export const LandingPageContainer: React.FC<any> = () => {
                     ref={applicantOnePersonalInformationRef}
                   />
                 </Grid>
-                <Grid size={5.5} offset={1}>
+                <Grid size={{xl: 5.5, lg: 5.5, md: 5.5, sm: 12, xs: 12}} offset={{xl: 1, lg: 1, md:1}}>
                   <PersonalInformationTab
                     key={2}
                     applicant={"secondaryApplicant"}
@@ -502,7 +502,7 @@ export const LandingPageContainer: React.FC<any> = () => {
           <Fragment>
             {jointLoan ? (
               <Grid container size={8} offset={1.5}>
-                <Grid size={5.5}>
+                <Grid size={{xl: 5.5, lg: 5.5, md: 5.5, sm: 12, xs: 12}}>
                   <WorkInformationTab
                     key={1}
                     applicant={"primaryApplicant"}
@@ -511,7 +511,7 @@ export const LandingPageContainer: React.FC<any> = () => {
                     ref={applicantOneWorkInfoRef}
                   />
                 </Grid>
-                <Grid size={5.5} offset={1}>
+                <Grid size={{xl: 5.5, lg: 5.5, md: 5.5, sm: 12, xs: 12}} offset={{xl: 1, lg: 1, md:1}}>
                   <WorkInformationTab
                     key={2}
                     applicant={"secondaryApplicant"}
@@ -551,7 +551,7 @@ export const LandingPageContainer: React.FC<any> = () => {
           <Fragment>
             {jointLoan ? (
               <Grid container size={8} offset={1.5}>
-                <Grid size={5.5}>
+                <Grid size={{xl: 5.5, lg: 5.5, md: 5.5, sm: 12, xs: 12}}>
                   <FinancialInformationTab
                     key={1}
                     applicant={"primaryApplicant"}
@@ -562,7 +562,7 @@ export const LandingPageContainer: React.FC<any> = () => {
                     ref={applicationOneFinancialInfoRef}
                   />
                 </Grid>
-                <Grid size={5.5} offset={1}>
+                <Grid size={{xl: 5.5, lg: 5.5, md: 5.5, sm: 12, xs: 12}} offset={{xl: 1, lg: 1, md:1}}>
                   <FinancialInformationTab
                     key={2}
                     applicant={"secondaryApplicant"}
@@ -626,9 +626,9 @@ export const LandingPageContainer: React.FC<any> = () => {
           </Fragment>
         )}
       </Grid>
-      <Grid size={12} offset={1}>
+      {/* <Grid size={12} offset={1}>
         <SubscriptionComponent />
-      </Grid>
+      </Grid> */}
     </Grid>
   );
 };

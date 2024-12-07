@@ -227,14 +227,14 @@ export const ApplicationViewContainer: React.FC<any> = () => {
             </Grid>
             {jointLoan ? (
               <Grid container size={8} offset={1.5}>
-                <Grid size={5.5}>
+                <Grid size={{xl: 5.5, lg: 5.5, md: 5.5, sm: 12, xs: 12}}>
                   <PersonalInformationTab
                     key={1}
                     applicant={"primaryApplicant"}
                     readonly={true}
                   />
                 </Grid>
-                <Grid size={5.5} offset={1}>
+                <Grid size={{xl: 5.5, lg: 5.5, md: 5.5, sm: 12, xs: 12}} offset={{xl: 1, lg: 1, md:1}}>
                   <PersonalInformationTab
                     key={2}
                     applicant={"secondaryApplicant"}
@@ -269,14 +269,14 @@ export const ApplicationViewContainer: React.FC<any> = () => {
           <Fragment>
             {jointLoan ? (
               <Grid container size={8} offset={1.5}>
-                <Grid size={5.5}>
+                <Grid size={{xl: 5.5, lg: 5.5, md: 5.5, sm: 12, xs: 12}}>
                   <FinancialInformationTab
                     key={1}
                     applicant={"primaryApplicant"}
                     readonly={true}
                   />
                 </Grid>
-                <Grid size={5.5} offset={1}>
+                <Grid size={{xl: 5.5, lg: 5.5, md: 5.5, sm: 12, xs: 12}} offset={{xl: 1, lg: 1, md:1}}>
                   <FinancialInformationTab
                     key={2}
                     applicant={"secondaryApplicant"}
