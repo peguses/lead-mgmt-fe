@@ -21,7 +21,7 @@ export const ApplicationFooterComponent: React.FC<any> = () => {
         width: "100%",
       }}
     >
-      <Grid container size={12}>
+      <Grid container size={12} justifyContent={"center"}>
         <Grid
           container
           size={{ xl: 4, lg: 4, md: 3, sm: 4, xs: 4 }}

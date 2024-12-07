@@ -90,8 +90,17 @@ const FinancialInformationTab = forwardRef(
       }
     }, [isValid, errors]);
 
+    const applicantText = (code: string) => {
+      return code === "primaryApplicant" ? "primary applicant" : "secondary applicant"
+    }
+
     return (
       <>
+        <Typography
+          sx={{ marginTop: "20px", fontSize: "14px", fontWeight: 700 }}
+        >
+          Applicant {applicantText(applicant)} details
+        </Typography>
         <FormControl fullWidth error={Boolean(errors.annualIncome)}>
           <Controller
             name="annualIncome"

@@ -101,7 +101,7 @@ export const ApplicationNavbarComponent: React.FC<any> = () => {
       sx={{
         boxShadow: "none",
         zIndex: (theme) => theme.zIndex.drawer + 1,
-        backgroundColor: "#ebeded",
+        backgroundColor: "#1E3A5F",
       }}
     >
       <Toolbar>
@@ -110,7 +110,7 @@ export const ApplicationNavbarComponent: React.FC<any> = () => {
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <Typography
               variant="body1"
-              sx={{ marginRight: 2, color: "blue", fontWeight: 700 }}
+              sx={{marginRight: 2, color: "FFFFF", fontWeight: 700 }}
             >
               {`${user?.firstName} ${user?.lastName}`}
             </Typography>

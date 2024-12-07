@@ -101,12 +101,16 @@ const PersonalInformationTab = forwardRef(
       }
     }, [isValid, errors]);
 
+    const applicantText = (code: string) => {
+      return code === "primaryApplicant" ? "primary applicant" : "secondary applicant"
+    }
+
     return (
       <>
         <Typography
           sx={{ marginTop: "20px", fontSize: "14px", fontWeight: 700 }}
         >
-          Applicant {applicant} Details
+          Applicant {applicantText(applicant)} details
         </Typography>
         <TextField
           variant={readonly ? "filled" : "outlined"}
