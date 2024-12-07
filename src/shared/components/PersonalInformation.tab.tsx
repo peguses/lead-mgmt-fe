@@ -14,10 +14,11 @@ import {
 } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
-import { forwardRef, useEffect, useImperativeHandle } from "react";
+import { useEffect, useImperativeHandle, useRef } from "react";
 import { useAppSelector } from "../redux/hooks";
 import { PersonalInformation } from "../redux/application.slice";
 import { AustralianState } from "../constants/AustralianState.constant";
+import React from "react";
 
 interface PersonalInformationProps {
   applicant: string;
@@ -26,7 +27,7 @@ interface PersonalInformationProps {
   readonly?: boolean;
 }
 
-const PersonalInformationTab = forwardRef(
+const PersonalInformationTab = React.forwardRef(
   (
     {
       applicant,
@@ -36,9 +37,12 @@ const PersonalInformationTab = forwardRef(
     }: PersonalInformationProps,
     ref
   ) => {
+    const localRef = useRef();
+
     const applicantInformation = useAppSelector(
       (state): PersonalInformation | undefined => {
-        return state?.managedApplication.application?.[applicant].personalInformation;
+        return state?.managedApplication.application?.[applicant]
+          .personalInformation;
       }
     );
 
@@ -50,18 +54,20 @@ const PersonalInformationTab = forwardRef(
       clearErrors,
     } = useForm<any>({
       mode: "all",
-      defaultValues: applicantInformation ? applicantInformation : {
-        firstName: "",
-        lastName: "",
-        mobile: "",
-        email: "",
-        state: "",
-        residencyStatus: "",
-        investmentType: "",
-        firstTimeBuyer: "",
-        stateCapitalCityBuyer: "",
-        buyerAgreedToConnectWithAgent: "",
-      },
+      defaultValues: applicantInformation
+        ? applicantInformation
+        : {
+            firstName: "",
+            lastName: "",
+            mobile: "",
+            email: "",
+            state: "",
+            residencyStatus: "",
+            investmentType: "",
+            firstTimeBuyer: "",
+            stateCapitalCityBuyer: "",
+            buyerAgreedToConnectWithAgent: "",
+          },
     });
 
     const residencyStatus = [
@@ -99,11 +105,13 @@ const PersonalInformationTab = forwardRef(
       if (!readonly && onValid) {
         onValid(isValid && !!errors);
       }
-    }, [isValid, errors]);
+    }, [isValid, errors, readonly, onValid]);
 
     const applicantText = (code: string) => {
-      return code === "primaryApplicant" ? "primary applicant" : "secondary applicant"
-    }
+      return code === "primaryApplicant"
+        ? "primary applicant"
+        : "secondary applicant";
+    };
 
     return (
       <>
@@ -132,7 +140,7 @@ const PersonalInformationTab = forwardRef(
                 </InputAdornment>
               ),
               sx: {
-                 marginTop: !readonly ? "20px" : "",
+                marginTop: !readonly ? "20px" : "",
               },
             },
           }}
@@ -396,24 +404,30 @@ const PersonalInformationTab = forwardRef(
               >
                 <FormControlLabel
                   value={true}
-                  control={readonly ? (<Radio
-                    checked={
-                      applicantInformation?.firstTimeBuyer
-                    }
-                    disabled={true}
-                  />) : <Radio/>
-                }
+                  control={
+                    readonly ? (
+                      <Radio
+                        checked={applicantInformation?.firstTimeBuyer}
+                        disabled={true}
+                      />
+                    ) : (
+                      <Radio />
+                    )
+                  }
                   label="Yes"
                 />
                 <FormControlLabel
                   value={false}
-                  control={readonly ? (<Radio
-                    checked={
-                      !applicantInformation?.firstTimeBuyer
-                    }
-                    disabled={true}
-                  />) : <Radio/>
-                }
+                  control={
+                    readonly ? (
+                      <Radio
+                        checked={!applicantInformation?.firstTimeBuyer}
+                        disabled={true}
+                      />
+                    ) : (
+                      <Radio />
+                    )
+                  }
                   label="No"
                 />
               </RadioGroup>
@@ -452,24 +466,30 @@ const PersonalInformationTab = forwardRef(
               >
                 <FormControlLabel
                   value={true}
-                  control={readonly ? (<Radio
-                    checked={
-                      applicantInformation?.stateCapitalCityBuyer
-                    }
-                    disabled={true}
-                  />) : <Radio/>
-                }
+                  control={
+                    readonly ? (
+                      <Radio
+                        checked={applicantInformation?.stateCapitalCityBuyer}
+                        disabled={true}
+                      />
+                    ) : (
+                      <Radio />
+                    )
+                  }
                   label="Yes"
                 />
                 <FormControlLabel
                   value={false}
-                  control={readonly ? (<Radio
-                    checked={
-                      !applicantInformation?.stateCapitalCityBuyer
-                    }
-                    disabled={true}
-                  />) : <Radio/>
-                }
+                  control={
+                    readonly ? (
+                      <Radio
+                        checked={!applicantInformation?.stateCapitalCityBuyer}
+                        disabled={true}
+                      />
+                    ) : (
+                      <Radio />
+                    )
+                  }
                   label="No"
                 />
               </RadioGroup>
@@ -509,24 +529,34 @@ const PersonalInformationTab = forwardRef(
               >
                 <FormControlLabel
                   value={true}
-                  control={readonly ? (<Radio
-                      checked={
-                        applicantInformation?.buyerAgreedToConnectWithAgent
-                      }
-                      disabled={true}
-                    />) : <Radio/>
+                  control={
+                    readonly ? (
+                      <Radio
+                        checked={
+                          applicantInformation?.buyerAgreedToConnectWithAgent
+                        }
+                        disabled={true}
+                      />
+                    ) : (
+                      <Radio />
+                    )
                   }
                   label="Yes"
                 />
                 <FormControlLabel
                   value={false}
-                  control={readonly ? (<Radio
-                    checked={
-                      !applicantInformation?.buyerAgreedToConnectWithAgent
-                    }
-                    disabled={true}
-                  />) : <Radio/>
-                }
+                  control={
+                    readonly ? (
+                      <Radio
+                        checked={
+                          !applicantInformation?.buyerAgreedToConnectWithAgent
+                        }
+                        disabled={true}
+                      />
+                    ) : (
+                      <Radio />
+                    )
+                  }
                   label="No"
                 />
               </RadioGroup>

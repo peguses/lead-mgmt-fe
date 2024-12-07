@@ -8,7 +8,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
+import { useEffect, useImperativeHandle, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { AttachMoney, AccessTime } from "@mui/icons-material";
 import SavingsIcon from "@mui/icons-material/Savings";
@@ -18,6 +18,7 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { NumericFormat } from "react-number-format";
 import { FinancialInformation } from "../redux/application.slice";
 import { useAppSelector } from "../redux/hooks";
+import React from "react";
 
 interface FinancialInformationProps {
   applicant: string;
@@ -26,7 +27,7 @@ interface FinancialInformationProps {
   readonly?: boolean;
 }
 
-const FinancialInformationTab = forwardRef(
+const FinancialInformationTab = React.forwardRef(
   (
     {
       applicant,
@@ -88,7 +89,7 @@ const FinancialInformationTab = forwardRef(
       if (!readonly && onValid) {
         onValid(isValid && !!errors);
       }
-    }, [isValid, errors]);
+    }, [isValid, errors, readonly, onValid]);
 
     const applicantText = (code: string) => {
       return code === "primaryApplicant" ? "primary applicant" : "secondary applicant"
@@ -801,6 +802,5 @@ const FinancialInformationTab = forwardRef(
         )}
       </>
     );
-  }
-);
+  });
 export default FinancialInformationTab;

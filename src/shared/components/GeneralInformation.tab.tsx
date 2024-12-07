@@ -10,12 +10,13 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
+import { useEffect, useImperativeHandle, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import GroupIcon from "@mui/icons-material/Group";
 import { NumericFormat } from "react-number-format";
 import { GeneralInformation } from "../redux/application.slice";
 import { useAppSelector } from "../redux/hooks";
+import React from "react";
 
 interface GeneralInformationProps {
   onSubmit?: (data: any) => void;
@@ -23,7 +24,7 @@ interface GeneralInformationProps {
   readonly?: boolean;
 }
 
-const GeneralInformationTab = forwardRef(
+const GeneralInformationTab = React.forwardRef(
   ({ onSubmit, onValid, readonly = false }: GeneralInformationProps, ref) => {
     const [hasOfferForProperty, setHasOfferForProperty] =
       useState<boolean>(false);
@@ -77,7 +78,7 @@ const GeneralInformationTab = forwardRef(
       if (!readonly && hasAcceptAgreement && onValid) {
         onValid(isValid && !!errors && hasAcceptAgreement);
       }
-    }, [isValid, errors, hasAcceptAgreement]);
+    }, [isValid, errors, hasAcceptAgreement, readonly, onValid]);
 
     return (
       <>
@@ -226,7 +227,7 @@ const GeneralInformationTab = forwardRef(
           })}
           placeholder={"Applicant optional note"}
         />
-        
+
         <Typography
           sx={{ marginTop: "20px", fontSize: "14px", fontWeight: 700 }}
         >

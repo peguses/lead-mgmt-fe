@@ -34,7 +34,7 @@ export interface FinancialInformation {
   annualIncome: number;
   lengthOfEmployment: number;
   totalAmountSaved: number;
-  parentWillBeGuarantors: boolean;
+  parentWillBeGuarantors: boolean | undefined;
   totalLoanAmount: number;
   totalLoanRepayments: number;
   helpDebtTotalAmount: number;
@@ -43,8 +43,8 @@ export interface FinancialInformation {
   totalPropertyValue: number;
   totalCreditCardLimits: number;
   livingExpenses: number;
-  wereBankrupted: boolean;
-  hasDefaulted: boolean;
+  wereBankrupted: boolean | undefined;
+  hasDefaulted: boolean | undefined;
   defaultedReason: string;
 }
 
@@ -56,9 +56,9 @@ export interface PersonalInformation {
   state: string;
   residencyStatus: string;
   investmentType: string;
-  firstTimeBuyer: boolean;
-  stateCapitalCityBuyer: boolean;
-  buyerAgreedToConnectWithAgent: boolean;
+  firstTimeBuyer: boolean | undefined;
+  stateCapitalCityBuyer: boolean | undefined;
+  buyerAgreedToConnectWithAgent: boolean | undefined;
 }
 
 export interface Applicant {
@@ -122,15 +122,15 @@ const INITIAL_STATE: ManagedApplication = {
         state: "",
         residencyStatus: "",
         investmentType: "",
-        firstTimeBuyer: false,
-        stateCapitalCityBuyer: false,
-        buyerAgreedToConnectWithAgent: false,
+        firstTimeBuyer: undefined,
+        stateCapitalCityBuyer: undefined,
+        buyerAgreedToConnectWithAgent: undefined,
       },
       financialInformation: {
         annualIncome: 0,
         lengthOfEmployment: 0,
         totalAmountSaved: 0,
-        parentWillBeGuarantors: false,
+        parentWillBeGuarantors: undefined,
         totalLoanAmount: 0,
         totalLoanRepayments: 0,
         helpDebtTotalAmount: 0,
@@ -139,8 +139,8 @@ const INITIAL_STATE: ManagedApplication = {
         totalPropertyValue: 0,
         totalCreditCardLimits: 0,
         livingExpenses: 0,
-        wereBankrupted: true,
-        hasDefaulted: true,
+        wereBankrupted: undefined,
+        hasDefaulted: undefined,
         defaultedReason: "",
       },
     },
@@ -153,9 +153,26 @@ const INITIAL_STATE: ManagedApplication = {
         state: "",
         residencyStatus: "",
         investmentType: "",
-        firstTimeBuyer: false,
-        stateCapitalCityBuyer: false,
-        buyerAgreedToConnectWithAgent: false,
+        firstTimeBuyer: undefined,
+        stateCapitalCityBuyer: undefined,
+        buyerAgreedToConnectWithAgent: undefined,
+      },
+      financialInformation: {
+        annualIncome: 0,
+        lengthOfEmployment: 0,
+        totalAmountSaved: 0,
+        parentWillBeGuarantors: undefined,
+        totalLoanAmount: 0,
+        totalLoanRepayments: 0,
+        helpDebtTotalAmount: 0,
+        totalExistingHomeLoanAmount: 0,
+        totalExistingHomeLoanRepaymentAmt: 0,
+        totalPropertyValue: 0,
+        totalCreditCardLimits: 0,
+        livingExpenses: 0,
+        wereBankrupted: undefined,
+        hasDefaulted: undefined,
+        defaultedReason: "",
       },
     },
     generalInformation: {

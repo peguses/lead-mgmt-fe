@@ -17,7 +17,7 @@ import {
   TableHead,
   TableRow,
   TextField,
-  Typography
+  Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import {
@@ -32,18 +32,18 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import { useNavigate } from "react-router-dom";
 import { findLatestStatus } from "../../shared/utils/find.application.status.util";
 import moment from "moment";
-import UploadIcon from '@mui/icons-material/Upload';
+import UploadIcon from "@mui/icons-material/Upload";
 import { FileUploadModal } from "../../shared/components/FileUpload.modal";
 import CheckCircleOutlineOutlinedIcon from "@mui/icons-material/CheckCircleOutlineOutlined";
 
 export const ApplicationStatusContainer: React.FC<any> = () => {
-
-  const [viewStatusModelOpen, setViewStatusModelOpen] = useState<boolean>(false);
+  const [viewStatusModelOpen, setViewStatusModelOpen] =
+    useState<boolean>(false);
 
   const navigate = useNavigate();
 
   const [uploadDocumentModelOpen, setUploadDocumentModelOpen] =
-  useState<boolean>(false);
+    useState<boolean>(false);
 
   const {
     control,
@@ -55,7 +55,7 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
     mode: "all",
     defaultValues: {
       filerKey: "",
-      filterValue: ""
+      filterValue: "",
     },
   });
 
@@ -67,15 +67,15 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
     [`&.${tableCellClasses.body}`]: {
       fontSize: 14,
     },
-    whiteSpace: 'normal', wordWrap: 'break-word' 
+    whiteSpace: "normal",
+    wordWrap: "break-word",
   }));
-  
+
   const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    '&:nth-of-type(odd)': {
+    "&:nth-of-type(odd)": {
       backgroundColor: theme.palette.action.hover,
     },
-    // hide last border
-    '&:last-child td, &:last-child th': {
+    "&:last-child td, &:last-child th": {
       border: 0,
     },
   }));
@@ -123,7 +123,7 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
   return (
     <>
       <Grid container justifyContent={"center"}>
-        <Grid size={{xl: 5, lg: 5, md: 5, sm: 10, xs: 10}}>
+        <Grid size={{ xl: 8, lg: 8, md: 10, sm: 12, xs: 12 }}>
           {!application.isLoading && (
             <>
               <TextField
@@ -131,7 +131,9 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
                 label="Inquiry Status"
                 variant={"filled"}
                 fullWidth
-                value={findLatestStatus(application.applicationStatus)?.status.name}
+                value={
+                  findLatestStatus(application.applicationStatus)?.status.name
+                }
                 disabled={true}
                 slotProps={{
                   inputLabel: {
@@ -207,49 +209,49 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
               />
             </>
           )}
-          <Grid container sx={{marginTop: "20px"}} size={12}>
-          {application.documents.length !== 0 && (<TableContainer>
-            <Table sx={{ minWidth: 650 }} aria-label="lead table">
-              <TableHead>
-                <StyledTableRow>
-                  <StyledTableCell sx={{ fontWeight: 700 }}>Document</StyledTableCell>
-                  <StyledTableCell sx={{ fontWeight: 700 }} align="left">
-                    Remark
-                  </StyledTableCell>
-                  <StyledTableCell sx={{ fontWeight: 700 }} align="left">
-                    Url
-                  </StyledTableCell>
-                </StyledTableRow>
-              </TableHead>
-              <TableBody>
-                {application?.documents?.map((row, index) => (
-                  <StyledTableRow
-                    key={`${row.name}${index}`}
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
-                    <StyledTableCell component="th" scope="row">
-                      {row?.name}
-                    </StyledTableCell>
-                    <StyledTableCell align="left">
-                     {row?.remark}
-                    </StyledTableCell>
-                    <StyledTableCell align="left">
-                      {row?.path}
-                    </StyledTableCell>
-                  </StyledTableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          )}
+          <Grid container sx={{ marginTop: "20px" }} size={12}>
+            {application.documents.length !== 0 && (
+              <TableContainer>
+                <Table sx={{ minWidth: 650 }} aria-label="lead table">
+                  <TableHead>
+                    <StyledTableRow>
+                      <StyledTableCell sx={{ fontWeight: 700 }}>
+                        Document
+                      </StyledTableCell>
+                      <StyledTableCell sx={{ fontWeight: 700 }} align="left">
+                        Remark
+                      </StyledTableCell>
+                      <StyledTableCell sx={{ fontWeight: 700 }} align="left">
+                        Url
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  </TableHead>
+                  <TableBody>
+                    {application?.documents?.map((row, index) => (
+                      <StyledTableRow
+                        key={`${row.name}${index}`}
+                        sx={{
+                          "&:last-child td, &:last-child th": { border: 0 },
+                        }}
+                      >
+                        <StyledTableCell component="th" scope="row">
+                          {row?.name}
+                        </StyledTableCell>
+                        <StyledTableCell align="left">
+                          {row?.remark}
+                        </StyledTableCell>
+                        <StyledTableCell align="left">
+                          {row?.path}
+                        </StyledTableCell>
+                      </StyledTableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            )}
           </Grid>
-          <Grid  
-              container
-              spacing={2}>
-            <Grid
-              size={{ xl: 4, lg: 6, md: 12, sm: 12, xs: 12 }}
-
-            >
+          <Grid container spacing={2}>
+            <Grid size={{ xl: 4, lg: 6, md: 12, sm: 12, xs: 12 }}>
               <Button
                 onClick={() => setViewStatusModelOpen(true)}
                 variant="contained"
@@ -260,21 +262,20 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
                 VIEW STATUS
               </Button>
             </Grid>
-            { application.applicationId !== 0 && !application.isLoading && (
-              <Grid
-              size={{ xl: 4, lg: 6, md: 12, sm: 12, xs: 12 }}
-            >
-              <Button
-                onClick={() => setUploadDocumentModelOpen(true)}
-                variant="contained"
-                color="primary"
-                fullWidth
-                startIcon={<UploadIcon />}
-              >
-                UPLOAD DOCUMENT
-              </Button>
-            </Grid>)}
-            </Grid>
+            {application.applicationId !== 0 && !application.isLoading && (
+              <Grid size={{ xl: 4, lg: 6, md: 12, sm: 12, xs: 12 }}>
+                <Button
+                  onClick={() => setUploadDocumentModelOpen(true)}
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                  startIcon={<UploadIcon />}
+                >
+                  UPLOAD DOCUMENT
+                </Button>
+              </Grid>
+            )}
+          </Grid>
         </Grid>
 
         <Modal
@@ -289,7 +290,11 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
             size={{ xl: 12, lg: 12, md: 6, sm: 4, xs: 4 }}
           >
             <Grid size={12}>
-              <Typography id="upload-document-title" variant="h6" component="h2">
+              <Typography
+                id="upload-document-title"
+                variant="h6"
+                component="h2"
+              >
                 View my application
               </Typography>
             </Grid>
@@ -401,7 +406,7 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
             </Grid>
           </Grid>
         </Modal>
-        <FileUploadModal open={uploadDocumentModelOpen}/>
+        <FileUploadModal open={uploadDocumentModelOpen} />
       </Grid>
     </>
   );
