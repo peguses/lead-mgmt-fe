@@ -124,6 +124,9 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
     <>
       <Grid container justifyContent={"center"}>
         <Grid size={{ xl: 8, lg: 8, md: 10, sm: 12, xs: 12 }}>
+          <Typography sx={{ fontSize: "24px", fontWeight: 700 }}>
+              Inquiry Status
+          </Typography>
           {!application.isLoading && (
             <>
               <TextField
