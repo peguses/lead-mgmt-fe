@@ -24,7 +24,6 @@ import Paper from "@mui/material/Paper";
 import Visibility from "@mui/icons-material/Visibility";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AssignmentIcon from "@mui/icons-material/Assignment";
-import UpdateIcon from "@mui/icons-material/Update";
 import SearchIcon from "@mui/icons-material/Search";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { Controller, useForm } from "react-hook-form";
@@ -216,14 +215,6 @@ export const ApplicationListContainer: React.FC<any> = () => {
                             }}
                           >
                             <Visibility />
-                          </IconButton>
-                        </Grid>
-                        <Grid size={2}>
-                          <IconButton
-                            color="primary"
-                            onClick={() => alert("Home clicked!")}
-                          >
-                            <UpdateIcon />
                           </IconButton>
                         </Grid>
                         <Grid size={2}>

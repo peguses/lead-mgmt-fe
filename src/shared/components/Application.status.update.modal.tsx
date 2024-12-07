@@ -9,22 +9,24 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import { ManagedApplication } from "../redux/application.slice";
-import { useState } from "react";
+import { Application } from "../redux/application.slice";
 import { useAppSelector } from "../redux/hooks";
 import { ApplicationStatues } from "../redux/application.status.slice";
 import { Controller, useForm } from "react-hook-form";
-import CheckCircle from '@mui/icons-material/CheckCircle';
+import CheckCircle from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
+import { findLatestStatus } from "../utils/find.application.status.util";
 
 interface ApplicationStatusUpdateModalProps {
   open: boolean;
-  application?: ManagedApplication;
+  application?: Application;
+  onClose: () => void
 }
 
 export const ApplicationStatusUpdateModal: React.FC<
   ApplicationStatusUpdateModalProps
-> = ({ open, application }) => {
+> = ({ open, application, onClose }) => {
+
   const {
     control,
     register,
@@ -35,14 +37,9 @@ export const ApplicationStatusUpdateModal: React.FC<
     mode: "all",
     defaultValues: {
       status: "",
-      note: ""
+      note: "",
     },
   });
-
-  const [
-    openApplicationStatusUpdateModal,
-    setOpenApplicationStatusUpdateModal,
-  ] = useState<boolean>(open);
 
   const applicationStatuses = useAppSelector(
     (state): ApplicationStatues | undefined => {
@@ -62,18 +59,83 @@ export const ApplicationStatusUpdateModal: React.FC<
     p: 4,
   };
 
-  const onSubmit = () => {
+  const onSubmit = () => {};
 
-  }
+  const applicantsName = () => {
+    const primaryApplicant = `${application?.primaryApplicant?.personalInformation?.firstName} ${application?.primaryApplicant?.personalInformation?.lastName}`;
+    const secondaryApplicant = `${application?.secondaryApplicant?.personalInformation?.firstName} ${application?.secondaryApplicant?.personalInformation?.lastName}`;
+    return `${primaryApplicant} ${secondaryApplicant ? ` and ${secondaryApplicant}` : ""}`;
+  };
 
   return (
     <>
-      <Modal open={openApplicationStatusUpdateModal} onClose={() => {}}>
+      <Modal open={open} onClose={() => {}}>
         <Grid
           container
           sx={style}
           size={{ xl: 12, lg: 12, md: 6, sm: 4, xs: 4 }}
         >
+          <TextField
+            variant={"filled"}
+            size="small"
+            fullWidth
+            value={applicantsName()}
+            disabled={true}
+            label="Applicant(s)"
+            slotProps={{
+              inputLabel: {
+                shrink: true,
+              },
+            }}
+            sx={{
+              ".MuiInputLabel-outlined": {
+                lineHeight: "70px",
+              },
+            }}
+          />
+          <TextField
+            variant={"filled"}
+            size="small"
+            fullWidth
+            value={
+              findLatestStatus(application?.applicationStatus ?? [])?.status
+                .name
+            }
+            disabled={true}
+            label="Current status"
+            slotProps={{
+              inputLabel: {
+                shrink: true,
+              },
+            }}
+            sx={{
+              ".MuiInputLabel-outlined": {
+                lineHeight: "70px",
+              },
+            }}
+          />
+          <TextField
+            variant={"filled"}
+            size="small"
+            fullWidth
+            multiline
+            rows={4}
+            value={
+              findLatestStatus(application?.applicationStatus ?? [])?.note
+            }
+            disabled={true}
+            label="Current note"
+            slotProps={{
+              inputLabel: {
+                shrink: true,
+              },
+            }}
+            sx={{
+              ".MuiInputLabel-outlined": {
+                lineHeight: "70px",
+              },
+            }}
+          />
           <FormControl
             variant={"outlined"}
             fullWidth
@@ -131,7 +193,7 @@ export const ApplicationStatusUpdateModal: React.FC<
             }
             placeholder={"How did you hear about us"}
           />
-           <Grid
+          <Grid
             sx={{ marginTop: "10px" }}
             size={{ xl: 4, lg: 4, md: 4, sm: 4, xs: 12 }}
             offset={{ xl: 3, lg: 3, md: 3, sm: 3 }}
@@ -141,10 +203,10 @@ export const ApplicationStatusUpdateModal: React.FC<
               variant="contained"
               color="primary"
               fullWidth
-              disabled={ !isValid }
+              disabled={!isValid}
               startIcon={<CheckCircle />}
             >
-              UPLOAD
+              UPDATE
             </Button>
           </Grid>
           <Grid
@@ -154,7 +216,7 @@ export const ApplicationStatusUpdateModal: React.FC<
           >
             <Button
               onClick={() => {
-                setOpenApplicationStatusUpdateModal(false);
+                onClose();
               }}
               variant="outlined"
               fullWidth

@@ -23,7 +23,7 @@ import FinancialInformationTab from "../../shared/components/FinancialInformatio
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from "../../shared/redux/hooks";
 import { Application, fetchApplicationAsync } from "../../shared/redux/application.slice";
-import { ApplicationStatusUpdateModal } from "../../shared/components/application.status.update.modal";
+import { ApplicationStatusUpdateModal } from "../../shared/components/Application.status.update.modal";
 
 interface Step {
   id: number;
@@ -37,6 +37,9 @@ export const ApplicationViewContainer: React.FC<any> = () => {
   const navigate = useNavigate();
 
   const { applicationId } = useParams();
+
+  const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
+  
 
   useEffect(() => {
       dispatch(fetchApplicationAsync({ applicationId }))
@@ -59,8 +62,8 @@ export const ApplicationViewContainer: React.FC<any> = () => {
     { code: "2APP", name: "2 Applicants" },
   ];
 
-  const handleSubmit = () => {
-   
+  const handleUpdate = () => {
+    setOpenUpdateModal(true);
   };
 
   const handleNext = () => {
@@ -251,7 +254,7 @@ export const ApplicationViewContainer: React.FC<any> = () => {
               sx={{ marginTop: "20px" }}
             >
               <Button
-                onClick={handleSubmit}
+                onClick={handleUpdate}
                 variant="contained"
                 color="primary"
                 fullWidth
@@ -293,7 +296,7 @@ export const ApplicationViewContainer: React.FC<any> = () => {
               sx={{ marginTop: "20px" }}
             >
               <Button
-                onClick={handleSubmit}
+                onClick={handleUpdate}
                 variant="contained"
                 color="primary"
                 fullWidth
@@ -313,7 +316,7 @@ export const ApplicationViewContainer: React.FC<any> = () => {
               sx={{ marginTop: "20px" }}
             >
               <Button
-                onClick={handleSubmit}
+                onClick={handleUpdate}
                 variant="contained"
                 color="primary"
                 fullWidth
@@ -325,7 +328,7 @@ export const ApplicationViewContainer: React.FC<any> = () => {
           </Fragment>
         )}
       </Grid>)}
-      <ApplicationStatusUpdateModal open={true} application={undefined}/>
+      <ApplicationStatusUpdateModal open={openUpdateModal} application={application} onClose={() => setOpenUpdateModal(false)}/>
     </Grid>
   );
 };
