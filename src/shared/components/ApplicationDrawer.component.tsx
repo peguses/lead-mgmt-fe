@@ -5,12 +5,12 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  Button,
 } from "@mui/material";
 import { SyntheticEvent, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ArrowCircleLeftIcon from "@mui/icons-material/ArrowCircleLeft";
 import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
-import FavoriteBorderSharpIcon from "@mui/icons-material/FavoriteBorderSharp";
 import NotificationsNoneRoundedIcon from "@mui/icons-material/NotificationsNoneRounded";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
@@ -18,14 +18,47 @@ import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import useViewport from "../hooks/useViewport";
 import { useDispatch } from "react-redux";
 import { setViewport } from "../redux/common.slice";
+import styled from "@emotion/styled";
+
+interface Menu {
+  id: number;
+  selected: boolean;
+}
 
 export const ApplicationDrawerComponent: React.FC<any> = ({
   open,
   setOpen,
 }) => {
+  const StyledButton = styled(Button)({
+    textTransform: "none",
+    color: "#1E3A5F",
+    "& .MuiTypography-root": {
+      fontWeight: 700,
+    },
+    "&:hover": {
+      backgroundColor: "#F0F8FF",
+      color: "#1E3A5F",
+      fontWeight: 700,
+    },
+    "& .MuiListItemIcon-root": {
+      color: "#1E3A5F",
+      fontWeight: 700,
+    },
+    borderRadius: "0px"
+  });
+
+  const [selectedMenu, setSelectedMenu] = useState<Menu[]>([
+    { id: 1, selected: false },
+    { id: 2, selected: false },
+    { id: 3, selected: false },
+    { id: 4, selected: false },
+  ]);
+
   const viewPort = useViewport();
 
   const dispatch = useDispatch();
+
+  const navigate = useNavigate();
 
   const [menuOpen, setMenuOpen] = useState<boolean>(open);
 
@@ -52,6 +85,20 @@ export const ApplicationDrawerComponent: React.FC<any> = ({
     setMenuOpen(!menuOpen);
     setOpen(!menuOpen);
     dispatch(setViewport({ ...viewPort, menuOpen: !menuOpen }));
+  };
+
+  const setSelectedMenuItem = (step: number, state: boolean) => {
+    const steps = selectedMenu.map((s: Menu) => {
+      if (s.id === step) {
+        return { ...s, selected: state };
+      }
+      return { ...s, selected: false };
+    });
+    setSelectedMenu(steps);
+  };
+
+  const isSelectedMenu = (step: number): boolean | undefined => {
+    return selectedMenu.find((s) => s.id === step)?.selected;
   };
 
   return (
@@ -87,34 +134,138 @@ export const ApplicationDrawerComponent: React.FC<any> = ({
             boxShadow: 3,
             zIndex: (theme) => theme.zIndex.snackbar,
             overflowY: "clip",
+            color: "#1E3A5F"
           }}
         >
           {menuOpen ? <ArrowCircleLeftIcon /> : <ArrowCircleRightIcon />}
         </IconButton>
       )}
       <List sx={{ marginTop: "80px" }}>
-        <ListItem component={Link} to="/">
+        <ListItem
+          component={StyledButton}
+          onClick={() => {
+            navigate("/");
+            setSelectedMenuItem(1, true);
+          }}
+          disableRipple
+          sx={
+            isSelectedMenu(1)
+              ? {
+                  backgroundColor: "#B0C4DE",
+                  color: "white",
+                  fontWeight: 700,
+                  "&:hover": {
+                    backgroundColor: "#B0C4DE",
+                    color: "white",
+                    fontWeight: 700,
+                  },
+                  "& .MuiListItemIcon-root": {
+                    color: "white",
+                    fontWeight: 700,
+                  },
+                }
+              : {}
+          }
+        >
           <ListItemIcon>
-            <HomeOutlinedIcon />
+            <HomeOutlinedIcon/>
           </ListItemIcon>
           {menuOpen && <ListItemText primary="Home" />}
         </ListItem>
 
-        <ListItem component={Link} to="/applications/status">
+        <ListItem
+          component={StyledButton}
+          onClick={() => {
+            navigate("/applications/status");
+            setSelectedMenuItem(2, true);
+          }}
+          disableRipple
+          sx={
+            isSelectedMenu(2)
+              ? {
+                  backgroundColor: "#B0C4DE",
+                  color: "white",
+                  fontWeight: 700,
+                  "&:hover": {
+                    backgroundColor: "#B0C4DE",
+                    color: "white",
+                    fontWeight: 700,
+                  },
+                  "& .MuiListItemIcon-root": {
+                    color: "white",
+                    fontWeight: 700,
+                  },
+                }
+              : {}
+          }
+        >
           <ListItemIcon>
             <HelpOutlineOutlinedIcon />
           </ListItemIcon>
           {menuOpen && <ListItemText primary="Inquiry Status" />}
         </ListItem>
 
-        <ListItem component={Link} to="/applications">
+        <ListItem
+          component={StyledButton}
+          onClick={() => {
+            navigate("/applications");
+            setSelectedMenuItem(3, true);
+          }}
+          disableRipple
+          sx={
+            isSelectedMenu(3)
+              ? {
+                  backgroundColor: "#B0C4DE",
+                  color: "white",
+                  fontWeight: 700,
+                  "&:hover": {
+                    backgroundColor: "#B0C4DE",
+                    color: "white",
+                    fontWeight: 700,
+                  },
+                  "& .MuiListItemIcon-root": {
+                    color: "white",
+                    fontWeight: 700,
+                  },
+                }
+              : {}
+          }
+        >
           <ListItemIcon>
             <NotificationsNoneRoundedIcon />
           </ListItemIcon>
           {menuOpen && <ListItemText primary="Applications" />}
         </ListItem>
 
-        <ListItem component={Link} to="/users">
+        <ListItem
+          component={StyledButton}
+          onClick={() => {
+            navigate("/users");
+            setSelectedMenuItem(4, true);
+          }}
+          disableRipple
+          sx={
+            isSelectedMenu(4)
+              ? {
+                  backgroundColor: "#B0C4DE",
+                  color: "white",
+                  fontWeight: 700,
+                  "& .MuiTypography-root": {
+                    fontWeight: 700,
+                  },
+                  "&:hover": {
+                    backgroundColor: "#B0C4DE",
+                    color: "white",
+                    fontWeight: 700,
+                  },
+                  "& .MuiListItemIcon-root": {
+                    color: "white",
+                    fontWeight: 700,
+                  },
+                }
+              : {}
+          }
+        >
           <ListItemIcon>
             <PeopleAltOutlinedIcon />
           </ListItemIcon>

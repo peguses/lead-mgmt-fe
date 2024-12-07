@@ -68,12 +68,6 @@ export const FileUploadModal: React.FC<FileUploadComponentProps> = ({
   });
 
   useEffect(() => {
-
-    console.log(files);
-
-  }, [files]);
-
-  useEffect(() => {
     setUploadDocumentModelOpen(open);
   }, [open]);
 

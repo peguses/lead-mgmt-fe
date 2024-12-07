@@ -10,7 +10,6 @@ export interface Filer {
 
 export const fetchApplication = async ({applicationId, filterBy , filter}: Filer): Promise <AxiosResponse<Application>> => {
     if (filterBy && filter) {
-        console.log(`/applications?${filterBy}=${filter}`)
         return apiKit.get(`/applications?${filterBy}=${filter}`);
     }
     return apiKit.get(`/applications/${applicationId}`);

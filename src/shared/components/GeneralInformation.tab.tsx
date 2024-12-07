@@ -281,7 +281,6 @@ const GeneralInformationTab = forwardRef(
                   field.onChange(e);
                   setHasAcceptAgreement(false);
                   if (e.target.value === "true") {
-                    console.log(e.target.value)
                     setHasAcceptAgreement(true);
                   }
                 }}

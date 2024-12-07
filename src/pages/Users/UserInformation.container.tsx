@@ -41,7 +41,6 @@ export const UserInformationContainer: React.FC<any> = () => {
       !roles?.isLoading &&
       userManagementAction === UserManagedAction.UPDATE_USER
     ) {
-      console.log("view user");
       return (
         <>
           {!roles?.isLoading && (
