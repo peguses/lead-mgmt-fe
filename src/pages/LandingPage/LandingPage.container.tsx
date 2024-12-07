@@ -11,7 +11,6 @@ import {
   Stepper,
 } from "@mui/material";
 import React, { Fragment, useEffect, useRef, useState } from "react";
-import WorkInformationTab from "../../shared/components/WorkInformation.tab";
 import PersonalInformationTab from "../../shared/components/PersonalInformation.tab";
 import { batch, useDispatch } from "react-redux";
 import GeneralInformationTab from "../../shared/components/GeneralInformation.tab";
@@ -22,7 +21,6 @@ import PersonIcon from "@mui/icons-material/Person";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import InfoIcon from "@mui/icons-material/Info";
 import FinancialInformationTab from "../../shared/components/FinancialInformation.tab";
-import { SubscriptionComponent } from "../../shared/components/Subscription.component";
 import {
   addOrUpdateGeneralInformation,
   addOrUpdatePrimaryApplicantFinancialInformation,
@@ -289,346 +287,251 @@ export const LandingPageContainer: React.FC<any> = () => {
   };
 
   return (
-    <Grid container size={jointLoan ? 12 : 4} offset={jointLoan ? 12 : 4}>
+    <Grid container justifyContent={"center"}>
       <Grid
+        container
+        justifyContent={"center"}
         size={
           jointLoan && activeStep !== 2
-            ? 7.5
-            : { xl: 5, lg: 6, md: 6, sm: 8, xs: 8 }
-        }
-        offset={
-          jointLoan && activeStep !== 2
-            ? 2.25
-            : { xl: 3.5, lg: 3, md: 3, sm: 2, xs: 2 }
+            ? 8
+            : { xl: 4, lg: 4, md: 12, sm: 12, xs: 12 }
         }
         sx={{ marginTop: "5px", marginBottom: "20px" }}
       >
-        <Stepper nonLinear activeStep={activeStep}>
-          <Step key={"personal"} completed={isStepCompleted(0)}>
-            <StepLabel
-              icon={<PersonIcon />}
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                ...stepColor(0),
-              }}
-            >
-              Personal
-            </StepLabel>
-          </Step>
-          {/* <Step key={"work"} completed={isStepCompleted(1)}>
-            <StepLabel
-              icon={<WorkIcon />}
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                ...stepColor(1),
-              }}
-            >
-              Work
-            </StepLabel>
-          </Step> */}
-          <Step key={"financial"} completed={isStepCompleted(1)}>
-            <StepLabel
-              icon={<AttachMoneyIcon />}
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                ...stepColor(1),
-              }}
-            >
-              Financial
-            </StepLabel>
-          </Step>
-          <Step key={"general"} completed={isStepCompleted(2)}>
-            <StepLabel
-              icon={<InfoIcon />}
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                ...stepColor(2),
-              }}
-            >
-              General
-            </StepLabel>
-          </Step>
-        </Stepper>
-      </Grid>
-      <Grid
-        sx={{ marginTop: "5px" }}
-        size={
-          jointLoan && activeStep !== 2
-            ? 7.5
-            : { xl: 5, lg: 6, md: 6, sm: 8, xs: 8 }
-        }
-        offset={
-          jointLoan && activeStep !== 2
-            ? 2.25
-            : { xl: 3.5, lg: 3, md: 3, sm: 2, xs: 2 }
-        }
-      >
-        <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
-          <Button
-            sx={{
-              textTransform: "none",
-              color: "primary.main",
-            }}
-            startIcon={<ArrowCircleLeftOutlinedIcon />}
-            variant="text"
-            disableRipple
-            onClick={handleBack}
-            disabled={activeStep === 0}
-          >
-            Back
-          </Button>
-          <Box
-            sx={{
-              flexGrow: 1,
-              height: "1px",
-              backgroundColor: "gray",
-            }}
-          />
-        </Box>
-      </Grid>
-      <Grid
-        sx={{ marginTop: "20px" }}
-        size={
-          jointLoan && activeStep !== 2
-            ? 12
-            : { xl: 5, lg: 6, md: 6, sm: 8, xs: 8 }
-        }
-        offset={
-          jointLoan && activeStep !== 2
-            ? 1
-            : { xl: 3.5, lg: 3, md: 3, sm: 2, xs: 2 }
-        }
-      >
-        {activeStep === 0 && (
-          <Fragment>
-            <Grid
-              size={jointLoan ? 8 : { xl: 12, lg: 12, md: 12, sm: 12, xs: 12 }}
-              offset={jointLoan ? 1.5 : { xl: 0, lg: 0, md: 0, sm: 0, xs: 0 }}
-            >
-              <FormControl fullWidth sx={{ marginTop: "5px" }} size="small">
-                <InputLabel
-                  htmlFor="applicantStatus-label"
-                  id="applicantStatus"
-                >
-                  Applicants
-                </InputLabel>
-                <Select
-                  id="applicantStatus"
-                  label="Applicants"
-                  labelId="applicantStatus-label"
-                  value={jointLoan === true ? "2APP" : "1APP"}
-                  displayEmpty
-                  style={{ height: "36px" }}
-                  onChange={(event) => {
-                    if (event.target.value === "2APP") {
-                      handleJointApplication();
-                    } else {
-                      handleSingleApplication();
-                    }
-                  }}
-                >
-                  {applicantStatus.map((stateObj) => (
-                    <MenuItem key={stateObj.code} value={stateObj.code}>
-                      {stateObj.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            {jointLoan ? (
-              <Grid container size={8} offset={1.5}>
-                <Grid size={{xl: 5.5, lg: 5.5, md: 5.5, sm: 12, xs: 12}}>
-                  <PersonalInformationTab
-                    key={1}
-                    applicant={"primaryApplicant"}
-                    onValid={(isValid) =>
-                      setApplicantOnePersonalInfoValid(isValid)
-                    }
-                    onSubmit={(data) =>
-                      onPrimaryPersonalInformationSubmit(data)
-                    }
-                    ref={applicantOnePersonalInformationRef}
-                  />
-                </Grid>
-                <Grid size={{xl: 5.5, lg: 5.5, md: 5.5, sm: 12, xs: 12}} offset={{xl: 1, lg: 1, md:1}}>
-                  <PersonalInformationTab
-                    key={2}
-                    applicant={"secondaryApplicant"}
-                    onValid={(isValid) =>
-                      setApplicantTwoPersonalInfoValid(isValid)
-                    }
-                    onSubmit={(data) =>
-                      onSecondaryPersonalInformationSubmit(data)
-                    }
-                    ref={applicantTwoPersonalInformationRef}
-                  />
-                </Grid>
-              </Grid>
-            ) : (
-              <PersonalInformationTab
-                applicant={"primaryApplicant"}
-                onValid={(isValid) => setApplicantOnePersonalInfoValid(isValid)}
-                onSubmit={(data) => onPrimaryPersonalInformationSubmit(data)}
-                ref={applicantOnePersonalInformationRef}
-              />
-            )}
-            <Grid
-              size={jointLoan ? 2 : 3}
-              offset={jointLoan ? 7.5 : 9}
-              sx={{ marginTop: "20px" }}
-            >
-              <Button
-                onClick={handlePersonalInformationSubmit}
-                variant="contained"
-                color="primary"
-                fullWidth
-                endIcon={<ArrowCircleRightOutlinedIcon />}
-                disabled={!allowWorkTab}
+        <Grid size={12}>
+          <Stepper nonLinear activeStep={activeStep}>
+            <Step key={"personal"} completed={isStepCompleted(0)}>
+              <StepLabel
+                icon={<PersonIcon />}
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  ...stepColor(0),
+                }}
               >
-                Next
-              </Button>
-            </Grid>
-          </Fragment>
-        )}
-        {activeStep === 5 && (
-          <Fragment>
-            {jointLoan ? (
-              <Grid container size={8} offset={1.5}>
-                <Grid size={{xl: 5.5, lg: 5.5, md: 5.5, sm: 12, xs: 12}}>
-                  <WorkInformationTab
-                    key={1}
-                    applicant={"primaryApplicant"}
-                    onValid={(isValid) => setApplicantOneWorkInfoValid(isValid)}
-                    onSubmit={(data) => onPrimaryWorkInfoSubmit(data)}
-                    ref={applicantOneWorkInfoRef}
-                  />
-                </Grid>
-                <Grid size={{xl: 5.5, lg: 5.5, md: 5.5, sm: 12, xs: 12}} offset={{xl: 1, lg: 1, md:1}}>
-                  <WorkInformationTab
-                    key={2}
-                    applicant={"secondaryApplicant"}
-                    onValid={(isValid) => setApplicantTwoWorkInfoValid(isValid)}
-                    onSubmit={(data) => onSecondaryWorkInfoSubmit(data)}
-                    ref={applicantTwoWorkInfoRef}
-                  />
-                </Grid>
-              </Grid>
-            ) : (
-              <WorkInformationTab
-                applicant={"primaryApplicant"}
-                onValid={(isValid) => setApplicantOneWorkInfoValid(isValid)}
-                onSubmit={(data) => onPrimaryWorkInfoSubmit(data)}
-                ref={applicantOneWorkInfoRef}
-              />
-            )}
-            <Grid
-              size={jointLoan ? 2 : 3}
-              offset={jointLoan ? 7.5 : 9}
-              sx={{ marginTop: "20px" }}
-            >
-              <Button
-                onClick={handleWorkInformationSubmit}
-                variant="contained"
-                color="primary"
-                fullWidth
-                endIcon={<ArrowCircleRightOutlinedIcon />}
-                disabled={!allowFinancialTab}
+                Personal
+              </StepLabel>
+            </Step>
+            <Step key={"financial"} completed={isStepCompleted(1)}>
+              <StepLabel
+                icon={<AttachMoneyIcon />}
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  ...stepColor(1),
+                }}
               >
-                Next
-              </Button>
-            </Grid>
-          </Fragment>
-        )}
-        {activeStep === 1 && (
-          <Fragment>
-            {jointLoan ? (
-              <Grid container size={8} offset={1.5}>
-                <Grid size={{xl: 5.5, lg: 5.5, md: 5.5, sm: 12, xs: 12}}>
-                  <FinancialInformationTab
-                    key={1}
-                    applicant={"primaryApplicant"}
-                    onValid={(isValid) =>
-                      setApplicationOneFinancialValid(isValid)
-                    }
-                    onSubmit={(data) => onPrimaryFinancialInfoSubmit(data)}
-                    ref={applicationOneFinancialInfoRef}
-                  />
-                </Grid>
-                <Grid size={{xl: 5.5, lg: 5.5, md: 5.5, sm: 12, xs: 12}} offset={{xl: 1, lg: 1, md:1}}>
-                  <FinancialInformationTab
-                    key={2}
-                    applicant={"secondaryApplicant"}
-                    onValid={(isValid) =>
-                      setApplicationTwoFinancialValid(isValid)
-                    }
-                    onSubmit={(data) => onSecondaryFinancialInfoSubmit(data)}
-                    ref={applicationTwoFinancialInfoRef}
-                  />
-                </Grid>
-              </Grid>
-            ) : (
-              <FinancialInformationTab
-                applicant={"primaryApplicant"}
-                onValid={(isValid) => setApplicationOneFinancialValid(isValid)}
-                onSubmit={(data) => onPrimaryFinancialInfoSubmit(data)}
-                ref={applicationOneFinancialInfoRef}
-              />
-            )}
-            <Grid
-              size={jointLoan ? 2 : 3}
-              offset={jointLoan ? 7.5 : 9}
-              sx={{ marginTop: "20px" }}
-            >
-              <Button
-                onClick={handleFinancialInformationSubmit}
-                variant="contained"
-                color="primary"
-                fullWidth
-                endIcon={<ArrowCircleRightOutlinedIcon />}
-                disabled={!allowGeneralTab}
+                Financial
+              </StepLabel>
+            </Step>
+            <Step key={"general"} completed={isStepCompleted(2)}>
+              <StepLabel
+                icon={<InfoIcon />}
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  ...stepColor(2),
+                }}
               >
-                Next
-              </Button>
-            </Grid>
-          </Fragment>
-        )}
-        {activeStep === 2 && (
-          <Fragment>
-            <GeneralInformationTab
-              onValid={(isValid) => setApplicationGeneralInfoValid(isValid)}
-              onSubmit={(data) => onGeneralInfoInfoSubmit(data)}
-              ref={applicationGeneralInfoRef}
+                General
+              </StepLabel>
+            </Step>
+          </Stepper>
+        </Grid>
+        <Grid size={12}>
+          <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
+            <Button
+              sx={{
+                textTransform: "none",
+                color: "primary.main",
+              }}
+              startIcon={<ArrowCircleLeftOutlinedIcon />}
+              variant="text"
+              disableRipple
+              onClick={handleBack}
+              disabled={activeStep === 0}
+            >
+              Back
+            </Button>
+            <Box
+              sx={{
+                flexGrow: 1,
+                height: "1px",
+                backgroundColor: "gray",
+              }}
             />
-            <Grid
-              size={jointLoan ? 2 : 3}
-              offset={jointLoan ? 10 : 9}
-              sx={{ marginTop: "20px" }}
-            >
-              <Button
-                onClick={handleSubmit}
-                variant="contained"
-                color="primary"
-                fullWidth
-                startIcon={<CheckCircleOutlineOutlinedIcon />}
-                disabled={!allowSubmit}
-              >
-                Submit
-              </Button>
-            </Grid>
-          </Fragment>
-        )}
+          </Box>
+        </Grid>
+        <Grid>
+          {activeStep === 0 && (
+            <Fragment>
+              <Grid>
+                <FormControl fullWidth sx={{ marginTop: "5px" }} size="small">
+                  <InputLabel
+                    htmlFor="applicantStatus-label"
+                    id="applicantStatus"
+                  >
+                    Applicants
+                  </InputLabel>
+                  <Select
+                    id="applicantStatus"
+                    label="Applicants"
+                    labelId="applicantStatus-label"
+                    value={jointLoan === true ? "2APP" : "1APP"}
+                    displayEmpty
+                    style={{ height: "36px" }}
+                    onChange={(event) => {
+                      if (event.target.value === "2APP") {
+                        handleJointApplication();
+                      } else {
+                        handleSingleApplication();
+                      }
+                    }}
+                  >
+                    {applicantStatus.map((stateObj) => (
+                      <MenuItem key={stateObj.code} value={stateObj.code}>
+                        {stateObj.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              {jointLoan ? (
+                <Grid container size={12} spacing={2}>
+                  <Grid size={{ xl: 6, lg: 6, md: 6, sm: 12, xs: 12 }}>
+                    <PersonalInformationTab
+                      key={1}
+                      applicant={"primaryApplicant"}
+                      onValid={(isValid) =>
+                        setApplicantOnePersonalInfoValid(isValid)
+                      }
+                      onSubmit={(data) =>
+                        onPrimaryPersonalInformationSubmit(data)
+                      }
+                      ref={applicantOnePersonalInformationRef}
+                    />
+                  </Grid>
+                  <Grid size={{ xl: 6, lg: 6, md: 6, sm: 12, xs: 12 }}>
+                    <PersonalInformationTab
+                      key={2}
+                      applicant={"secondaryApplicant"}
+                      onValid={(isValid) =>
+                        setApplicantTwoPersonalInfoValid(isValid)
+                      }
+                      onSubmit={(data) =>
+                        onSecondaryPersonalInformationSubmit(data)
+                      }
+                      ref={applicantTwoPersonalInformationRef}
+                    />
+                  </Grid>
+                </Grid>
+              ) : (
+                <PersonalInformationTab
+                  applicant={"primaryApplicant"}
+                  onValid={(isValid) =>
+                    setApplicantOnePersonalInfoValid(isValid)
+                  }
+                  onSubmit={(data) => onPrimaryPersonalInformationSubmit(data)}
+                  ref={applicantOnePersonalInformationRef}
+                />
+              )}
+              <Grid container justifyContent={"end"}>
+              <Grid size={{xl: 3, lg: 3, md:6,  sm: 12, xs: 12}} sx={{ marginTop: "20px" }}>
+                  <Button
+                    onClick={handlePersonalInformationSubmit}
+                    variant="contained"
+                    color="primary"
+                    fullWidth
+                    endIcon={<ArrowCircleRightOutlinedIcon />}
+                    disabled={!allowWorkTab}
+                  >
+                    Next
+                  </Button>
+                </Grid>
+              </Grid>
+            </Fragment>
+          )}
+          {activeStep === 1 && (
+            <Fragment>
+              {jointLoan ? (
+                <Grid container size={12} spacing={2}>
+                  <Grid size={{ xl: 6, lg: 6, md: 6, sm: 12, xs: 12 }}>
+                    <FinancialInformationTab
+                      key={1}
+                      applicant={"primaryApplicant"}
+                      onValid={(isValid) =>
+                        setApplicationOneFinancialValid(isValid)
+                      }
+                      onSubmit={(data) => onPrimaryFinancialInfoSubmit(data)}
+                      ref={applicationOneFinancialInfoRef}
+                    />
+                  </Grid>
+                  <Grid size={{ xl: 6, lg: 6, md: 6, sm: 12, xs: 12 }}>
+                    <FinancialInformationTab
+                      key={2}
+                      applicant={"secondaryApplicant"}
+                      onValid={(isValid) =>
+                        setApplicationTwoFinancialValid(isValid)
+                      }
+                      onSubmit={(data) => onSecondaryFinancialInfoSubmit(data)}
+                      ref={applicationTwoFinancialInfoRef}
+                    />
+                  </Grid>
+                </Grid>
+              ) : (
+                <FinancialInformationTab
+                  applicant={"primaryApplicant"}
+                  onValid={(isValid) =>
+                    setApplicationOneFinancialValid(isValid)
+                  }
+                  onSubmit={(data) => onPrimaryFinancialInfoSubmit(data)}
+                  ref={applicationOneFinancialInfoRef}
+                />
+              )}
+              <Grid container justifyContent={"end"}>
+              <Grid size={{xl: 3, lg: 3, md:6,  sm: 12, xs: 12}} sx={{ marginTop: "20px" }}>
+                  <Button
+                    onClick={handleFinancialInformationSubmit}
+                    variant="contained"
+                    color="primary"
+                    fullWidth
+                    endIcon={<ArrowCircleRightOutlinedIcon />}
+                    disabled={!allowGeneralTab}
+                  >
+                    Next
+                  </Button>
+                </Grid>
+              </Grid>
+            </Fragment>
+          )}
+          {activeStep === 2 && (
+            <Fragment>
+              <GeneralInformationTab
+                onValid={(isValid) => setApplicationGeneralInfoValid(isValid)}
+                onSubmit={(data) => onGeneralInfoInfoSubmit(data)}
+                ref={applicationGeneralInfoRef}
+              />
+             <Grid container justifyContent={"end"}>
+             <Grid size={{xl: 3, lg: 3, md:6,  sm: 12, xs: 12}} sx={{ marginTop: "20px" }}>
+                <Button
+                  onClick={handleSubmit}
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                  startIcon={<CheckCircleOutlineOutlinedIcon />}
+                  disabled={!allowSubmit}
+                >
+                  Submit
+                </Button>
+                </Grid>
+              </Grid>
+            </Fragment>
+          )}
+        </Grid>
       </Grid>
-      {/* <Grid size={12} offset={1}>
-        <SubscriptionComponent />
-      </Grid> */}
     </Grid>
   );
 };

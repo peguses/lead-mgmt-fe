@@ -101,7 +101,7 @@ const FinancialInformationTab = forwardRef(
         >
           Applicant {applicantText(applicant)} details
         </Typography>
-        <FormControl fullWidth error={Boolean(errors.annualIncome)}>
+        <FormControl sx={{ marginTop: "10px" }} fullWidth error={Boolean(errors.annualIncome)}>
           <Controller
             name="annualIncome"
             control={control}
