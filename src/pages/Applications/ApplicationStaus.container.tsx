@@ -29,7 +29,7 @@ import { FileUploadModal } from "../../shared/components/FileUpload.modal";
 
 export const ApplicationStatusContainer: React.FC<any> = () => {
 
-  const [viewStatusModelOpen, setViewStatusModelOpen] = useState<boolean>(true);
+  const [viewStatusModelOpen, setViewStatusModelOpen] = useState<boolean>(false);
 
   const navigate = useNavigate();
 

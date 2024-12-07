@@ -114,13 +114,6 @@ export const ApplicationDrawerComponent: React.FC<any> = ({
           {menuOpen && <ListItemText primary="Applications" />}
         </ListItem>
 
-        <ListItem component={Link} to="/referral-manager-view">
-          <ListItemIcon>
-            <FavoriteBorderSharpIcon />
-          </ListItemIcon>
-          {menuOpen && <ListItemText primary="Referrals" />}
-        </ListItem>
-
         <ListItem component={Link} to="/users">
           <ListItemIcon>
             <PeopleAltOutlinedIcon />

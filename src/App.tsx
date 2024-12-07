@@ -5,9 +5,6 @@ import { useEffect, useState } from 'react';
 import { ApplicationDrawerComponent } from "./shared/components/ApplicationDrawer.component";
 import { LandingPageContainer } from "./pages/LandingPage/LandingPage.container";
 import { ApplicationListContainer } from "./pages/Applications/ApplicationList.container";
-import { useDispatch } from "react-redux";
-import { InquiryStatusViewContainer } from "./pages/InquiryStatusView.container";
-import { ReferralManagerViewContainer } from "./pages/ReferralManagerView.container";
 import { ApplicationNavbarComponent } from "./shared/components/ApplicationNavbar.component";
 import { ApplicationFooterComponent } from "./shared/components/ApplicationFooter.component";
 import { ApplicationViewContainer } from "./pages/Applications/ApplicationView.container";
@@ -46,7 +43,6 @@ function App() {
             <Route path="/users" element={<UsersListContainer />} />
             <Route path="/users/user" element={<UserInformationContainer />} />
             <Route path="/users/user/:userId" element={<UserInformationContainer />} />
-            <Route path="/referral-manager-view" element={<ReferralManagerViewContainer />} />
           </Routes>
         </Box>
         <ApplicationFooterComponent/>
