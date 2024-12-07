@@ -25,17 +25,14 @@ import {
   addOrUpdateGeneralInformation,
   addOrUpdatePrimaryApplicantFinancialInformation,
   addOrUpdatePrimaryApplicantPersonalInformation,
-  addOrUpdatePrimaryApplicantWorkInformation,
   addOrUpdateSecondaryApplicantFinancialInformation,
   addOrUpdateSecondaryApplicantPersonalInformation,
-  addOrUpdateSecondaryApplicantWorkInformation,
   FinancialInformation,
   GeneralInformation,
   PersonalInformation,
   removeGeneralInformation,
   removeSecondaryApplicant,
   setJoinLoanApplication,
-  WorkInformation,
 } from "../../shared/redux/application.slice";
 
 interface Step {
@@ -72,8 +69,6 @@ export const LandingPageContainer: React.FC<any> = () => {
     useState<boolean>(false);
 
   const [allowWorkTab, setAllowWorkTab] = useState<boolean>(false);
-
-  const [allowFinancialTab, setAllowFinancialTab] = useState<boolean>(false);
 
   const [allowGeneralTab, setAllowGeneralTab] = useState<boolean>(false);
 
@@ -120,11 +115,9 @@ export const LandingPageContainer: React.FC<any> = () => {
   useEffect(() => {
     if (jointLoan) {
       const valid = applicantOneWorkInfoValid && applicantTwoWorkInfoValid;
-      setAllowFinancialTab(valid);
       setCompletedStep(5, valid);
     } else {
       setCompletedStep(5, applicantOneWorkInfoValid);
-      setAllowFinancialTab(applicantOneWorkInfoValid);
     }
   }, [applicantOneWorkInfoValid, applicantTwoWorkInfoValid, jointLoan]);
 
@@ -208,10 +201,6 @@ export const LandingPageContainer: React.FC<any> = () => {
     dispatch(addOrUpdatePrimaryApplicantPersonalInformation(data));
   };
 
-  const onPrimaryWorkInfoSubmit = (data: WorkInformation) => {
-    dispatch(addOrUpdatePrimaryApplicantWorkInformation(data));
-  };
-
   const onPrimaryFinancialInfoSubmit = (data: FinancialInformation) => {
     dispatch(addOrUpdatePrimaryApplicantFinancialInformation(data));
   };
@@ -222,10 +211,6 @@ export const LandingPageContainer: React.FC<any> = () => {
 
   const onSecondaryPersonalInformationSubmit = (data: PersonalInformation) => {
     dispatch(addOrUpdateSecondaryApplicantPersonalInformation(data));
-  };
-
-  const onSecondaryWorkInfoSubmit = (data: WorkInformation) => {
-    dispatch(addOrUpdateSecondaryApplicantWorkInformation(data));
   };
 
   const onSecondaryFinancialInfoSubmit = (data: FinancialInformation) => {
@@ -439,7 +424,10 @@ export const LandingPageContainer: React.FC<any> = () => {
                 />
               )}
               <Grid container justifyContent={"end"}>
-              <Grid size={{xl: 3, lg: 3, md:6,  sm: 12, xs: 12}} sx={{ marginTop: "20px" }}>
+                <Grid
+                  size={{ xl: 3, lg: 3, md: 6, sm: 12, xs: 12 }}
+                  sx={{ marginTop: "20px" }}
+                >
                   <Button
                     onClick={handlePersonalInformationSubmit}
                     variant="contained"
@@ -492,7 +480,10 @@ export const LandingPageContainer: React.FC<any> = () => {
                 />
               )}
               <Grid container justifyContent={"end"}>
-              <Grid size={{xl: 3, lg: 3, md:6,  sm: 12, xs: 12}} sx={{ marginTop: "20px" }}>
+                <Grid
+                  size={{ xl: 3, lg: 3, md: 6, sm: 12, xs: 12 }}
+                  sx={{ marginTop: "20px" }}
+                >
                   <Button
                     onClick={handleFinancialInformationSubmit}
                     variant="contained"
@@ -514,18 +505,21 @@ export const LandingPageContainer: React.FC<any> = () => {
                 onSubmit={(data) => onGeneralInfoInfoSubmit(data)}
                 ref={applicationGeneralInfoRef}
               />
-             <Grid container justifyContent={"end"}>
-             <Grid size={{xl: 3, lg: 3, md:6,  sm: 12, xs: 12}} sx={{ marginTop: "20px" }}>
-                <Button
-                  onClick={handleSubmit}
-                  variant="contained"
-                  color="primary"
-                  fullWidth
-                  startIcon={<CheckCircleOutlineOutlinedIcon />}
-                  disabled={!allowSubmit}
+              <Grid container justifyContent={"end"}>
+                <Grid
+                  size={{ xl: 3, lg: 3, md: 6, sm: 12, xs: 12 }}
+                  sx={{ marginTop: "20px" }}
                 >
-                  Submit
-                </Button>
+                  <Button
+                    onClick={handleSubmit}
+                    variant="contained"
+                    color="primary"
+                    fullWidth
+                    startIcon={<CheckCircleOutlineOutlinedIcon />}
+                    disabled={!allowSubmit}
+                  >
+                    Submit
+                  </Button>
                 </Grid>
               </Grid>
             </Fragment>
