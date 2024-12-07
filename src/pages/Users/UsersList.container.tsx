@@ -14,6 +14,7 @@ import {
   TablePagination,
   TableRow,
   TextField,
+  Typography,
   useMediaQuery,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
@@ -25,11 +26,13 @@ import { fetchUsersAsync, Users } from "../../shared/redux/users.slice";
 import { useAppDispatch, useAppSelector } from "../../shared/redux/hooks";
 import GroupIcon from "@mui/icons-material/Group";
 import { useNavigate } from "react-router-dom";
-import { setUserManagementAction, UserManagedAction } from "../../shared/redux/managed.user.slice";
+import {
+  setUserManagementAction,
+  UserManagedAction,
+} from "../../shared/redux/managed.user.slice";
 
 export const UsersListContainer: React.FC<any> = () => {
-
-  const isSmallScreen = useMediaQuery('(max-width: 900px)');
+  const isSmallScreen = useMediaQuery("(max-width: 900px)");
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -40,12 +43,12 @@ export const UsersListContainer: React.FC<any> = () => {
       fontSize: 14,
     },
   }));
-  
+
   const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    '&:nth-of-type(odd)': {
+    "&:nth-of-type(odd)": {
       backgroundColor: theme.palette.action.hover,
     },
-    '&:last-child td, &:last-child th': {
+    "&:last-child td, &:last-child th": {
       border: 0,
     },
   }));
@@ -78,27 +81,31 @@ export const UsersListContainer: React.FC<any> = () => {
   };
 
   const handleAdd = () => {
-    dispatch(setUserManagementAction(UserManagedAction.CREATE_USER))
+    dispatch(setUserManagementAction(UserManagedAction.CREATE_USER));
     navigate("/users/user");
   };
 
   const handleView = (userId: number) => {
-      navigate(`/users/user/${userId}`);
+    navigate(`/users/user/${userId}`);
   };
 
   const handleUpdate = (userId: number) => {
-      navigate(`/users/user/${userId}`);
+    navigate(`/users/user/${userId}`);
   };
 
   const handleDelete = (userId: number) => {
     navigate(`/users/user/${userId}`);
   };
-  
 
   return (
     <Grid container size={12}>
       <Grid container justifyContent="flex-start" size={6}>
-      <Grid size={{xl: 3, lg: 3, md: 3, sm: 6, xs: 6}}>
+        <Grid size={{xl:6, lg: 6, md: 6, sm:12, xs: 12}}>
+          <Typography sx={{fontSize:"24px", fontWeight: 700}}>Users</Typography>
+        </Grid>
+      </Grid>
+      <Grid container size={6} justifyContent="flex-end" spacing={2}>
+        <Grid size={{ xl: 3, lg: 3, md: 6, sm: 12, xs: 12 }}>
           <TextField
             label="Search"
             variant="outlined"
@@ -115,9 +122,7 @@ export const UsersListContainer: React.FC<any> = () => {
             }}
           />
         </Grid>
-      </Grid>
-      <Grid container size={6} justifyContent="flex-end">
-        <Grid size={{xl: 3, lg: 3, md: 6, sm: 6, xs: 6}}>
+        <Grid size={{ xl: 3, lg: 3, md: 6, sm: 12, xs: 12 }}>
           <Button
             onClick={handleAdd}
             variant="contained"
@@ -136,17 +141,28 @@ export const UsersListContainer: React.FC<any> = () => {
               <Table sx={{ minWidth: 650 }} aria-label="lead table">
                 <TableHead>
                   <StyledTableRow>
-                    {!isSmallScreen && (<StyledTableCell sx={{ fontWeight: 700 }}>First Name</StyledTableCell>)}
-                    {!isSmallScreen && (<StyledTableCell sx={{ fontWeight: 700, }} align="left"    >
-                      Last Name
-                    </StyledTableCell>)}
-                    <StyledTableCell sx={{ fontWeight: 700}} align="left">
-                      User Name 
+                    {!isSmallScreen && (
+                      <StyledTableCell sx={{ fontWeight: 700 }}>
+                        First Name
+                      </StyledTableCell>
+                    )}
+                    {!isSmallScreen && (
+                      <StyledTableCell sx={{ fontWeight: 700 }} align="left">
+                        Last Name
+                      </StyledTableCell>
+                    )}
+                    <StyledTableCell sx={{ fontWeight: 700 }} align="left">
+                      User Name
                     </StyledTableCell>
-                    {!isSmallScreen && (<StyledTableCell sx={{ fontWeight: 700}} align="left">
-                      Roles
-                    </StyledTableCell>)}
-                    <StyledTableCell sx={{ fontWeight: 700, minWidth: { sm: "100px"}}} align="right">
+                    {!isSmallScreen && (
+                      <StyledTableCell sx={{ fontWeight: 700 }} align="left">
+                        Roles
+                      </StyledTableCell>
+                    )}
+                    <StyledTableCell
+                      sx={{ fontWeight: 700, minWidth: { sm: "100px" } }}
+                      align="right"
+                    >
                       Actions
                     </StyledTableCell>
                   </StyledTableRow>
@@ -157,20 +173,37 @@ export const UsersListContainer: React.FC<any> = () => {
                       key={row.email}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                     >
-                      {!isSmallScreen && (<StyledTableCell  component="th" scope="row">
-                        {row.firstName}
-                      </StyledTableCell>)}
-                      {!isSmallScreen && (<StyledTableCell>{row?.lastName}</StyledTableCell>)}
-                      <StyledTableCell align="left">{row?.email}</StyledTableCell>
-                      {!isSmallScreen && (<StyledTableCell align="left">{row?.role?.name}</StyledTableCell>)}
-                      <StyledTableCell align="right" sx={{minWidth:{ sm: "100px"}}}>
+                      {!isSmallScreen && (
+                        <StyledTableCell component="th" scope="row">
+                          {row.firstName}
+                        </StyledTableCell>
+                      )}
+                      {!isSmallScreen && (
+                        <StyledTableCell>{row?.lastName}</StyledTableCell>
+                      )}
+                      <StyledTableCell align="left">
+                        {row?.email}
+                      </StyledTableCell>
+                      {!isSmallScreen && (
+                        <StyledTableCell align="left">
+                          {row?.role?.name}
+                        </StyledTableCell>
+                      )}
+                      <StyledTableCell
+                        align="right"
+                        sx={{ minWidth: { sm: "100px" } }}
+                      >
                         <Grid container spacing={1} justifyContent="flex-end">
                           <Grid size={2}>
                             <IconButton
                               color="primary"
                               onClick={() => {
-                                  dispatch(setUserManagementAction(UserManagedAction.VIEW_USER));
-                                  handleView(row?.id);
+                                dispatch(
+                                  setUserManagementAction(
+                                    UserManagedAction.VIEW_USER
+                                  )
+                                );
+                                handleView(row?.id);
                               }}
                             >
                               <Visibility />
@@ -180,7 +213,11 @@ export const UsersListContainer: React.FC<any> = () => {
                             <IconButton
                               color="primary"
                               onClick={() => {
-                                dispatch(setUserManagementAction(UserManagedAction.UPDATE_USER))
+                                dispatch(
+                                  setUserManagementAction(
+                                    UserManagedAction.UPDATE_USER
+                                  )
+                                );
                                 handleUpdate(row?.id);
                               }}
                             >
@@ -191,7 +228,11 @@ export const UsersListContainer: React.FC<any> = () => {
                             <IconButton
                               color="primary"
                               onClick={() => {
-                                dispatch(setUserManagementAction(UserManagedAction.DELETE_USER))
+                                dispatch(
+                                  setUserManagementAction(
+                                    UserManagedAction.DELETE_USER
+                                  )
+                                );
                                 handleDelete(row?.id);
                               }}
                             >

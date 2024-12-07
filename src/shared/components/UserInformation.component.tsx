@@ -2,6 +2,7 @@ import { AccountCircle } from "@mui/icons-material";
 import {
   Alert,
   AlertTitle,
+  Box,
   Button,
   FormControl,
   FormHelperText,
@@ -33,6 +34,7 @@ import { User } from "../interfaces/user.interface";
 import CancelIcon from "@mui/icons-material/Cancel";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useNavigate } from "react-router-dom";
+import ArrowCircleLeftOutlinedIcon from "@mui/icons-material/ArrowCircleLeftOutlined";
 
 interface UserInformationProps {
   readonly?: boolean;
@@ -47,7 +49,6 @@ export const UserInformationComponent: React.FC<UserInformationProps> = ({
   user,
   userManagementAction,
 }) => {
-
   const style = {
     position: "absolute",
     top: "50%",
@@ -89,18 +90,18 @@ export const UserInformationComponent: React.FC<UserInformationProps> = ({
   });
 
   const onSubmit = (data: User) => {
-    dispatch(createUserAsync({...data})).then(() => navigate("/users"));
+    dispatch(createUserAsync({ ...data })).then(() => navigate("/users"));
   };
-  
+
   const onUpdate = (data: User) => {
-      dispatch(updateUserAsync(data)).then(() => navigate("/users"));
-  }
+    dispatch(updateUserAsync(data)).then(() => navigate("/users"));
+  };
 
   const onDelete = (userId: number | undefined) => {
     if (userId) {
       dispatch(dropUserAsync(userId)).then(() => navigate("/users"));
     }
-  }
+  };
 
   const handleClickShowPassword = () => setShowPassword(!showPassword);
 
@@ -108,10 +109,64 @@ export const UserInformationComponent: React.FC<UserInformationProps> = ({
     return readonly || userManagementAction === UserManagedAction.UPDATE_USER;
   };
 
+  const actionText = () => {
+    if (userManagementAction === UserManagedAction.UPDATE_USER) {
+      return "Update";
+    }
+    if (userManagementAction === UserManagedAction.VIEW_USER) {
+      return "View";
+    }
+    if (userManagementAction === UserManagedAction.CREATE_USER) {
+      return "Create";
+    }
+    if (userManagementAction === UserManagedAction.DELETE_USER) {
+      return "Delete";
+    }
+  };
+
   return (
     <>
       <Grid container justifyContent={"center"}>
-        <Grid size={4}>
+        <Grid size={{ xl: 8, lg: 8, md: 10, sm: 12, xs: 12 }}>
+          <Box sx={{ display: "flex", alignItems: "self-end" }}>
+            <Typography sx={{ fontSize: "24px", fontWeight: 700 }}>
+              Users
+            </Typography>
+            <Typography
+              sx={{
+                fontSize: "16px",
+                fontWeight: 600,
+                justifyContent: "end",
+                marginLeft: "5px",
+                color: "#1E3A5F"
+              }}
+            >
+              {actionText()}
+            </Typography>
+          </Box>
+          <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
+            <Button
+              sx={{
+                textTransform: "none",
+                color: "primary.main",
+              }}
+              startIcon={<ArrowCircleLeftOutlinedIcon />}
+              variant="text"
+              disableRipple
+              onClick={() => {
+                navigate("/users");
+              }}
+            >
+              Back
+            </Button>
+            <Box
+              sx={{
+                flexGrow: 1,
+                height: "1px",
+                backgroundColor: "gray",
+              }}
+            />
+          </Box>
           <TextField
             variant={hidden() ? "filled" : "outlined"}
             size="small"
@@ -337,7 +392,7 @@ export const UserInformationComponent: React.FC<UserInformationProps> = ({
                 Update
               </Button>
             )}
-             {userManagementAction === UserManagedAction.DELETE_USER && (
+            {userManagementAction === UserManagedAction.DELETE_USER && (
               <Button
                 onClick={() => setOpenDelete(true)}
                 variant="contained"
@@ -352,54 +407,54 @@ export const UserInformationComponent: React.FC<UserInformationProps> = ({
           </Grid>
         </Grid>
         <Modal
-        open={openDelete}
-        onClose={() => {}}
-        aria-labelledby="Delete model"
-        aria-describedby="Are you sure you want to delete this lead ?"
-      >
-        <Grid
-          container
-          sx={style}
-          size={{ xl: 12, lg: 12, md: 6, sm: 4, xs: 4 }}
+          open={openDelete}
+          onClose={() => {}}
+          aria-labelledby="Delete model"
+          aria-describedby="Are you sure you want to delete this lead ?"
         >
-          <Grid size={12}>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-              Are you sure you want to delete this lead ?
-            </Typography>
-          </Grid>
           <Grid
-            sx={{ marginTop: "10px" }}
-            size={{ xl: 3, lg: 3, md: 4, sm: 4, xs: 12 }}
-            offset={{ xl: 4, lg: 4, md: 3, sm: 3, xs: 1 }}
+            container
+            sx={style}
+            size={{ xl: 12, lg: 12, md: 6, sm: 4, xs: 4 }}
           >
-            <Button
-              onClick={() => onDelete(user?.id)}
-              variant="contained"
-              color="primary"
-              fullWidth
-              startIcon={<DeleteIcon />}
+            <Grid size={12}>
+              <Typography id="modal-modal-title" variant="h6" component="h2">
+                Are you sure you want to delete this lead ?
+              </Typography>
+            </Grid>
+            <Grid
+              sx={{ marginTop: "10px" }}
+              size={{ xl: 3, lg: 3, md: 4, sm: 4, xs: 12 }}
+              offset={{ xl: 4, lg: 4, md: 3, sm: 3, xs: 1 }}
             >
-              Delete
-            </Button>
-          </Grid>
-          <Grid
-            sx={{ marginTop: "10px" }}
-            size={{ xl: 3, lg: 3, md: 4, sm: 4, xs: 12 }}
-            offset={{ xl: 1, lg: 1, md: 1, sm: 1, xs: 1 }}
-          >
-            <Button
-              onClick={() => {
-                setOpenDelete(false);
-              }}
-              variant="outlined"
-              fullWidth
-              startIcon={<CancelIcon />}
+              <Button
+                onClick={() => onDelete(user?.id)}
+                variant="contained"
+                color="primary"
+                fullWidth
+                startIcon={<DeleteIcon />}
+              >
+                Delete
+              </Button>
+            </Grid>
+            <Grid
+              sx={{ marginTop: "10px" }}
+              size={{ xl: 3, lg: 3, md: 4, sm: 4, xs: 12 }}
+              offset={{ xl: 1, lg: 1, md: 1, sm: 1, xs: 1 }}
             >
-              Cancel
-            </Button>
+              <Button
+                onClick={() => {
+                  setOpenDelete(false);
+                }}
+                variant="outlined"
+                fullWidth
+                startIcon={<CancelIcon />}
+              >
+                Cancel
+              </Button>
+            </Grid>
           </Grid>
-        </Grid>
-      </Modal>
+        </Modal>
       </Grid>
     </>
   );
