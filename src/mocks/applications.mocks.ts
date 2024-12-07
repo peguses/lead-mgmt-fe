@@ -80,13 +80,13 @@ export const data = [
     applicationStatus: [
         {
             note: "test1",
-            status: "INQUIRY",
+            status: { name: "Inquiry", status: "INQUIRY"},
             userId: 1,
             createDateTime: new Date()
         },
         {
             note: "test2",
-            status: "DEAL",
+            status: { name: "deal", status: "DEAL"},
             userId: 1,
             createDateTime: new Date().setDate(2)
         }
@@ -174,13 +174,13 @@ export const data = [
     applicationStatus: [
         {
             note: "test1",
-            status: "INQUIRY",
+            status: { name: "Inquiry", status: "INQUIRY"},
             userId: 1,
             createDateTime: new Date()
         },
         {
             note: "test2",
-            status: "CANCELLED",
+            status: { name: "Cancelled", status: "CANCELLED"},
             userId: 1,
             createDateTime: new Date().setDate(2)
         }

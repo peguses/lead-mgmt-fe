@@ -9,6 +9,7 @@ import userSlice from "./users.slice";
 import roleSlice from "./role.slice";
 import managedUserSlice from "./managed.user.slice";
 import applicationUserSlice from "./application.user.slice";
+import applicationStatusSlice from "./application.status.slice";
 
 const env = process.env.REACT_APP_ENV! as "DEVELOPMENT" | "PRODUCTION" | "QA";
 
@@ -47,6 +48,11 @@ const rolesConfig = {
   storage
 }
 
+const statusesConfig = {
+  key: "applicationStatuses",
+  storage
+}
+
 
 const persistedCommon = persistReducer(commonConfig, commonSlice);
 const persistedManagedApplication = persistReducer(managedApplicationConfig, applicationSlice);
@@ -54,7 +60,8 @@ const persistedApplications = persistReducer(applicationsConfig, applicationsSli
 const persistedUsers = persistReducer(usersConfig, userSlice);
 const persistedManagedUser = persistReducer(managedUserConfig, managedUserSlice);
 const persistedApplicationUser = persistReducer(applicationUserConfig, applicationUserSlice);
-const persistedRoles = persistReducer(rolesConfig, roleSlice)
+const persistedRoles = persistReducer(rolesConfig, roleSlice);
+const persistedStatuses = persistReducer(statusesConfig, applicationStatusSlice)
 
 export const store = configureStore({
   reducer: {
@@ -64,7 +71,8 @@ export const store = configureStore({
     users: persistedUsers,
     roles: persistedRoles,
     managedUser: persistedManagedUser,
-    applicationUser: persistedApplicationUser
+    applicationUser: persistedApplicationUser,
+    applicationStatuses: persistedStatuses
   },
   devTools: env === "DEVELOPMENT" ? true : false,
   middleware: (getDefaultMiddleware) =>

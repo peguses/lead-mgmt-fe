@@ -19,13 +19,15 @@ export interface FileUploadComponentProps {
   open: boolean;
 }
 
-export const FileUploadComponent: React.FC<FileUploadComponentProps> = ({
+export const FileUploadModal: React.FC<FileUploadComponentProps> = ({
   open,
 }) => {
   const [uploadDocumentModelOpen, setUploadDocumentModelOpen] =
     useState<boolean>(false);
 
   const [files, setFiles] = useState<FileList | null>();
+
+  const [fileBrowsed, setFileBrowsed] = useState<boolean>(false);
 
   const HiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
@@ -58,7 +60,11 @@ export const FileUploadComponent: React.FC<FileUploadComponentProps> = ({
     clearErrors,
   } = useForm<any>({
     mode: "all",
-    defaultValues: {},
+    defaultValues: {
+      name: "",
+      remark: "",
+      path: ""
+    },
   });
 
   useEffect(() => {
@@ -152,11 +158,10 @@ export const FileUploadComponent: React.FC<FileUploadComponentProps> = ({
                   fullWidth
                   label="Path"
                   value={files && files[0] ? files[0].name : ""}
+                  disabled={true}
                   {...register("path", {
-                    required: "Document path",
+                    required: false,
                   })}
-                  error={!!errors.path}
-                  helperText={errors.path ? String(errors.path.message) : ""}
                   placeholder={"Local file path"}
                   slotProps={{
                     input: {
@@ -198,6 +203,10 @@ export const FileUploadComponent: React.FC<FileUploadComponentProps> = ({
                     onChange={(event) => {
                         clearErrors("path")
                         setFiles(event.target.files)
+                        if (event.target.files?.length === 0) {
+                          setFileBrowsed(false);
+                        }
+                        setFileBrowsed(true);
                     }}
                     multiple
                   />
@@ -215,7 +224,7 @@ export const FileUploadComponent: React.FC<FileUploadComponentProps> = ({
               variant="contained"
               color="primary"
               fullWidth
-              disabled={!isValid}
+              disabled={ !isValid && !fileBrowsed }
               startIcon={<UploadIcon />}
             >
               UPLOAD

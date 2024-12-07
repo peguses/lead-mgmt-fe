@@ -226,6 +226,7 @@ const GeneralInformationTab = forwardRef(
           })}
           placeholder={"Applicant optional note"}
         />
+        
         <Typography
           sx={{ marginTop: "20px", fontSize: "14px", fontWeight: 700 }}
         >

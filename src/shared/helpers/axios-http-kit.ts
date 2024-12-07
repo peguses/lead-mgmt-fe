@@ -4,6 +4,7 @@ import MockAdapter from 'axios-mock-adapter';
 import { data } from '../../mocks/applications.mocks';
 import { users } from '../../mocks/users.mock';
 import { roles } from '../../mocks/roles.mocks';
+import { status } from '../../mocks/status.mock';
 
 const mock = new MockAdapter(axios);
 mock.onGet('http://localhost:8080/applications/1').reply(200, { ...data.find((a) => a.applicationId === 1)});
@@ -15,6 +16,7 @@ mock.onGet('http://localhost:8080/users/1').reply(200,  users.find((u) => u.id =
 mock.onPost('http://localhost:8080/users').reply(200,  users.find((u) => u.id === 1));
 mock.onPost('http://localhost:8080/login').reply(200,  users.find((u) => u.id === 1));
 mock.onGet('http://localhost:8080/roles').reply(200,  roles);
+mock.onGet('http://localhost:8080/statuses').reply(200,  status);
 export const baseUrl = "http://localhost:8080";
 
 const userName = "test";

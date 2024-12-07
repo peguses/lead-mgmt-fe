@@ -25,7 +25,7 @@ import { useNavigate } from "react-router-dom";
 import { findLatestStatus } from "../../shared/utils/find.application.status.util";
 import moment from "moment";
 import UploadIcon from '@mui/icons-material/Upload';
-import { FileUploadComponent } from "../../shared/components/FileUpload.component";
+import { FileUploadModal } from "../../shared/components/FileUpload.modal";
 
 export const ApplicationStatusContainer: React.FC<any> = () => {
 
@@ -44,7 +44,10 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
     clearErrors,
   } = useForm<any>({
     mode: "all",
-    defaultValues: {},
+    defaultValues: {
+      filerKey: "",
+      filterValue: ""
+    },
   });
 
   const dispatch = useAppDispatch();
@@ -98,11 +101,8 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
                 label="Inquiry Status"
                 variant={"filled"}
                 fullWidth
-                value={findLatestStatus(application.applicationStatus)?.status}
+                value={findLatestStatus(application.applicationStatus)?.status.name}
                 disabled={true}
-                {...register("applicantOptionalNote", {
-                  required: false,
-                })}
                 slotProps={{
                   inputLabel: {
                     shrink: true,
@@ -130,9 +130,6 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
                     ?.createDateTime
                 ).format("yyyy-MM-DD:HH:hh")}
                 disabled={true}
-                {...register("applicantOptionalNote", {
-                  required: false,
-                })}
               />
 
               <TextField
@@ -147,9 +144,6 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
                 }}
                 value={application.processingOfficer}
                 disabled={true}
-                {...register("applicantOptionalNote", {
-                  required: false,
-                })}
               />
 
               <TextField
@@ -164,9 +158,6 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
                 }}
                 value={application.referrer}
                 disabled={true}
-                {...register("applicantOptionalNote", {
-                  required: false,
-                })}
               />
 
               <TextField
@@ -183,9 +174,6 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
                 fullWidth
                 value={findLatestStatus(application.applicationStatus)?.note}
                 disabled={true}
-                {...register("applicantOptionalNote", {
-                  required: false,
-                })}
               />
             </>
           )}
@@ -332,7 +320,7 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
             </Grid>
           </Grid>
         </Modal>
-        <FileUploadComponent open={uploadDocumentModelOpen}/>
+        <FileUploadModal open={uploadDocumentModelOpen}/>
       </Grid>
     </>
   );

@@ -15,16 +15,20 @@ import { removeGeneralInformation, removePrimaryApplicant, removeSecondaryApplic
 import { UsersListContainer } from "./pages/Users/UsersList.container";
 import { UserInformationContainer } from "./pages/Users/UserInformation.container";
 import { ApplicationStatusContainer } from "./pages/Applications/ApplicationStaus.container";
+import { fetchStatusesAsync } from "./shared/redux/application.status.slice";
+import { useAppDispatch } from "./shared/redux/hooks";
 
 function App() {
   const [open, setOpen] = useState(false);
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
+
   useEffect(() => {
     dispatch(removeSecondaryApplicant());
     dispatch(removePrimaryApplicant());
     dispatch(removeGeneralInformation());
     dispatch(resetApplication());
+    dispatch(fetchStatusesAsync())
   }, [dispatch]);
 
   

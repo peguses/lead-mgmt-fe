@@ -199,7 +199,7 @@ export const ApplicationListContainer: React.FC<any> = () => {
                     </TableCell>
                     <TableCell align="left">{row?.referrer}</TableCell>
                     <TableCell align="left">{row?.processingOfficer}</TableCell>
-                    <TableCell align="left">{findLatestStatus(row?.applicationStatus).status}</TableCell>
+                    <TableCell align="left">{findLatestStatus(row?.applicationStatus).status.name}</TableCell>
                     <TableCell align="left">
                     <Moment format="YYYY-MM-DD HH:MM">
                             {row?.createDateTime}

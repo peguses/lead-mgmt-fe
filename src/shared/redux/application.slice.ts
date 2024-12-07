@@ -3,6 +3,7 @@ import {
   fetchApplication,
   updateApplication,
 } from "../services/application.service";
+import { ApplicationStatus } from "./application.status.slice";
 
 export interface WorkInformation {
   employmentType: string;
@@ -99,16 +100,6 @@ export interface Application {
 
 export interface ManagedApplication {
   application: Application;
-}
-
-export enum ApplicationStatus {
-  Inquiry = "INQUIRY",
-  Deal = "DEAL",
-  Processing = "PROCESSING",
-  Approved = "APPROVED",
-  Canceled = "CANCELLED",
-  Settled = "SETTLED",
-  Paid = "PAID",
 }
 
 const INITIAL_STATE: ManagedApplication = {

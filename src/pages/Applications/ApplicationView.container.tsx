@@ -23,6 +23,7 @@ import FinancialInformationTab from "../../shared/components/FinancialInformatio
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from "../../shared/redux/hooks";
 import { Application, fetchApplicationAsync } from "../../shared/redux/application.slice";
+import { ApplicationStatusUpdateModal } from "../../shared/components/application.status.update.modal";
 
 interface Step {
   id: number;
@@ -324,6 +325,7 @@ export const ApplicationViewContainer: React.FC<any> = () => {
           </Fragment>
         )}
       </Grid>)}
+      <ApplicationStatusUpdateModal open={true} application={undefined}/>
     </Grid>
   );
 };
