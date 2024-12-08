@@ -32,6 +32,7 @@ import {
 } from "../../shared/redux/managed.user.slice";
 
 export const UsersListContainer: React.FC<any> = () => {
+  
   const isSmallScreen = useMediaQuery("(max-width: 900px)");
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -98,13 +99,13 @@ export const UsersListContainer: React.FC<any> = () => {
   };
 
   return (
-    <Grid container size={12}>
-      <Grid container justifyContent="flex-start" size={6}>
+    <Grid container size={12} spacing={2}>
+      <Grid container justifyContent="flex-start" size={{xl: 6, lg: 6, md: 6, sm: 12, xs: 12}}>
         <Grid size={{xl:6, lg: 6, md: 6, sm:12, xs: 12}}>
           <Typography sx={{fontSize:"24px", fontWeight: 700}}>Users</Typography>
         </Grid>
       </Grid>
-      <Grid container size={6} justifyContent="flex-end" spacing={2}>
+      <Grid container size={{xl: 6, lg: 6, md: 6, sm: 12, xs: 12}} justifyContent="flex-end" spacing={2}>
         <Grid size={{ xl: 3, lg: 3, md: 6, sm: 12, xs: 12 }}>
           <TextField
             label="Search"

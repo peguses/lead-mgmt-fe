@@ -18,6 +18,7 @@ import {
   TableRow,
   TextField,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import {
@@ -37,6 +38,10 @@ import { FileUploadModal } from "../../shared/components/FileUpload.modal";
 import CheckCircleOutlineOutlinedIcon from "@mui/icons-material/CheckCircleOutlineOutlined";
 
 export const ApplicationStatusContainer: React.FC<any> = () => {
+
+    
+  const isSmallScreen = useMediaQuery("(max-width: 900px)");
+
   const [viewStatusModelOpen, setViewStatusModelOpen] =
     useState<boolean>(false);
 
@@ -212,7 +217,7 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
               />
             </>
           )}
-          <Grid container sx={{ marginTop: "20px" }} size={12}>
+          {!isSmallScreen && (<Grid container sx={{ marginTop: "20px" }} size={12}>
             {application.documents.length !== 0 && (
               <TableContainer>
                 <Table sx={{ minWidth: 650 }} aria-label="lead table">
@@ -253,7 +258,8 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
               </TableContainer>
             )}
           </Grid>
-          <Grid container spacing={2}>
+          )}
+          <Grid sx={{marginTop: "10px"}} container spacing={2}>
             <Grid size={{ xl: 4, lg: 6, md: 12, sm: 12, xs: 12 }}>
               <Button
                 onClick={() => setViewStatusModelOpen(true)}
