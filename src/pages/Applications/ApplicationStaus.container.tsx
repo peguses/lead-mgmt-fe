@@ -38,8 +38,6 @@ import { FileUploadModal } from "../../shared/components/FileUpload.modal";
 import CheckCircleOutlineOutlinedIcon from "@mui/icons-material/CheckCircleOutlineOutlined";
 
 export const ApplicationStatusContainer: React.FC<any> = () => {
-
-    
   const isSmallScreen = useMediaQuery("(max-width: 900px)");
 
   const [viewStatusModelOpen, setViewStatusModelOpen] =
@@ -130,7 +128,7 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
       <Grid container justifyContent={"center"}>
         <Grid size={{ xl: 8, lg: 8, md: 10, sm: 12, xs: 12 }}>
           <Typography sx={{ fontSize: "24px", fontWeight: 700 }}>
-              Inquiry Status
+            Inquiry Status
           </Typography>
           {!application.isLoading && (
             <>
@@ -217,49 +215,50 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
               />
             </>
           )}
-          {!isSmallScreen && (<Grid container sx={{ marginTop: "20px" }} size={12}>
-            {application.documents.length !== 0 && (
-              <TableContainer>
-                <Table sx={{ minWidth: 650 }} aria-label="lead table">
-                  <TableHead>
-                    <StyledTableRow>
-                      <StyledTableCell sx={{ fontWeight: 700 }}>
-                        Document
-                      </StyledTableCell>
-                      <StyledTableCell sx={{ fontWeight: 700 }} align="left">
-                        Remark
-                      </StyledTableCell>
-                      <StyledTableCell sx={{ fontWeight: 700 }} align="left">
-                        Url
-                      </StyledTableCell>
-                    </StyledTableRow>
-                  </TableHead>
-                  <TableBody>
-                    {application?.documents?.map((row, index) => (
-                      <StyledTableRow
-                        key={`${row.name}${index}`}
-                        sx={{
-                          "&:last-child td, &:last-child th": { border: 0 },
-                        }}
-                      >
-                        <StyledTableCell component="th" scope="row">
-                          {row?.name}
+          {!isSmallScreen && (
+            <Grid container sx={{ marginTop: "20px" }} size={12}>
+              {application.documents.length !== 0 && (
+                <TableContainer>
+                  <Table sx={{ minWidth: 650 }} aria-label="lead table">
+                    <TableHead>
+                      <StyledTableRow>
+                        <StyledTableCell sx={{ fontWeight: 700 }}>
+                          Document
                         </StyledTableCell>
-                        <StyledTableCell align="left">
-                          {row?.remark}
+                        <StyledTableCell sx={{ fontWeight: 700 }} align="left">
+                          Remark
                         </StyledTableCell>
-                        <StyledTableCell align="left">
-                          {row?.path}
+                        <StyledTableCell sx={{ fontWeight: 700 }} align="left">
+                          Url
                         </StyledTableCell>
                       </StyledTableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            )}
-          </Grid>
+                    </TableHead>
+                    <TableBody>
+                      {application?.documents?.map((row, index) => (
+                        <StyledTableRow
+                          key={`${row.name}${index}`}
+                          sx={{
+                            "&:last-child td, &:last-child th": { border: 0 },
+                          }}
+                        >
+                          <StyledTableCell component="th" scope="row">
+                            {row?.name}
+                          </StyledTableCell>
+                          <StyledTableCell align="left">
+                            {row?.remark}
+                          </StyledTableCell>
+                          <StyledTableCell align="left">
+                            {row?.path}
+                          </StyledTableCell>
+                        </StyledTableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              )}
+            </Grid>
           )}
-          <Grid sx={{marginTop: "10px"}} container spacing={2}>
+          <Grid sx={{ marginTop: "10px" }} container spacing={2}>
             <Grid size={{ xl: 4, lg: 6, md: 12, sm: 12, xs: 12 }}>
               <Button
                 onClick={() => setViewStatusModelOpen(true)}
@@ -296,7 +295,7 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
           <Grid
             container
             sx={style}
-            size={{ xl: 12, lg: 12, md: 6, sm: 4, xs: 4 }}
+            size={{ xl: 6, lg: 6, md: 6, sm: 12, xs: 12 }}
           >
             <Grid size={12}>
               <Typography
@@ -380,38 +379,36 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
                 }}
               />
             </Grid>
-            <Grid
-              sx={{ marginTop: "10px" }}
-              size={{ xl: 4, lg: 4, md: 4, sm: 4, xs: 12 }}
-              offset={{ xl: 3, lg: 3, md: 3, sm: 3, xs: 1 }}
-            >
-              <Button
-                onClick={handleSubmit(handleFilter)}
-                variant="contained"
-                color="primary"
-                fullWidth
-                disabled={!isValid}
-                startIcon={<FilterList />}
+            <Grid size={12} container justifyContent={"flex-start"} spacing={2} sx={{marginTop: "10px"}}>
+              <Grid
+               size={{xl: 4, lg: 4, md: 4, sm: 12, xs: 12}}
               >
-                Filter
-              </Button>
-            </Grid>
-            <Grid
-              sx={{ marginTop: "10px" }}
-              size={{ xl: 4, lg: 4, md: 4, sm: 4, xs: 12 }}
-              offset={{ xl: 1, lg: 1, md: 1, sm: 1, xs: 1 }}
-            >
-              <Button
-                onClick={() => {
-                  setViewStatusModelOpen(false);
-                  navigate("/");
-                }}
-                variant="outlined"
-                fullWidth
-                startIcon={<CancelIcon />}
+                <Button
+                  onClick={handleSubmit(handleFilter)}
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                  disabled={!isValid}
+                  startIcon={<FilterList />}
+                >
+                  Filter
+                </Button>
+              </Grid>
+              <Grid
+                 size={{xl: 4, lg: 4, md: 4, sm: 12, xs: 12}}
               >
-                Cancel
-              </Button>
+                <Button
+                  onClick={() => {
+                    setViewStatusModelOpen(false);
+                    navigate("/");
+                  }}
+                  variant="outlined"
+                  fullWidth
+                  startIcon={<CancelIcon />}
+                >
+                  Cancel
+                </Button>
+              </Grid>
             </Grid>
           </Grid>
         </Modal>

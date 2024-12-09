@@ -278,7 +278,7 @@ export const LandingPageContainer: React.FC<any> = () => {
         justifyContent={"center"}
         size={
           jointLoan && activeStep !== 2
-            ? 12
+            ? {xl: 8, lg: 8, md: 12, sm: 12, xs: 12}
             : { xl: 4, lg: 4, md: 12, sm: 12, xs: 12 }
         }
         sx={{ marginTop: "5px", marginBottom: "20px" }}

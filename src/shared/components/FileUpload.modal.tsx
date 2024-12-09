@@ -63,7 +63,7 @@ export const FileUploadModal: React.FC<FileUploadComponentProps> = ({
     defaultValues: {
       name: "",
       remark: "",
-      path: ""
+      path: "",
     },
   });
 
@@ -134,7 +134,7 @@ export const FileUploadModal: React.FC<FileUploadComponentProps> = ({
                   },
                 },
                 inputLabel: {
-                    shrink: true,
+                  shrink: true,
                 },
               }}
               sx={{
@@ -179,9 +179,9 @@ export const FileUploadModal: React.FC<FileUploadComponentProps> = ({
               <Grid
                 size={{ xl: 3, lg: 3, md: 12, sm: 12, xs: 12 }}
                 sx={{ marginBottom: "3px" }}
-                offset={{xl: 1, lg: 1}}
+                offset={{ xl: 1, lg: 1 }}
                 justifyContent={"flex-end"}
-                alignContent={errors?.path ? "center" :"flex-end"}
+                alignContent={errors?.path ? "center" : "flex-end"}
               >
                 <Button
                   component="label"
@@ -195,12 +195,12 @@ export const FileUploadModal: React.FC<FileUploadComponentProps> = ({
                   <HiddenInput
                     type="file"
                     onChange={(event) => {
-                        clearErrors("path")
-                        setFiles(event.target.files)
-                        if (event.target.files?.length === 0) {
-                          setFileBrowsed(false);
-                        }
-                        setFileBrowsed(true);
+                      clearErrors("path");
+                      setFiles(event.target.files);
+                      if (event.target.files?.length === 0) {
+                        setFileBrowsed(false);
+                      }
+                      setFileBrowsed(true);
                     }}
                     multiple
                   />
@@ -209,36 +209,40 @@ export const FileUploadModal: React.FC<FileUploadComponentProps> = ({
             </Grid>
           </Grid>
           <Grid
+            size={12}
+            container
+            justifyContent={"flex-start"}
+            spacing={2}
             sx={{ marginTop: "10px" }}
-            size={{ xl: 4, lg: 4, md: 4, sm: 4, xs: 12 }}
-            offset={{ xl: 3, lg: 3, md: 3, sm: 3 }}
           >
-            <Button
-              onClick={handleSubmit(handleUpload)}
-              variant="contained"
-              color="primary"
-              fullWidth
-              disabled={ !isValid && !fileBrowsed }
-              startIcon={<UploadIcon />}
+            <Grid
+              size={{xl: "grow", lg: "grow", md: "grow", sm: 12, xs: 12}}
             >
-              UPLOAD
-            </Button>
-          </Grid>
-          <Grid
-            sx={{ marginTop: "10px" }}
-            size={{ xl: 4, lg: 4, md: 4, sm: 4, xs: 12 }}
-            offset={{ xl: 1, lg: 1, md: 1, sm: 1 }}
-          >
-            <Button
-              onClick={() => {
-                setUploadDocumentModelOpen(false);
-              }}
-              variant="outlined"
-              fullWidth
-              startIcon={<CancelIcon />}
+              <Button
+                onClick={handleSubmit(handleUpload)}
+                variant="contained"
+                color="primary"
+                fullWidth
+                disabled={!isValid && !fileBrowsed}
+                startIcon={<UploadIcon />}
+              >
+                UPLOAD
+              </Button>
+            </Grid>
+            <Grid
+             size={{xl: "grow", lg: "grow", md: "grow", sm: 12, xs: 12}}
             >
-              Cancel
-            </Button>
+              <Button
+                onClick={() => {
+                  setUploadDocumentModelOpen(false);
+                }}
+                variant="outlined"
+                fullWidth
+                startIcon={<CancelIcon />}
+              >
+                Cancel
+              </Button>
+            </Grid>
           </Grid>
         </Grid>
       </Modal>
