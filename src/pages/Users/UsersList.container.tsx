@@ -33,6 +33,7 @@ import {
   UserManagedAction,
 } from "../../shared/redux/managed.user.slice";
 import { User } from "../../shared/interfaces/user.interface";
+import RefreshIcon from "@mui/icons-material/Refresh";
 
 export const UsersListContainer: React.FC<any> = () => {
   const isSmallScreen = useMediaQuery("(max-width: 900px)");
@@ -111,6 +112,10 @@ export const UsersListContainer: React.FC<any> = () => {
     navigate(`/users/user/${userId}`);
   };
 
+  const handleRefresh = () => {
+    dispatch(fetchUsersAsync());
+  };
+
   return (
     <>
       <Grid container size={12} spacing={2}>
@@ -148,20 +153,45 @@ export const UsersListContainer: React.FC<any> = () => {
               }}
             />
           </Grid>
-          <Grid size={{ xl: 3, lg: 3, md: 6, sm: 12, xs: 12 }}>
-            <Button
-              onClick={handleAdd}
-              variant="contained"
-              color="primary"
-              fullWidth
-              startIcon={<GroupIcon />}
-            >
-              Add User
-            </Button>
+          <Grid
+            container
+            size={{ xl: 4, lg: 4, md: 7, sm: 12, xs: 12 }}
+            spacing={1}
+          >
+            <Grid size={10}>
+              <Button
+                onClick={handleAdd}
+                variant="contained"
+                color="primary"
+                fullWidth
+                startIcon={<GroupIcon />}
+              >
+                Add User
+              </Button>
+            </Grid>
+            <Grid size={1}>
+              <IconButton
+                onClick={handleRefresh}
+                sx={{
+                  width: 36,
+                  height: 36,
+                  padding: 0,
+                  border: "2px solid",
+                  borderColor: "primary.main",
+                  borderRadius: 2,
+                  "&:hover": {
+                    backgroundColor: "rgba(0, 0, 0, 0.1)",
+                    borderColor: "#1E3A5F",
+                  },
+                }}
+              >
+                <RefreshIcon />
+              </IconButton>
+            </Grid>
           </Grid>
         </Grid>
-        {!isUsersLoading && users.length !== 0 && (
-          <Grid size={12} sx={{ marginTop: "10px" }}>
+        <Grid size={12} sx={{ marginTop: "10px" }}>
+          {!isUsersLoading ?(
             <Paper sx={{ width: "100%", mb: 2 }}>
               <TableContainer>
                 <Table sx={{ minWidth: 650 }} aria-label="lead table">
@@ -290,28 +320,27 @@ export const UsersListContainer: React.FC<any> = () => {
                 onRowsPerPageChange={handleChangeRowsPerPage}
               />
             </Paper>
-          </Grid>
-        )}
+          ) : (
+            <Backdrop
+              className="diagnose-loader"
+              sx={{
+                color: "primary.main",
+                marginRight: "20%",
+                position: "absolute",
+                inset: "0",
+                zIndex: "10",
+                backgroundColor: "primary.contrastText",
+              }}
+              open={true}
+            >
+              <CircularProgress
+                color="inherit"
+                sx={{ marginLeft: "250px", textAlign: "center" }}
+              />
+            </Backdrop>
+          )}
+        </Grid>
       </Grid>
-      {isUsersLoading && users && users?.length > 0 && (
-        <Backdrop
-          className="diagnose-loader"
-          sx={{
-            color: "primary.main",
-            marginRight: "20%",
-            position: "absolute",
-            inset: "0",
-            zIndex: "10",
-            backgroundColor: "primary.contrastText",
-          }}
-          open={isUsersLoading || false}
-        >
-          <CircularProgress
-            color="inherit"
-            sx={{ marginLeft: "250px", textAlign: "center" }}
-          />
-        </Backdrop>
-      )}
     </>
   );
 };
