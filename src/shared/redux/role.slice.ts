@@ -21,6 +21,7 @@ export enum IRole {
 }
 
 export interface Role {
+    id: number;
     name: string;
     role: IRole;
     permissions: Permission[]

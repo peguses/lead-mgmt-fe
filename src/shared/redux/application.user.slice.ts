@@ -24,6 +24,7 @@ const INITIAL_STATE: ApplicationUser = {
       email: "",
       password: "",
       role: {
+        id: 0,
         name: "",
         role: IRole.referrer,
         permissions: []

@@ -15,15 +15,17 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
-import { useAppDispatch } from "../../shared/redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../shared/redux/hooks";
 import { Role } from "../../shared/redux/role.slice";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import {
   createUserAsync,
   dropUserAsync,
+  ManagedUser,
+  resetManagedUser,
   updateUserAsync,
   UserManagedAction,
 } from "../../shared/redux/managed.user.slice";
@@ -67,6 +69,8 @@ export const UserInformationComponent: React.FC<UserInformationProps> = ({
 
   const [openDelete, setOpenDelete] = useState<boolean>(false);
 
+  const [message, setMessage] = useState<string>("");
+
   const navigate = useNavigate();
 
   const {
@@ -78,19 +82,32 @@ export const UserInformationComponent: React.FC<UserInformationProps> = ({
   } = useForm<any>({
     mode: "all",
     defaultValues: user
-      ? { ...user, role: user.role.role }
+      ? { ...user, role: { id: 1 } }
       : {
           id: 1,
           firstName: "",
           lastName: "",
           email: "",
           password: "",
-          role: "",
+          role: null,
         },
   });
 
-  const onSubmit = (data: User) => {
-    dispatch(createUserAsync({ ...data })).then(() => navigate("/users"));
+  const managedUser = useAppSelector((state): ManagedUser | undefined => {
+    return state?.managedUser;
+  });
+
+  useEffect(() => {
+    if (managedUser?.loadingFailed && managedUser?.errorMessageIfFailed) {
+      setMessage(managedUser.errorMessageIfFailed);
+    } else {
+      setMessage("");
+    }
+  }, [managedUser?.errorMessageIfFailed, managedUser?.loadingFailed]);
+
+  const onSubmit = (data: any) => {
+    dispatch(resetManagedUser());
+    dispatch(createUserAsync(data));
   };
 
   const onUpdate = (data: User) => {
@@ -138,7 +155,7 @@ export const UserInformationComponent: React.FC<UserInformationProps> = ({
                 fontWeight: 600,
                 justifyContent: "end",
                 marginLeft: "5px",
-                color: "#1E3A5F"
+                color: "#1E3A5F",
               }}
             >
               {actionText()}
@@ -167,6 +184,15 @@ export const UserInformationComponent: React.FC<UserInformationProps> = ({
               }}
             />
           </Box>
+          {message && (
+            <Alert
+              severity="error"
+              sx={{ marginTop: "20px", fontSize: "14px", fontWeight: 700 }}
+            >
+              <AlertTitle>Important</AlertTitle>
+              {message}
+            </Alert>
+          )}
           <TextField
             variant={hidden() ? "filled" : "outlined"}
             size="small"
@@ -264,55 +290,55 @@ export const UserInformationComponent: React.FC<UserInformationProps> = ({
             }}
           />
 
-          {userManagementAction === UserManagedAction.CREATE_USER ||
-            (userManagementAction === UserManagedAction.UPDATE_USER && (
-              <TextField
-                type={showPassword ? "text" : "password"}
-                variant={readonly ? "filled" : "outlined"}
-                fullWidth
-                size="small"
-                label="Password"
-                disabled={readonly}
-                {...register("password", {
-                  required: "Password is required",
-                  pattern: {
-                    value:
-                      /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-                    message:
-                      "Password must be at least 8 characters, contain one uppercase letter, one number, and one special character.",
+          {(userManagementAction === UserManagedAction.CREATE_USER ||
+            userManagementAction === UserManagedAction.UPDATE_USER) && (
+            <TextField
+              type={showPassword ? "text" : "password"}
+              variant={readonly ? "filled" : "outlined"}
+              fullWidth
+              size="small"
+              label="Password"
+              disabled={readonly}
+              {...register("password", {
+                required: "Password is required",
+                pattern: {
+                  value:
+                    /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                  message:
+                    "Password must be at least 8 characters, contain one uppercase letter, one number, and one special character.",
+                },
+              })}
+              error={!!errors.password}
+              placeholder={"Password"}
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <InputAdornment
+                      position="end"
+                      onClick={handleClickShowPassword}
+                    >
+                      <div onClick={handleClickShowPassword}>
+                        {showPassword ? <Visibility /> : <VisibilityOff />}
+                      </div>
+                    </InputAdornment>
+                  ),
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <KeyIcon />
+                    </InputAdornment>
+                  ),
+                  sx: {
+                    marginTop: !readonly ? "20px" : "",
                   },
-                })}
-                error={!!errors.password}
-                placeholder={"Password"}
-                slotProps={{
-                  input: {
-                    endAdornment: (
-                      <InputAdornment
-                        position="end"
-                        onClick={handleClickShowPassword}
-                      >
-                        <div onClick={handleClickShowPassword}>
-                          {showPassword ? <Visibility /> : <VisibilityOff />}
-                        </div>
-                      </InputAdornment>
-                    ),
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <KeyIcon />
-                      </InputAdornment>
-                    ),
-                    sx: {
-                      marginTop: !readonly ? "20px" : "",
-                    },
-                  },
-                }}
-                sx={{
-                  ".MuiInputLabel-outlined": {
-                    lineHeight: "70px",
-                  },
-                }}
-              />
-            ))}
+                },
+              }}
+              sx={{
+                ".MuiInputLabel-outlined": {
+                  lineHeight: "70px",
+                },
+              }}
+            />
+          )}
 
           {errors.password && (
             <Alert
@@ -335,32 +361,34 @@ export const UserInformationComponent: React.FC<UserInformationProps> = ({
               Role
             </InputLabel>
             <Controller
-              name="role"
+              name="role.id"
               control={control}
               disabled={readonly}
               rules={{ required: "Role is required" }}
               render={({ field }) => (
                 <Select
-                  id="role"
+                  id="role.id"
                   labelId="role-label"
                   label="Role"
                   {...field}
                   displayEmpty
                   onChange={(e) => {
-                    clearErrors("role");
+                    clearErrors("role.id");
                     field.onChange(e);
                   }}
                 >
                   {roles?.map((stateObj) => (
-                    <MenuItem key={stateObj.name} value={stateObj.role}>
+                    <MenuItem key={stateObj.id} value={stateObj.id}>
                       {stateObj.name}
                     </MenuItem>
                   ))}
                 </Select>
               )}
             />
-            {errors.role && (
-              <FormHelperText>{String(errors.role?.message)}</FormHelperText>
+            {errors?.role && errors?.role?.["id"] && (
+              <FormHelperText>
+                {String(errors.role?.["id"]?.message)}
+              </FormHelperText>
             )}
           </FormControl>
           <Grid

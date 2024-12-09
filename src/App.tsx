@@ -14,6 +14,7 @@ import { UserInformationContainer } from "./pages/Users/UserInformation.containe
 import { ApplicationStatusContainer } from "./pages/Applications/ApplicationStaus.container";
 import { fetchStatusesAsync } from "./shared/redux/application.status.slice";
 import { useAppDispatch } from "./shared/redux/hooks";
+import { resetManagedUser } from "./shared/redux/managed.user.slice";
 
 function App() {
   const [open, setOpen] = useState(false);
@@ -25,6 +26,7 @@ function App() {
     dispatch(removePrimaryApplicant());
     dispatch(removeGeneralInformation());
     dispatch(resetApplication());
+    dispatch(resetManagedUser())
     // dispatch(fetchStatusesAsync())
   }, [dispatch]);
 
