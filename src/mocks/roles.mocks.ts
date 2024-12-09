@@ -27,9 +27,6 @@ export const roles = [
     name: "Referrer",
     role: "REFERRER",
     permissions: [
-      "ADD_USER",
-      "DELETE_USER",
-      "UPDATE_USER",
       "DELETE_APPLICATION",
       "ASSIGN_APPLICATION",
       "VIEW_APPLICATION",

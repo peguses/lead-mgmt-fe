@@ -43,7 +43,7 @@ export const fetchUserAsync = createAsyncThunk(
     async (userId: number) => {
       const response = await fetchUser(userId);
       return {
-        user: response.data as any,
+        user: response.data.data as any,
       };
     }
 );

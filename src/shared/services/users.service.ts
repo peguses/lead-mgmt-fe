@@ -6,7 +6,7 @@ export const fetchUsers = async(): Promise<AxiosResponse<any>> => {
     return apiKit.get("/users")
 }
 
-export const fetchUser = async(userId: number): Promise<AxiosResponse<User>> => {
+export const fetchUser = async(userId: number): Promise<AxiosResponse<any>> => {
     return apiKit.get(`/users/${userId}`)
 }
 

@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { UserInformationComponent } from "../../shared/components/UserInformation.component";
-import { useEffect } from "react";
+import { useEffect, useId } from "react";
 import { fetchRolesAsync, Roles } from "../../shared/redux/role.slice";
 import { useAppDispatch, useAppSelector } from "../../shared/redux/hooks";
 import {
@@ -18,9 +18,15 @@ export const UserInformationContainer: React.FC<any> = () => {
     dispatch(fetchRolesAsync());
   }, []);
 
+  const userManagementAction = useAppSelector((state): UserManagedAction => {
+    return state?.managedUser.action;
+  });
+
   useEffect(() => {
-    dispatch(fetchUserAsync(Number(userId)));
-  }, [userId]);
+    if (userManagementAction !== UserManagedAction.CREATE_USER) {
+      dispatch(fetchUserAsync(Number(userId)));
+    }
+  }, [dispatch, userId, userManagementAction]);
 
   const roles = useAppSelector((state): Roles | undefined => {
     return state?.roles;
@@ -28,10 +34,6 @@ export const UserInformationContainer: React.FC<any> = () => {
 
   const managedUser = useAppSelector((state): ManagedUser => {
     return state?.managedUser;
-  });
-
-  const userManagementAction = useAppSelector((state): UserManagedAction => {
-    return state?.managedUser.action;
   });
 
   const view = () => {

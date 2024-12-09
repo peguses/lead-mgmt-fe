@@ -45,7 +45,7 @@ export const fetchRolesAsync = createAsyncThunk(
     async () => {
       const response = await fetchRoles();
       return {
-        users: response.data as any,
+        roles: response.data.data as any,
       };
     }
   );
@@ -61,7 +61,7 @@ export const userSlice = createSlice({
         state.loadingFailed = false;
       });
       builder.addCase(fetchRolesAsync.fulfilled, (state, action) => {
-        state.roles = [...action.payload.users];
+        state.roles = [...action.payload.roles];
         state.isLoading = false;
         state.loadingFailed = false;
       });
