@@ -23,7 +23,7 @@ export const fetchUsersAsync = createAsyncThunk(
     async () => {
       const response = await fetchUsers();
       return {
-        users: response.data as any,
+        users: response.data.data as any,
       };
     }
   );
@@ -39,7 +39,7 @@ export const userSlice = createSlice({
         state.loadingFailed = false;
       });
       builder.addCase(fetchUsersAsync.fulfilled, (state, action) => {
-        state.users = [...action.payload.users];
+        state.users = action.payload.users
         state.isLoading = false;
         state.loadingFailed = false;
       });

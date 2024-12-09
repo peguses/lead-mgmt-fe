@@ -25,7 +25,7 @@ function App() {
     dispatch(removePrimaryApplicant());
     dispatch(removeGeneralInformation());
     dispatch(resetApplication());
-    dispatch(fetchStatusesAsync())
+    // dispatch(fetchStatusesAsync())
   }, [dispatch]);
 
   

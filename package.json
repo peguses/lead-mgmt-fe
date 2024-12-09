@@ -17,6 +17,7 @@
     "axios": "^1.7.8",
     "axios-mock-adapter": "^2.1.0",
     "date-fns": "^2.28.0",
+    "env-cmd": "^10.1.0",
     "react": "^18.3.1",
     "react-currency-input-field": "^3.9.0",
     "react-dom": "^18.3.1",
@@ -30,10 +31,12 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "mock": "react-scripts mock",
+    "eject": "react-scripts eject",
+    "start:local": "env-cmd -f ./env/local.env react-scripts start",
+    "start:prod": "env-cmd -f ./env/production.env react-scripts start",
+    "build:local": "env-cmd -f ./env/local.env react-scripts start",
+    "build:prod": "env-cmd -f ./env/production.env react-scripts start"
   },
   "eslintConfig": {
     "extends": [

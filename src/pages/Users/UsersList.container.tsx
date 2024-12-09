@@ -1,5 +1,7 @@
 import {
+  Backdrop,
   Button,
+  CircularProgress,
   Grid2 as Grid,
   IconButton,
   InputAdornment,
@@ -30,10 +32,16 @@ import {
   setUserManagementAction,
   UserManagedAction,
 } from "../../shared/redux/managed.user.slice";
+import { User } from "../../shared/interfaces/user.interface";
 
 export const UsersListContainer: React.FC<any> = () => {
-  
   const isSmallScreen = useMediaQuery("(max-width: 900px)");
+
+  const [users, setUsers] = useState<User[]>([]);
+
+  const [isUsersLoading, setUsersLoading] = useState<boolean | undefined>(
+    false
+  );
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -64,11 +72,16 @@ export const UsersListContainer: React.FC<any> = () => {
 
   useEffect(() => {
     dispatch(fetchUsersAsync());
-  }, []);
+  }, [dispatch]);
 
-  const users = useAppSelector((state): Users | undefined => {
+  const usersList = useAppSelector((state): Users | undefined => {
     return state?.users;
   });
+
+  useEffect(() => {
+    setUsers(usersList?.users || []);
+    setUsersLoading(usersList?.isLoading);
+  }, [usersList]);
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -99,166 +112,206 @@ export const UsersListContainer: React.FC<any> = () => {
   };
 
   return (
-    <Grid container size={12} spacing={2}>
-      <Grid container justifyContent="flex-start" size={{xl: 6, lg: 6, md: 6, sm: 12, xs: 12}}>
-        <Grid size={{xl:6, lg: 6, md: 6, sm:12, xs: 12}}>
-          <Typography sx={{fontSize:"24px", fontWeight: 700}}>Users</Typography>
+    <>
+      <Grid container size={12} spacing={2}>
+        <Grid
+          container
+          justifyContent="flex-start"
+          size={{ xl: 6, lg: 6, md: 6, sm: 12, xs: 12 }}
+        >
+          <Grid size={{ xl: 6, lg: 6, md: 6, sm: 12, xs: 12 }}>
+            <Typography sx={{ fontSize: "24px", fontWeight: 700 }}>
+              Users
+            </Typography>
+          </Grid>
         </Grid>
-      </Grid>
-      <Grid container size={{xl: 6, lg: 6, md: 6, sm: 12, xs: 12}} justifyContent="flex-end" spacing={2}>
-        <Grid size={{ xl: 3, lg: 3, md: 6, sm: 12, xs: 12 }}>
-          <TextField
-            label="Search"
-            variant="outlined"
-            size="small"
-            fullWidth
-            slotProps={{
-              input: {
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon />
-                  </InputAdornment>
-                ),
-              },
-            }}
-          />
+        <Grid
+          container
+          size={{ xl: 6, lg: 6, md: 6, sm: 12, xs: 12 }}
+          justifyContent="flex-end"
+          spacing={2}
+        >
+          <Grid size={{ xl: 3, lg: 3, md: 6, sm: 12, xs: 12 }}>
+            <TextField
+              label="Search"
+              variant="outlined"
+              size="small"
+              fullWidth
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon />
+                    </InputAdornment>
+                  ),
+                },
+              }}
+            />
+          </Grid>
+          <Grid size={{ xl: 3, lg: 3, md: 6, sm: 12, xs: 12 }}>
+            <Button
+              onClick={handleAdd}
+              variant="contained"
+              color="primary"
+              fullWidth
+              startIcon={<GroupIcon />}
+            >
+              Add User
+            </Button>
+          </Grid>
         </Grid>
-        <Grid size={{ xl: 3, lg: 3, md: 6, sm: 12, xs: 12 }}>
-          <Button
-            onClick={handleAdd}
-            variant="contained"
-            color="primary"
-            fullWidth
-            startIcon={<GroupIcon />}
-          >
-            Add User
-          </Button>
-        </Grid>
-      </Grid>
-      <Grid size={12} sx={{ marginTop: "10px" }}>
-        {!users?.isLoading && (
-          <Paper sx={{ width: "100%", mb: 2 }}>
-            <TableContainer>
-              <Table sx={{ minWidth: 650 }} aria-label="lead table">
-                <TableHead>
-                  <StyledTableRow>
-                    {!isSmallScreen && (
-                      <StyledTableCell sx={{ fontWeight: 700 }}>
-                        First Name
-                      </StyledTableCell>
-                    )}
-                    {!isSmallScreen && (
-                      <StyledTableCell sx={{ fontWeight: 700 }} align="left">
-                        Last Name
-                      </StyledTableCell>
-                    )}
-                    <StyledTableCell sx={{ fontWeight: 700 }} align="left">
-                      User Name
-                    </StyledTableCell>
-                    {!isSmallScreen && (
-                      <StyledTableCell sx={{ fontWeight: 700 }} align="left">
-                        Roles
-                      </StyledTableCell>
-                    )}
-                    <StyledTableCell
-                      sx={{ fontWeight: 700, minWidth: { sm: "100px" } }}
-                      align="right"
-                    >
-                      Actions
-                    </StyledTableCell>
-                  </StyledTableRow>
-                </TableHead>
-                <TableBody>
-                  {users?.users?.map((row) => (
-                    <StyledTableRow
-                      key={row.email}
-                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                    >
+        {!isUsersLoading && users.length !== 0 && (
+          <Grid size={12} sx={{ marginTop: "10px" }}>
+            <Paper sx={{ width: "100%", mb: 2 }}>
+              <TableContainer>
+                <Table sx={{ minWidth: 650 }} aria-label="lead table">
+                  <TableHead>
+                    <StyledTableRow>
                       {!isSmallScreen && (
-                        <StyledTableCell component="th" scope="row">
-                          {row.firstName}
+                        <StyledTableCell sx={{ fontWeight: 700 }}>
+                          First Name
                         </StyledTableCell>
                       )}
                       {!isSmallScreen && (
-                        <StyledTableCell>{row?.lastName}</StyledTableCell>
+                        <StyledTableCell sx={{ fontWeight: 700 }} align="left">
+                          Last Name
+                        </StyledTableCell>
                       )}
-                      <StyledTableCell align="left">
-                        {row?.email}
+                      <StyledTableCell sx={{ fontWeight: 700 }} align="left">
+                        User Name
                       </StyledTableCell>
                       {!isSmallScreen && (
-                        <StyledTableCell align="left">
-                          {row?.role?.name}
+                        <StyledTableCell sx={{ fontWeight: 700 }} align="left">
+                          Roles
                         </StyledTableCell>
                       )}
                       <StyledTableCell
+                        sx={{ fontWeight: 700, minWidth: { sm: "100px" } }}
                         align="right"
-                        sx={{ minWidth: { sm: "100px" } }}
                       >
-                        <Grid container spacing={1} justifyContent="flex-end">
-                          <Grid size={2}>
-                            <IconButton
-                              color="primary"
-                              onClick={() => {
-                                dispatch(
-                                  setUserManagementAction(
-                                    UserManagedAction.VIEW_USER
-                                  )
-                                );
-                                handleView(row?.id);
-                              }}
-                            >
-                              <Visibility />
-                            </IconButton>
-                          </Grid>
-                          <Grid size={2}>
-                            <IconButton
-                              color="primary"
-                              onClick={() => {
-                                dispatch(
-                                  setUserManagementAction(
-                                    UserManagedAction.UPDATE_USER
-                                  )
-                                );
-                                handleUpdate(row?.id);
-                              }}
-                            >
-                              <EditIcon />
-                            </IconButton>
-                          </Grid>
-                          <Grid size={2}>
-                            <IconButton
-                              color="primary"
-                              onClick={() => {
-                                dispatch(
-                                  setUserManagementAction(
-                                    UserManagedAction.DELETE_USER
-                                  )
-                                );
-                                handleDelete(row?.id);
-                              }}
-                            >
-                              <DeleteIcon />
-                            </IconButton>
-                          </Grid>
-                        </Grid>
+                        Actions
                       </StyledTableCell>
                     </StyledTableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-            <TablePagination
-              rowsPerPageOptions={[5, 10, 25]}
-              component="div"
-              count={users?.users.length || 0}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-          </Paper>
+                  </TableHead>
+                  <TableBody>
+                    {!isUsersLoading &&
+                      users?.length !== 0 &&
+                      users?.map((row) => (
+                        <StyledTableRow
+                          key={row.email}
+                          sx={{
+                            "&:last-child td, &:last-child th": { border: 0 },
+                          }}
+                        >
+                          {!isSmallScreen && (
+                            <StyledTableCell component="th" scope="row">
+                              {row.firstName}
+                            </StyledTableCell>
+                          )}
+                          {!isSmallScreen && (
+                            <StyledTableCell>{row?.lastName}</StyledTableCell>
+                          )}
+                          <StyledTableCell align="left">
+                            {row?.email}
+                          </StyledTableCell>
+                          {!isSmallScreen && (
+                            <StyledTableCell align="left">
+                              {row?.role?.name}
+                            </StyledTableCell>
+                          )}
+                          <StyledTableCell
+                            align="right"
+                            sx={{ minWidth: { sm: "100px" } }}
+                          >
+                            <Grid
+                              container
+                              spacing={1}
+                              justifyContent="flex-end"
+                            >
+                              <Grid size={2}>
+                                <IconButton
+                                  color="primary"
+                                  onClick={() => {
+                                    dispatch(
+                                      setUserManagementAction(
+                                        UserManagedAction.VIEW_USER
+                                      )
+                                    );
+                                    handleView(row?.id);
+                                  }}
+                                >
+                                  <Visibility />
+                                </IconButton>
+                              </Grid>
+                              <Grid size={2}>
+                                <IconButton
+                                  color="primary"
+                                  onClick={() => {
+                                    dispatch(
+                                      setUserManagementAction(
+                                        UserManagedAction.UPDATE_USER
+                                      )
+                                    );
+                                    handleUpdate(row?.id);
+                                  }}
+                                >
+                                  <EditIcon />
+                                </IconButton>
+                              </Grid>
+                              <Grid size={2}>
+                                <IconButton
+                                  color="primary"
+                                  onClick={() => {
+                                    dispatch(
+                                      setUserManagementAction(
+                                        UserManagedAction.DELETE_USER
+                                      )
+                                    );
+                                    handleDelete(row?.id);
+                                  }}
+                                >
+                                  <DeleteIcon />
+                                </IconButton>
+                              </Grid>
+                            </Grid>
+                          </StyledTableCell>
+                        </StyledTableRow>
+                      ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 25]}
+                component="div"
+                count={users?.length || 0}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
+            </Paper>
+          </Grid>
         )}
       </Grid>
-    </Grid>
+      {isUsersLoading && users && users?.length > 0 && (
+        <Backdrop
+          className="diagnose-loader"
+          sx={{
+            color: "primary.main",
+            marginRight: "20%",
+            position: "absolute",
+            inset: "0",
+            zIndex: "10",
+            backgroundColor: "primary.contrastText",
+          }}
+          open={isUsersLoading || false}
+        >
+          <CircularProgress
+            color="inherit"
+            sx={{ marginLeft: "250px", textAlign: "center" }}
+          />
+        </Backdrop>
+      )}
+    </>
   );
 };
