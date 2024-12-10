@@ -114,7 +114,7 @@ export const ApplicationListContainer: React.FC<any> = () => {
 
   useEffect(() => {
     dispatch(fetchApplicationsAsync());
-    dispatch(fetchUsersAsync());
+    // dispatch(fetchUsersAsync());
     dispatch(resetApplication());
   }, []);
 

@@ -83,8 +83,8 @@ export const UsersListContainer: React.FC<any> = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    dispatch(fetchUsersAsync());
-  }, [dispatch]);
+    dispatch(fetchUsersAsync({page: page, limit: rowsPerPage}));
+  }, [dispatch,  page, rowsPerPage]);
 
   const usersList = useAppSelector((state): Users | undefined => {
     return state?.users;
@@ -124,7 +124,7 @@ export const UsersListContainer: React.FC<any> = () => {
   };
 
   const handleRefresh = () => {
-    dispatch(fetchUsersAsync());
+    dispatch(fetchUsersAsync({page: page, limit: rowsPerPage}));
   };
 
   return (
@@ -324,7 +324,7 @@ export const UsersListContainer: React.FC<any> = () => {
               <TablePagination
                 rowsPerPageOptions={[5, 10, 25]}
                 component="div"
-                count={users?.length || 0}
+                count={usersList?.pagination.total || 0}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onPageChange={handleChangePage}

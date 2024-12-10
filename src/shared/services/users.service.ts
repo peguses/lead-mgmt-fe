@@ -2,8 +2,8 @@ import { AxiosResponse } from "axios"
 import apiKit from '../helpers/axios-http-kit';
 import { User } from "../interfaces/user.interface";
 
-export const fetchUsers = async(): Promise<AxiosResponse<any>> => {
-    return apiKit.get("/users")
+export const fetchUsers = async({page, limit}): Promise<AxiosResponse<any>> => {
+    return apiKit.get(`/users?page=${page}&limit=${limit}`)
 }
 
 export const fetchUser = async(userId: number): Promise<AxiosResponse<any>> => {

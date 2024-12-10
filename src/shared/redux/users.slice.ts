@@ -7,6 +7,7 @@ export interface Users {
     isLoading: boolean,
     loadingFailed: boolean,
     users: User[],
+    pagination: any
 
 }
 
@@ -15,15 +16,16 @@ const INITIAL_STATE: Users = {
     isLoading: false,
     loadingFailed: false,
     users: [],
+    pagination: undefined
 
 };
 
 export const fetchUsersAsync = createAsyncThunk(
     "users/fetchUsers",
-    async () => {
-      const response = await fetchUsers();
+    async ({ page, limit }: any) => {
+      const response = await fetchUsers({page, limit});
       return {
-        users: response.data.data as any,
+        users: response.data as any,
       };
     }
   );
@@ -39,9 +41,10 @@ export const userSlice = createSlice({
         state.loadingFailed = false;
       });
       builder.addCase(fetchUsersAsync.fulfilled, (state, action) => {
-        state.users = action.payload.users
+        state.users = action.payload.users.data
         state.isLoading = false;
         state.loadingFailed = false;
+        state.pagination = action.payload.users.pagination;
       });
       builder.addCase(fetchUsersAsync.rejected, (state) => {
         state.users = [];
