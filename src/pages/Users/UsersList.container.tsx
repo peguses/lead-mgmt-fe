@@ -4,7 +4,6 @@ import {
   CircularProgress,
   Grid2 as Grid,
   IconButton,
-  InputAdornment,
   Paper,
   styled,
   Table,
@@ -15,12 +14,10 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-  TextField,
   Typography,
   useMediaQuery,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import SearchIcon from "@mui/icons-material/Search";
 import { Visibility } from "@mui/icons-material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
@@ -36,11 +33,15 @@ import { User } from "../../shared/interfaces/user.interface";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { fetchRolesAsync, Roles } from "../../shared/redux/role.slice";
 import { findApplicationRole } from "../../shared/utils/find.application.role.util";
+import FilterDropdown, { Filter } from "../../shared/components/TableFilter.dialog";
 
 export const UsersListContainer: React.FC<any> = () => {
+
   const isSmallScreen = useMediaQuery("(max-width: 900px)");
 
   const [users, setUsers] = useState<User[]>([]);
+
+  const [filter, setFilter] = useState<Filter>();
 
   const [isUsersLoading, setUsersLoading] = useState<boolean | undefined>(
     false
@@ -76,15 +77,15 @@ export const UsersListContainer: React.FC<any> = () => {
 
   const dispatch = useAppDispatch();
 
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    dispatch(fetchUsersAsync({page: page, limit: rowsPerPage}));
-  }, [dispatch,  page, rowsPerPage]);
+    dispatch(fetchUsersAsync({page: page, limit: rowsPerPage, key: filter?.key, value: filter?.value}));
+  }, [dispatch,  page, rowsPerPage, filter]);
 
   const usersList = useAppSelector((state): Users | undefined => {
     return state?.users;
@@ -145,31 +146,13 @@ export const UsersListContainer: React.FC<any> = () => {
           container
           size={{ xl: 6, lg: 6, md: 6, sm: 12, xs: 12 }}
           justifyContent="flex-end"
-          spacing={2}
         >
-          <Grid size={{ xl: 3, lg: 3, md: 6, sm: 12, xs: 12 }}>
-            <TextField
-              label="Search"
-              variant="outlined"
-              size="small"
-              fullWidth
-              slotProps={{
-                input: {
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SearchIcon />
-                    </InputAdornment>
-                  ),
-                },
-              }}
-            />
-          </Grid>
           <Grid
             container
-            size={{ xl: 4, lg: 4, md: 6, sm: 12, xs: 12 }}
-            spacing={1}
+            size={{ xl: 4, lg: 6, md: 6, sm: 12, xs: 12 }}
+            spacing={{xl: 1, lg: 1, md: 1}}
           >
-            <Grid size={10}>
+            <Grid size={{xl:8, lg: 8, md: 8, sm: 10, xs: 10}}>
               <Button
                 onClick={handleAdd}
                 variant="contained"
@@ -180,7 +163,10 @@ export const UsersListContainer: React.FC<any> = () => {
                 Add User
               </Button>
             </Grid>
-            <Grid size={1}>
+            <Grid size={{xl:2, lg: 2, md: 2, sm: 1, xs: 1}}>
+              <FilterDropdown onFilter={(data: Filter) => setFilter(data)}/>
+            </Grid>
+            <Grid size={{xl:2, lg: 2, md: 2, sm:1, xs: 1}}>
               <IconButton
                 onClick={handleRefresh}
                 sx={{
@@ -326,7 +312,7 @@ export const UsersListContainer: React.FC<any> = () => {
                 component="div"
                 count={usersList?.pagination.total || 0}
                 rowsPerPage={rowsPerPage}
-                page={page}
+                page={Number(usersList?.pagination.page)}
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
               />

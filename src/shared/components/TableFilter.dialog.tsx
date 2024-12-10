@@ -1,49 +1,157 @@
-import { Button, Dialog, DialogActions, DialogContent, TextField } from "@mui/material"
-import { useEffect, useState } from "react";
+import React, { useState } from "react";
+import {
+  Button,
+  Popover,
+  TextField,
+  IconButton,
+  FormControl,
+  FormHelperText,
+  Autocomplete,
+} from "@mui/material";
+import FilterListIcon from "@mui/icons-material/FilterList";
+import { Controller, useForm } from "react-hook-form";
+import { UserFilters } from "../constants/UserFilters.constant";
 
-export interface TableFilterDialogProp {
-    open: boolean;
-    position: React.CSSProperties;
-    filterKey: string,
-    filterDescription: string;
-    onSubmit: (e: any, key: any) => void;
-    onClose: () => void
+export interface Filter {
+    key: string
+    value: any;
 }
 
-export const TableFilterDialog: React.FC<TableFilterDialogProp>  = ({open, position, onSubmit, onClose, filterDescription, filterKey}) => {
+export interface FilterDropdownProps {
+    onFilter: (filter: Filter) => void
+}
 
-    const [value, setValue] = useState<string | boolean | number | undefined> ('');
+export const FilterDropdown: React.FC<FilterDropdownProps> = ({onFilter}) => {
 
-    // useEffect(() => {
-    //     console.log(position);
-    // },[position])
+  const [anchorEl, setAnchorEl] = useState(null);
 
-    return <>
-        <Dialog
-            open={open}
-            onClose={() => {}}
-            PaperProps={{
-                style: position,
-            }}
-        >
-            <DialogContent>
-            <TextField
-                label={`Filter by ${filterDescription}`}
-                value={value}
-                onChange={(e) => {
-                    setValue(e.target.value);
-                }}
-                fullWidth
+  const {
+    control,
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm<any>({
+    mode: "all",
+    defaultValues: {
+      filterKey: {  name: ""},
+      filterValue: "",
+    },
+  });
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleApplyFilter = ({filterKey, filterValue}) => {
+    if (filterKey && filterValue) {
+      onFilter({key: filterKey.key, value: filterValue});
+      setAnchorEl(null);
+    }
+  };
+
+  const open = Boolean(anchorEl);
+
+  return (
+    <div>
+      <IconButton
+        sx={{
+          width: 36,
+          height: 36,
+          padding: 0,
+          border: "2px solid",
+          borderColor: "primary.main",
+          borderRadius: 2,
+          "&:hover": {
+            backgroundColor: "rgba(0, 0, 0, 0.1)",
+            borderColor: "#1E3A5F",
+          },
+        }}
+        color="primary"
+        onClick={handleClick}
+      >
+        <FilterListIcon />
+      </IconButton>
+
+      <Popover
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "center",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "center",
+        }}
+        disableRestoreFocus
+      >
+        <div style={{ padding: "10px" }}>
+          <FormControl
+            variant={"outlined"}
+            size="small"
+            fullWidth
+            error={Boolean(errors.filterKey)}
+          >
+            <Controller
+              name="filterKey"
+              control={control}
+              rules={{ required: "The field is required" }}
+              render={({ field }) => (
+                <Autocomplete
+                    size="small"
+                  {...field}
+                  options={UserFilters}
+                  getOptionLabel={(filterKey) => filterKey.name}
+                  onChange={(_, newValue) => field.onChange(newValue)}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      value={params}
+                      label="Filter Key"
+                      error={!!errors.filterKey}
+                    />
+                  )}
+                  isOptionEqualToValue={(filterKey, value) => filterKey === value}
+                  autoHighlight
+                  fullWidth
+                />
+              )}
             />
-            </DialogContent>
-            <DialogActions>
-            <Button onClick={() => onSubmit(value, filterKey)} color="primary">
-                Filter
+            {errors.filterKey && (
+              <FormHelperText>
+                {String(errors.filterKey?.message)}
+              </FormHelperText>
+            )}
+          </FormControl>
+          <TextField
+            size="small"
+            margin="dense"
+            label="Filter Value"
+            type="text"
+            fullWidth
+            {...register("filterValue", {
+              required: "Value is required"
+            })}
+            error={!!errors.filterValue}
+            helperText={errors.filterValue ? String(errors.filterValue.message) : ""}
+          />
+          <div style={{ marginTop: "10px" }}>
+            <Button size="small" onClick={handleClose} color="primary">
+              Cancel
             </Button>
-            <Button onClick={() => onClose()} color="secondary">
-                Cancel
+            <Button disabled={!isValid} size="small" onClick={handleSubmit(handleApplyFilter)} color="primary">
+              Filter
             </Button>
-            </DialogActions>
-        </Dialog>
-    </>
-} 
+          </div>
+        </div>
+      </Popover>
+    </div>
+  );
+};
+
+export default FilterDropdown;
