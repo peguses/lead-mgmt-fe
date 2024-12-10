@@ -11,6 +11,13 @@ export interface Users {
 
 }
 
+export interface UsersQuery {
+  page: number;
+  limit: number;
+  key?: string;
+  value?: any;
+}
+
 const INITIAL_STATE: Users = {
 
     isLoading: false,
@@ -22,8 +29,8 @@ const INITIAL_STATE: Users = {
 
 export const fetchUsersAsync = createAsyncThunk(
     "users/fetchUsers",
-    async ({ page, limit }: any) => {
-      const response = await fetchUsers({page, limit});
+    async ({ page, limit, key, value }: UsersQuery) => {
+      const response = await fetchUsers({page, limit, key, value});
       return {
         users: response.data as any,
       };
