@@ -34,6 +34,8 @@ import {
 } from "../../shared/redux/managed.user.slice";
 import { User } from "../../shared/interfaces/user.interface";
 import RefreshIcon from "@mui/icons-material/Refresh";
+import { fetchRolesAsync, Roles } from "../../shared/redux/role.slice";
+import { findApplicationRole } from "../../shared/utils/find.application.role.util";
 
 export const UsersListContainer: React.FC<any> = () => {
   const isSmallScreen = useMediaQuery("(max-width: 900px)");
@@ -43,6 +45,15 @@ export const UsersListContainer: React.FC<any> = () => {
   const [isUsersLoading, setUsersLoading] = useState<boolean | undefined>(
     false
   );
+
+  useEffect(() => {
+    dispatch(fetchRolesAsync());
+  }, []);
+
+  const roles = useAppSelector((state): Roles | undefined => {
+    return state?.roles;
+  });
+
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -155,7 +166,7 @@ export const UsersListContainer: React.FC<any> = () => {
           </Grid>
           <Grid
             container
-            size={{ xl: 4, lg: 4, md: 7, sm: 12, xs: 12 }}
+            size={{ xl: 4, lg: 4, md: 6, sm: 12, xs: 12 }}
             spacing={1}
           >
             <Grid size={10}>
@@ -246,7 +257,7 @@ export const UsersListContainer: React.FC<any> = () => {
                           </StyledTableCell>
                           {!isSmallScreen && (
                             <StyledTableCell align="left">
-                              {row?.role?.name}
+                              {findApplicationRole(row?.role?.name, roles?.roles)?.name}
                             </StyledTableCell>
                           )}
                           <StyledTableCell

@@ -117,7 +117,12 @@ export const UserInformationComponent: React.FC<UserInformationProps> = ({
   };
 
   const onUpdate = (data: User) => {
-    dispatch(updateUserAsync(data)).then(() => navigate("/users"));
+    dispatch(resetManagedUser());
+    dispatch(updateUserAsync(data)).then((err: any) => {
+      if (!err.error) {
+        navigate("/users");
+      }
+    });
   };
 
   const onDelete = (userId: number | undefined) => {

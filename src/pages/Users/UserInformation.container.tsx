@@ -15,10 +15,6 @@ export const UserInformationContainer: React.FC<any> = () => {
 
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    dispatch(fetchRolesAsync());
-  }, []);
-
   const userManagementAction = useAppSelector((state): UserManagedAction => {
     return state?.managedUser.action;
   });

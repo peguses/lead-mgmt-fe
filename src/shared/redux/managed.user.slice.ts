@@ -78,11 +78,15 @@ export const dropUserAsync = createAsyncThunk(
 
 export const updateUserAsync = createAsyncThunk(
   "managedUser/updateUserAsync",
-  async (data: User) => {
-    const response = await updateUser(data.id, data);
-    return {
-      user: response.data as any,
-    };
+  async (data: User, { rejectWithValue }) => {
+    try {
+      const response = await updateUser(data.id, data);
+      return {
+        user: response.data as any,
+      };
+    } catch (error: any) {
+      return rejectWithValue(error.response.data.error);
+    }
   }
 );
 
@@ -156,10 +160,11 @@ export const managedUserSlice = createSlice({
       state.isLoading = false;
       state.loadingFailed = false;
     });
-    builder.addCase(updateUserAsync.rejected, (state) => {
+    builder.addCase(updateUserAsync.rejected, (state, action) => {
       state.user = undefined;
       state.isLoading = false;
       state.loadingFailed = true;
+      state.errorMessageIfFailed = action.payload;
     });
   },
 });
