@@ -129,7 +129,6 @@ export const managedUserSlice = createSlice({
       state.user = undefined;
       state.isLoading = false;
       state.loadingFailed = true;
-      console.log(action.payload);
       state.errorMessageIfFailed = action.payload;
     });
 

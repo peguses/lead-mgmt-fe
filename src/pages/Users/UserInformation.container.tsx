@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from "../../shared/redux/hooks";
 import {
   fetchUserAsync,
   ManagedUser,
+  resetManagedUser,
   UserManagedAction,
 } from "../../shared/redux/managed.user.slice";
 
@@ -26,6 +27,7 @@ export const UserInformationContainer: React.FC<any> = () => {
     if (userManagementAction !== UserManagedAction.CREATE_USER) {
       dispatch(fetchUserAsync(Number(userId)));
     }
+    dispatch(resetManagedUser());
   }, [dispatch, userId, userManagementAction]);
 
   const roles = useAppSelector((state): Roles | undefined => {

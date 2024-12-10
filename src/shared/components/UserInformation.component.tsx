@@ -69,7 +69,7 @@ export const UserInformationComponent: React.FC<UserInformationProps> = ({
 
   const [openDelete, setOpenDelete] = useState<boolean>(false);
 
-  const [message, setMessage] = useState<string>("");
+  const [message, setMessage] = useState<string | undefined>("");
 
   const navigate = useNavigate();
 
@@ -89,7 +89,9 @@ export const UserInformationComponent: React.FC<UserInformationProps> = ({
           lastName: "",
           email: "",
           password: "",
-          role: null,
+          role: {
+            id: 0
+          },
         },
   });
 
@@ -101,13 +103,17 @@ export const UserInformationComponent: React.FC<UserInformationProps> = ({
     if (managedUser?.loadingFailed && managedUser?.errorMessageIfFailed) {
       setMessage(managedUser.errorMessageIfFailed);
     } else {
-      setMessage("");
+      setMessage(undefined);
     }
-  }, [managedUser?.errorMessageIfFailed, managedUser?.loadingFailed]);
+  }, [managedUser]);
 
   const onSubmit = (data: any) => {
     dispatch(resetManagedUser());
-    dispatch(createUserAsync(data));
+    dispatch(createUserAsync(data)).then((err: any) => {
+      if (!err.error) {
+        navigate("/users");
+      }
+    });
   };
 
   const onUpdate = (data: User) => {
