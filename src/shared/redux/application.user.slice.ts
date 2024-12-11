@@ -9,6 +9,8 @@ export interface ApplicationUser {
     loadingFailed: boolean,
     user: User | undefined,
     loginError: string | undefined,
+    authToken: string | undefined,
+
 
 }
 
@@ -17,6 +19,7 @@ const INITIAL_STATE: ApplicationUser = {
     isLoading: false,
     loadingFailed: false,
     loginError: "",
+    authToken: "",
     user: {
       id: 1,
       firstName: "",
@@ -38,7 +41,7 @@ export const loginAsync = createAsyncThunk(
     async (user: User) => {
       const response = await login(user);
       return {
-        user: response.data as any,
+        auth: response.data as any,
       };
     }
   );
@@ -53,7 +56,8 @@ export const managedUserSlice = createSlice({
         state.loadingFailed = false;
       });
       builder.addCase(loginAsync.fulfilled, (state, action) => {
-        state.user = action.payload.user;
+        state.user = action.payload.auth.data;
+        state.authToken = action.payload.auth.authToken;
         state.isLoading = false;
         state.loadingFailed = false;
         state.loginError = "";
