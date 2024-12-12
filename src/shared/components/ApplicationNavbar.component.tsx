@@ -11,9 +11,8 @@ import {
 import React, { useEffect, useState } from "react";
 import { AccountCircle } from "@mui/icons-material";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { User } from "../interfaces/user.interface";
 import { useNavigate } from "react-router-dom";
-import { logoutAsync } from "../redux/application.user.slice";
+import { ApplicationUser, logoutAsync } from "../redux/application.user.slice";
 
 export const ApplicationNavbarComponent: React.FC<any> = () => {
   
@@ -21,8 +20,8 @@ export const ApplicationNavbarComponent: React.FC<any> = () => {
 
   const dispatch = useAppDispatch();
 
-  const user = useAppSelector((state): User | undefined => {
-    return state?.applicationUser.user;
+  const user = useAppSelector((state): ApplicationUser => {
+    return state?.applicationUser;
   });
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -44,11 +43,13 @@ export const ApplicationNavbarComponent: React.FC<any> = () => {
   const handleLogout = () => {
     setIsLoggedIn(false);
     handleCloseMenu();
-    dispatch(logoutAsync());
+    dispatch(logoutAsync()).then(() => {
+      setIsLoggedIn(false);
+    });
   };
 
   useEffect(() => {
-    if (user) {
+    if (user.authToken && !user.isLoading && !user.loadingFailed) {
       setIsLoggedIn(true);
       handleCloseMenu();
     }
@@ -71,7 +72,7 @@ export const ApplicationNavbarComponent: React.FC<any> = () => {
               variant="body1"
               sx={{ marginRight: 2, color: "FFFFF", fontWeight: 700 }}
             >
-              {`${user?.firstName} ${user?.lastName}`}
+              {`${user.user?.firstName} ${user.user?.lastName}`}
             </Typography>
             <IconButton onClick={handleMenuClick}>
               <Avatar>

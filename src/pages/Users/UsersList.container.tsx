@@ -18,7 +18,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { Visibility } from "@mui/icons-material";
+import { Visibility, WrapText } from "@mui/icons-material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { fetchUsersAsync, Users } from "../../shared/redux/users.slice";
@@ -55,6 +55,10 @@ export const UsersListContainer: React.FC<any> = () => {
     return state?.roles;
   });
 
+  const referrerUrl = (referrerToken?: string) =>{
+    return referrerToken ? `${window.location.origin}/?referrerToken=${referrerToken}` : "";
+  }
+
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -63,6 +67,9 @@ export const UsersListContainer: React.FC<any> = () => {
     },
     [`&.${tableCellClasses.body}`]: {
       fontSize: 14,
+      wordWrap: 'break-word',
+      whiteSpace: 'normal',
+      maxWidth: '200px'
     },
   }));
 
@@ -212,6 +219,11 @@ export const UsersListContainer: React.FC<any> = () => {
                           Roles
                         </StyledTableCell>
                       )}
+                      {!isSmallScreen && (
+                        <StyledTableCell sx={{ fontWeight: 700 }} align="left">
+                          Referral Url
+                        </StyledTableCell>
+                      )}
                       <StyledTableCell
                         sx={{ fontWeight: 700, minWidth: { sm: "100px" } }}
                         align="right"
@@ -244,6 +256,11 @@ export const UsersListContainer: React.FC<any> = () => {
                           {!isSmallScreen && (
                             <StyledTableCell align="left">
                               {findApplicationRole(row?.role?.name, roles?.roles)?.name}
+                            </StyledTableCell>
+                          )}
+                          {!isSmallScreen && (
+                            <StyledTableCell align="left">
+                              {referrerUrl(row?.referrerToken)}
                             </StyledTableCell>
                           )}
                           <StyledTableCell

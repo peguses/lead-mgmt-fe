@@ -74,25 +74,14 @@ function App() {
         >
           <Routes>
             <Route path="/login" element={<LoginPageContainer />} />
+            <Route path="/" element={<LandingPageContainer />} />
+            <Route path="/status" element={<ApplicationStatusContainer />}/>
             <Route element={<RequireAuth />}>
-              <Route path="/" element={<LandingPageContainer />} />
-              <Route
-                path="/applications/status"
-                element={
-                  <PermittedRoute
-                    requestedPermissions={[Permission.VIEW_STATUS]}
-                  >
-                    <ApplicationStatusContainer />
-                  </PermittedRoute>
-                }
-              />
               <Route
                 path="/applications"
                 element={
                   <PermittedRoute
-                    requestedPermissions={[
-                      Permission.VIEW_APPLICATIONS,
-                    ]}
+                    requestedPermissions={[Permission.VIEW_APPLICATIONS]}
                   >
                     <ApplicationListContainer />
                   </PermittedRoute>
@@ -112,15 +101,16 @@ function App() {
                   </PermittedRoute>
                 }
               />
-              <Route path="/users" element={
-                <PermittedRoute
-                  requestedPermissions={[
-                  Permission.VIEW_USERS,
-                ]}
-                >
-                <UsersListContainer />
-                </PermittedRoute>
-                } />
+              <Route
+                path="/users"
+                element={
+                  <PermittedRoute
+                    requestedPermissions={[Permission.VIEW_USERS]}
+                  >
+                    <UsersListContainer />
+                  </PermittedRoute>
+                }
+              />
               <Route
                 path="/users/user"
                 element={

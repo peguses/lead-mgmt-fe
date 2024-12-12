@@ -37,6 +37,7 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useNavigate } from "react-router-dom";
 import ArrowCircleLeftOutlinedIcon from "@mui/icons-material/ArrowCircleLeftOutlined";
+import LinkIcon from '@mui/icons-material/Link';
 
 interface UserInformationProps {
   readonly?: boolean;
@@ -73,6 +74,13 @@ export const UserInformationComponent: React.FC<UserInformationProps> = ({
 
   const navigate = useNavigate();
 
+  const referrerUrl = (referrerToken?: string) => {
+    return referrerToken
+      ? `${window.location.origin}/?referrerToken=${referrerToken}`
+      : "";
+  };
+
+
   const {
     control,
     register,
@@ -82,7 +90,7 @@ export const UserInformationComponent: React.FC<UserInformationProps> = ({
   } = useForm<any>({
     mode: "all",
     defaultValues: user
-      ? { ...user, role: { id: 1 } }
+      ? { ...user, role: { id: user.role.id }, referrerToken: referrerUrl(user.referrerToken) }
       : {
           id: 1,
           firstName: "",
@@ -90,7 +98,7 @@ export const UserInformationComponent: React.FC<UserInformationProps> = ({
           email: "",
           password: "",
           role: {
-            id: 0
+            id: 0,
           },
         },
   });
@@ -300,6 +308,38 @@ export const UserInformationComponent: React.FC<UserInformationProps> = ({
               },
             }}
           />
+
+          {userManagementAction !== UserManagedAction.CREATE_USER && (
+            <TextField
+              variant={hidden() ? "filled" : "outlined"}
+              fullWidth
+              multiline
+              rows={2}
+              size="small"
+              label="Referrer Url"
+              disabled={hidden()}
+              {...register("referrerToken", {
+                required: false,
+              })}
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <LinkIcon />
+                    </InputAdornment>
+                  ),
+                  sx: {
+                    marginTop: !hidden() ? "20px" : "",
+                  },
+                },
+              }}
+              sx={{
+                ".MuiInputLabel-outlined": {
+                  lineHeight: "70px",
+                },
+              }}
+            />
+          )}
 
           {(userManagementAction === UserManagedAction.CREATE_USER ||
             userManagementAction === UserManagedAction.UPDATE_USER) && (

@@ -180,7 +180,7 @@ export const ApplicationDrawerComponent: React.FC<any> = ({
         <ListItem
           component={StyledButton}
           onClick={() => {
-            navigate("/applications/status");
+            navigate("/status");
             setSelectedMenuItem(2, true);
           }}
           disableRipple

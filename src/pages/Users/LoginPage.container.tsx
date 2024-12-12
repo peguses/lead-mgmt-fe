@@ -1,7 +1,5 @@
 import {
   Alert,
-  AlertTitle,
-  Box,
   Button,
   Grid2 as Grid,
   InputAdornment,
@@ -10,9 +8,7 @@ import {
 } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import CancelIcon from "@mui/icons-material/Cancel";
 import AssignmentIcon from "@mui/icons-material/Assignment";
-import { AccountCircle } from "@mui/icons-material";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import KeyIcon from "@mui/icons-material/Key";
 import Visibility from "@mui/icons-material/Visibility";
@@ -41,7 +37,7 @@ export const LoginPageContainer: React.FC<any> = () => {
   const login = (data) => {
     dispatch(loginAsync(data)).then((err: any) => {
       if (!err.error) {
-        navigate("/users");
+        navigate("/applications");
       } else {
         setMessage(err.payload);
       }
