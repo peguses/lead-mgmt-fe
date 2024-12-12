@@ -1,7 +1,14 @@
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
+import useToken from "../hooks/useToken";
 
 export const RequireAuth = () => {
-    const navigate = useNavigate();
-    window.location.assign("/login");
-    return null;
+
+    const { token } = useToken();
+    
+    if (token()) {
+        return <Outlet/>;
+    } else {
+        window.location.assign("/login");
+        return null;
+    }
 }

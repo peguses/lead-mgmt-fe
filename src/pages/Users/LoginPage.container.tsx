@@ -1,4 +1,6 @@
 import {
+    Alert,
+  AlertTitle,
   Box,
   Button,
   Grid2 as Grid,
@@ -22,6 +24,10 @@ import { useAppDispatch } from "../../shared/redux/hooks";
 export const LoginPageContainer: React.FC<any> = () => {
   const dispatch = useAppDispatch();
 
+  const navigate = useNavigate();
+
+  const [message, setMessage] = useState<string | undefined>()
+
   const {
     register,
     handleSubmit,
@@ -33,8 +39,11 @@ export const LoginPageContainer: React.FC<any> = () => {
   const handleClickShowPassword = () => setShowPassword(!showPassword);
 
   const login = (data) => {
-    dispatch(loginAsync(data)).then((data) => {
-      //   setOpenLogin(false);
+    dispatch(loginAsync(data)).then((err:any) => {
+        if (!err.error) {
+            navigate("/applications");
+        }
+        setMessage(err.payload)
     });
   };
 
@@ -80,6 +89,14 @@ export const LoginPageContainer: React.FC<any> = () => {
               </Typography>
             </Grid>
             <Grid size={12}>
+            {message && (
+            <Alert
+              severity="error"
+              sx={{ marginTop: "20px", fontSize: "14px", fontWeight: 700 }}
+            >
+              {message}
+            </Alert>
+          )}
               <Grid size={12}>
                 <TextField
                   variant={"outlined"}
