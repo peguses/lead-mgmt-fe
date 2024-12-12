@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { login } from "../services/users.service";
+import { login, logout } from "../services/users.service";
 import { IRole } from "./role.slice";
 import { User } from "../interfaces/user.interface";
 
@@ -49,7 +49,23 @@ export const loginAsync = createAsyncThunk(
       }
     }
     
-  );
+);
+
+export const logoutAsync = createAsyncThunk(
+  "applicationUser/logout",
+  async (_, {rejectWithValue}) => {
+    try {
+      const response = await logout();
+      return {
+        auth: response.data as any,
+      };
+    } catch (error: any) {
+      return rejectWithValue(error.response.data.error);
+    }
+  }
+  
+);
+
 
 export const managedUserSlice = createSlice({
     name: "applicationUser",
@@ -69,6 +85,24 @@ export const managedUserSlice = createSlice({
         state.loginError = "";
       });
       builder.addCase(loginAsync.rejected, (state, action) => {
+        state.user = undefined;
+        state.isLoading = false;
+        state.loadingFailed = true;
+        state.loginError = action?.payload;
+      });
+
+      builder.addCase(logoutAsync.pending, (state) => {
+        state.isLoading = true;
+        state.loadingFailed = false;
+      });
+      builder.addCase(logoutAsync.fulfilled, (state, action) => {
+        state.user = undefined;
+        state.authToken = undefined;
+        state.isLoading = false;
+        state.loadingFailed = false;
+        state.loginError = "";
+      });
+      builder.addCase(logoutAsync.rejected, (state, action) => {
         state.user = undefined;
         state.isLoading = false;
         state.loadingFailed = true;

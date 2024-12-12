@@ -29,6 +29,6 @@ export const login = async(data: User): Promise<AxiosResponse<User>> => {
     return apiKit.post(`/auth/login`, {...data});
 }
 
-export const logout = async(data: User): Promise<AxiosResponse<User>> => {
-    return apiKit.post(`/auth/logout`, {...data});
+export const logout = async(): Promise<AxiosResponse<any>> => {
+    return apiKit.post(`/logout`);
 }   

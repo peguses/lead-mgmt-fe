@@ -10,13 +10,16 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { AccountCircle } from "@mui/icons-material";
-import { useAppSelector } from "../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { User } from "../interfaces/user.interface";
 import { useNavigate } from "react-router-dom";
+import { logoutAsync } from "../redux/application.user.slice";
 
 export const ApplicationNavbarComponent: React.FC<any> = () => {
   
   const navigate = useNavigate();
+
+  const dispatch = useAppDispatch();
 
   const user = useAppSelector((state): User | undefined => {
     return state?.applicationUser.user;
@@ -41,6 +44,7 @@ export const ApplicationNavbarComponent: React.FC<any> = () => {
   const handleLogout = () => {
     setIsLoggedIn(false);
     handleCloseMenu();
+    dispatch(logoutAsync());
   };
 
   useEffect(() => {
