@@ -16,6 +16,8 @@ import { useAppDispatch } from "./shared/redux/hooks";
 import { resetManagedUser } from "./shared/redux/managed.user.slice";
 import { RequireAuth } from "./shared/components/RequireAuth";
 import { LoginPageContainer } from "./pages/Users/LoginPage.container";
+import { store } from "./shared/redux/store";
+import httpApiKit from "./shared/helpers/axios-http-kit";
 
 function App() {
   const [open, setOpen] = useState(false);
@@ -31,6 +33,19 @@ function App() {
     // dispatch(fetchStatusesAsync())
   }, [dispatch]);
 
+  
+  httpApiKit.interceptors.request.use(
+    (config) => {
+      const token = store.getState().applicationUser.authToken
+      if (token) {
+        config.headers['Authorization'] = `Bearer ${token}`;
+      }
+      return config;
+    },
+    (error) => {
+      return Promise.reject(error);
+    }
+  );
   
   return (
     <Router>
