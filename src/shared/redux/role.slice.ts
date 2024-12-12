@@ -1,14 +1,16 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { fetchRoles } from "../services/roles.service";
 
-enum Permission {
+export enum Permission {
 
+    VIEW_USERS = "VIEW_USERS",
+    VIEW_STATUS = "VIEW_STATUS",
     CREATE_USER = "ADD_USER",
     DELETE_USER = "DELETE_USER",
     UPDATE_USER = "UPDATE_USER",
     DELETE_APPLICATION = "DELETE_APPLICATION",
     ASSIGN_APPLICATION = "ASSIGN_APPLICATION",
-    VIEW_APPLICATION = "VIEW_APPLICATION",
+    VIEW_APPLICATIONS = "VIEW_APPLICATIONS",
     UPDATE_APPLICATION = "UPDATE_APPLICATION",
     UPLOAD_DOCUMENT = "UPLOAD_DOCUMENT",
     

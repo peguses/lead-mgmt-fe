@@ -19,6 +19,8 @@ import useViewport from "../hooks/useViewport";
 import { useDispatch } from "react-redux";
 import { setViewport } from "../redux/common.slice";
 import styled from "@emotion/styled";
+import usePermission from "../hooks/usePermission";
+import { Permission } from "../redux/role.slice";
 
 interface Menu {
   id: number;
@@ -63,6 +65,8 @@ export const ApplicationDrawerComponent: React.FC<any> = ({
   const [menuOpen, setMenuOpen] = useState<boolean>(open);
 
   const [smallDevice, setSmallDevice] = useState<boolean>(open);
+
+  const { hasPermission } = usePermission();
 
   useEffect(() => {
     dispatch(setViewport({ viewPort }));
@@ -205,7 +209,7 @@ export const ApplicationDrawerComponent: React.FC<any> = ({
           {menuOpen && <ListItemText primary="Inquiry Status" />}
         </ListItem>
 
-        <ListItem
+        {hasPermission ([Permission.VIEW_APPLICATIONS]) && (<ListItem
           component={StyledButton}
           onClick={() => {
             navigate("/applications");
@@ -236,8 +240,9 @@ export const ApplicationDrawerComponent: React.FC<any> = ({
           </ListItemIcon>
           {menuOpen && <ListItemText primary="Applications" />}
         </ListItem>
+        )}
 
-        <ListItem
+        {hasPermission ([Permission.VIEW_USERS]) && (<ListItem
           component={StyledButton}
           onClick={() => {
             navigate("/users");
@@ -271,6 +276,7 @@ export const ApplicationDrawerComponent: React.FC<any> = ({
           </ListItemIcon>
           {menuOpen && <ListItemText primary="Users" />}
         </ListItem>
+        )}
       </List>
     </SwipeableDrawer>
   );
