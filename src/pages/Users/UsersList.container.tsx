@@ -310,9 +310,9 @@ export const UsersListContainer: React.FC<any> = () => {
               <TablePagination
                 rowsPerPageOptions={[5, 10, 25]}
                 component="div"
-                count={usersList?.pagination.total || 0}
+                count={usersList?.pagination?.total || 0}
                 rowsPerPage={rowsPerPage}
-                page={Number(usersList?.pagination.page)}
+                page={Number(usersList?.pagination?.page)}
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
               />

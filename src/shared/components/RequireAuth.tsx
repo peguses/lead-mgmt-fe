@@ -11,4 +11,5 @@ export const RequireAuth = () => {
         window.location.assign("/login");
         return null;
     }
+
 }

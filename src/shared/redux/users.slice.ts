@@ -12,10 +12,12 @@ export interface Users {
 }
 
 export interface UsersQuery {
-  page: number;
-  limit: number;
-  key?: string;
-  value?: any;
+
+    page: number;
+    limit: number;
+    key?: string;
+    value?: any;
+
 }
 
 const INITIAL_STATE: Users = {
