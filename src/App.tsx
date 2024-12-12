@@ -14,6 +14,8 @@ import { UserInformationContainer } from "./pages/Users/UserInformation.containe
 import { ApplicationStatusContainer } from "./pages/Applications/ApplicationStaus.container";
 import { useAppDispatch } from "./shared/redux/hooks";
 import { resetManagedUser } from "./shared/redux/managed.user.slice";
+import { RequireAuth } from "./shared/components/RequireAuth";
+import { LoginPageContainer } from "./pages/Users/LoginPage.container";
 
 function App() {
   const [open, setOpen] = useState(false);
@@ -37,13 +39,16 @@ function App() {
         <ApplicationDrawerComponent open={open} setOpen={setOpen}  />
         <Box component="main" sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 ,  marginTop: "74px", marginBottom: "74px", zIndex: 0 }}>
           <Routes>
-            <Route path="/" element={<LandingPageContainer />} />
-            <Route path="/applications/status" element={<ApplicationStatusContainer />} />
-            <Route path="/applications" element={<ApplicationListContainer />} />
-            <Route path="/applications/:applicationId" element={<ApplicationViewContainer />} />
-            <Route path="/users" element={<UsersListContainer />} />
-            <Route path="/users/user" element={<UserInformationContainer />} />
-            <Route path="/users/user/:userId" element={<UserInformationContainer />} />
+            <Route path="/login" element={<LoginPageContainer />} />
+            <Route element={<RequireAuth />}>
+              <Route path="/" element={<LandingPageContainer />} />
+              <Route path="/applications/status" element={<ApplicationStatusContainer />} />
+              <Route path="/applications" element={<ApplicationListContainer />} />
+              <Route path="/applications/:applicationId" element={<ApplicationViewContainer />} />
+              <Route path="/users" element={<UsersListContainer />} />
+              <Route path="/users/user" element={<UserInformationContainer />} />
+              <Route path="/users/user/:userId" element={<UserInformationContainer />} />
+            </Route>
           </Routes>
         </Box>
         <ApplicationFooterComponent/>
