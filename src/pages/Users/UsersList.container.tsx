@@ -311,8 +311,8 @@ export const UsersListContainer: React.FC<any> = () => {
                 rowsPerPageOptions={[5, 10, 25]}
                 component="div"
                 count={usersList?.pagination?.total || 0}
-                rowsPerPage={rowsPerPage}
-                page={Number(usersList?.pagination?.page)}
+                rowsPerPage={rowsPerPage || 10}
+                page={Number(usersList?.pagination?.page || 0)}
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
               />

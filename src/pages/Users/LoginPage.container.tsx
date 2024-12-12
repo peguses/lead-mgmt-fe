@@ -1,5 +1,5 @@
 import {
-    Alert,
+  Alert,
   AlertTitle,
   Box,
   Button,
@@ -26,7 +26,7 @@ export const LoginPageContainer: React.FC<any> = () => {
 
   const navigate = useNavigate();
 
-  const [message, setMessage] = useState<string | undefined>()
+  const [message, setMessage] = useState<string | undefined>();
 
   const {
     register,
@@ -39,11 +39,12 @@ export const LoginPageContainer: React.FC<any> = () => {
   const handleClickShowPassword = () => setShowPassword(!showPassword);
 
   const login = (data) => {
-    dispatch(loginAsync(data)).then((err:any) => {
-        if (!err.error) {
-            navigate("/applications");
-        }
-        setMessage(err.payload)
+    dispatch(loginAsync(data)).then((err: any) => {
+      if (!err.error) {
+        navigate("/users");
+      } else {
+        setMessage(err.payload);
+      }
     });
   };
 
@@ -89,14 +90,14 @@ export const LoginPageContainer: React.FC<any> = () => {
               </Typography>
             </Grid>
             <Grid size={12}>
-            {message && (
-            <Alert
-              severity="error"
-              sx={{ marginTop: "20px", fontSize: "14px", fontWeight: 700 }}
-            >
-              {message}
-            </Alert>
-          )}
+              {message && (
+                <Alert
+                  severity="error"
+                  sx={{ marginTop: "20px", fontSize: "14px", fontWeight: 700 }}
+                >
+                  {message}
+                </Alert>
+              )}
               <Grid size={12}>
                 <TextField
                   variant={"outlined"}
