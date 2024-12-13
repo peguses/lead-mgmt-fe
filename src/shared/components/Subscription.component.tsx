@@ -12,11 +12,9 @@ import { SubmitHandler, useForm } from "react-hook-form";
 
 export const SubscriptionComponent: React.FC<any> = () => {
   const {
-    control,
     register,
     handleSubmit,
     formState: { errors },
-    clearErrors,
   } = useForm<any>();
 
   const onSubmit: SubmitHandler<any> = (data) => console.log(data);

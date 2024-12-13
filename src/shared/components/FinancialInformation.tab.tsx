@@ -8,7 +8,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useEffect, useImperativeHandle, useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { AttachMoney, AccessTime } from "@mui/icons-material";
 import SavingsIcon from "@mui/icons-material/Savings";
@@ -23,19 +23,17 @@ import React from "react";
 interface FinancialInformationProps {
   applicant: string;
   onSubmit?: (data: any) => void;
-  onValid?: (isValid: boolean) => void;
   readonly?: boolean;
+  nextNotification?: string;
 }
 
-const FinancialInformationTab = React.forwardRef(
-  (
+const FinancialInformationTab : React.FC<FinancialInformationProps> = (
     {
       applicant,
       onSubmit,
-      onValid,
       readonly = false,
+      nextNotification
     }: FinancialInformationProps,
-    ref
   ) => {
 
     const financialInformation = useAppSelector(
@@ -51,45 +49,56 @@ const FinancialInformationTab = React.forwardRef(
       formState: { errors, isValid },
       clearErrors,
     } = useForm<any>({
-      mode: "all",
+      mode: "onSubmit",
       defaultValues: financialInformation
         ? financialInformation
         : {
-            annualIncome: "",
-            lengthOfEmployment: "",
-            totalAmountSaved: "",
-            parentWillBeGuarantors: "",
-            totalLoanAmount: "",
-            totalLoanRepayments: "",
-            helpDebtTotalAmount: "",
-            totalExistingHomeLoanAmount: "",
-            totalExistingHomeLoanRepaymentAmt: "",
-            totalPropertyValue: "",
-            totalCreditCardLimits: "",
-            livingExpenses: "",
-            wereBankrupted: "",
-            hasDefaulted: "",
-            defaultedReason: "",
+            annualIncome: undefined,
+            lengthOfEmployment: undefined,
+            totalAmountSaved: undefined,
+            parentWillBeGuarantors: undefined,
+            totalLoanAmount: undefined,
+            totalLoanRepayments: undefined,
+            helpDebtTotalAmount: undefined,
+            totalExistingHomeLoanAmount: undefined,
+            totalExistingHomeLoanRepaymentAmt: undefined,
+            totalPropertyValue: undefined,
+            totalCreditCardLimits: undefined,
+            livingExpenses: undefined,
+            wereBankrupted: undefined,
+            hasDefaulted: undefined,
+            defaultedReason: undefined,
           },
     });
 
     const [hasDefaulted, setHasDefaulted] = useState<boolean>(false);
 
-    const triggerSubmit = () => {
-      if (!readonly && onSubmit) {
-        handleSubmit(onSubmit)();
-      }
-    };
+    const transformData = (data: any): FinancialInformation => {
 
-    useImperativeHandle(ref, () => ({
-      triggerSubmit,
-    }));
+      return {
+        ...data,
+        annualIncome: parseFloat(data?.annualIncome?.replace(/,/g, '')) || 0,
+        totalAmountSaved: parseFloat(data?.totalAmountSaved?.replace(/,/g, '')) || 0,
+        totalLoanAmount: parseFloat(data?.totalLoanAmount?.replace(/,/g, '')) || 0,
+        totalLoanRepayments: parseFloat(data?.totalLoanRepayment?.replace(/,/g, '')) || 0,
+        helpDebtTotalAmount: parseFloat(data?.helpDebtTotalAmount?.replace(/,/g, '')) || 0,
+        totalExistingHomeLoanAmount: parseFloat(data?.totalExistingHomeLoanAmount?.replace(/,/g, '')) || 0,
+        totalExistingHomeLoanRepaymentAmt: parseFloat(data?.totalExistingHomeLoanRepaymentAmt?.replace(/,/g, '')) || 0,
+        totalPropertyValue: parseFloat(data.totalPropertyValue?.replace(/,/g, '')) || 0,
+        totalCreditCardLimits: parseFloat(data?.totalCreditCardLimits?.replace(/,/g, '')) || 0,
+        livingExpenses: parseFloat(data?.livingExpenses?.replace(/,/g, '')) || 0,
+        wereBankrupted: data?.wereBankrupted === undefined ? false : true,
+        hasDefaulted: data?.hasDefaulted === undefined ? false : true,
+        parentWillBeGuarantors:
+          data?.parentWillBeGuarantors === undefined ? false : true,
+      }
+    }
 
     useEffect(() => {
-      if (!readonly && onValid) {
-        onValid(isValid && !!errors);
+      if (!readonly && onSubmit && nextNotification!== "1") {
+        handleSubmit((data) => { onSubmit(transformData(data))})()
       }
-    }, [isValid, errors, readonly, onValid]);
+    }, [nextNotification]);
 
     const applicantText = (code: string) => {
       return code === "primaryApplicant" ? "primary applicant" : "secondary applicant"
@@ -114,6 +123,7 @@ const FinancialInformationTab = React.forwardRef(
                 size="small"
                 disabled={readonly}
                 thousandSeparator=","
+                valueIsNumericString={false}
                 decimalScale={2}
                 customInput={TextField}
                 fullWidth
@@ -151,6 +161,7 @@ const FinancialInformationTab = React.forwardRef(
                 size="small"
                 variant={readonly ? "filled" : "outlined"}
                 disabled={readonly}
+                valueIsNumericString={false}
                 fullWidth
                 label="Length of employment"
                 error={!!errors.lengthOfEmployment}
@@ -194,6 +205,7 @@ const FinancialInformationTab = React.forwardRef(
                 thousandSeparator=","
                 decimalScale={2}
                 variant={readonly ? "filled" : "outlined"}
+                valueIsNumericString={false}
                 size="small"
                 fullWidth
                 disabled={readonly}
@@ -348,6 +360,7 @@ const FinancialInformationTab = React.forwardRef(
                 customInput={TextField}
                 thousandSeparator=","
                 decimalScale={2}
+                valueIsNumericString={false}
                 variant={readonly ? "filled" : "outlined"}
                 size="small"
                 disabled={readonly}
@@ -393,6 +406,7 @@ const FinancialInformationTab = React.forwardRef(
                 customInput={TextField}
                 thousandSeparator=","
                 decimalScale={2}
+                valueIsNumericString={false}
                 variant={readonly ? "filled" : "outlined"}
                 size="small"
                 disabled={readonly}
@@ -440,6 +454,7 @@ const FinancialInformationTab = React.forwardRef(
                 customInput={TextField}
                 thousandSeparator=","
                 decimalScale={2}
+                valueIsNumericString={false}
                 variant={readonly ? "filled" : "outlined"}
                 size="small"
                 fullWidth
@@ -490,6 +505,7 @@ const FinancialInformationTab = React.forwardRef(
                 customInput={TextField}
                 thousandSeparator=","
                 decimalScale={2}
+                valueIsNumericString={false}
                 variant={readonly ? "filled" : "outlined"}
                 size="small"
                 fullWidth
@@ -535,6 +551,7 @@ const FinancialInformationTab = React.forwardRef(
                 customInput={TextField}
                 thousandSeparator=","
                 decimalScale={2}
+                valueIsNumericString={false}
                 variant={readonly ? "filled" : "outlined"}
                 size="small"
                 fullWidth
@@ -579,6 +596,7 @@ const FinancialInformationTab = React.forwardRef(
                 {...field}
                 customInput={TextField}
                 thousandSeparator=","
+                valueIsNumericString={false}
                 decimalScale={2}
                 variant={readonly ? "filled" : "outlined"}
                 size="small"
@@ -625,6 +643,7 @@ const FinancialInformationTab = React.forwardRef(
                 {...field}
                 customInput={TextField}
                 thousandSeparator=","
+                valueIsNumericString={false}
                 decimalScale={2}
                 variant={readonly ? "filled" : "outlined"}
                 size="small"
@@ -732,12 +751,12 @@ const FinancialInformationTab = React.forwardRef(
               <RadioGroup
                 {...field}
                 row
-                defaultValue=""
+                defaultValue={true}
                 name="hasDefaulted"
                 onChange={(e) => {
                   clearErrors("hasDefaulted");
                   setHasDefaulted(false);
-                  if (e.target.value === "yes") {
+                  if (e.target.value === "true") {
                     setHasDefaulted(true);
                   }
                   field.onChange(e);
@@ -791,7 +810,7 @@ const FinancialInformationTab = React.forwardRef(
             {...register("defaultedReason", {
               required: hasDefaulted,
             })}
-            error={!!errors.defaltedReason}
+            error={!!errors.defaultedReason}
             helperText={
               errors.defaultedReason
                 ? String(errors.defaultedReason.message)
@@ -802,5 +821,5 @@ const FinancialInformationTab = React.forwardRef(
         )}
       </>
     );
-  });
+  };
 export default FinancialInformationTab;

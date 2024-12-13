@@ -217,7 +217,7 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
           )}
           {!isSmallScreen && (
             <Grid container sx={{ marginTop: "20px" }} size={12}>
-              {application.documents.length !== 0 && (
+              {application.documents?.length !== 0 && (
                 <TableContainer>
                   <Table sx={{ minWidth: 650 }} aria-label="lead table">
                     <TableHead>

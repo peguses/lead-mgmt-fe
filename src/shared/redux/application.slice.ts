@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
+  createApplication,
   fetchApplication,
   updateApplication,
 } from "../services/application.service";
@@ -27,7 +28,7 @@ export interface GeneralInformation {
   propertyOfferElaboration: string;
   applicantOptionalNote: string;
   referralOption: string;
-  applicantsAgreedOnConditions: boolean;
+  applicantAgreedOnConditions: boolean;
 }
 
 export interface FinancialInformation {
@@ -68,6 +69,7 @@ export interface Applicant {
 }
 
 export interface Status {
+  statusId: number
   note: string;
   status: ApplicationStatus;
   userId: number;
@@ -85,17 +87,17 @@ export interface Application {
   referrer: string | undefined;
   referrerId: string;
   processingOfficer: string;
-  processingOfficerId: number;
+  processingOfficerId: number | undefined;
   jointLoan: boolean;
   generalInformation: GeneralInformation | undefined;
-  applicationStatus: Status[];
+  applicationStatus: Status[] | undefined;
   primaryApplicant: Applicant | undefined;
-  secondaryApplicant: Applicant | undefined;
+  secondaryApplicant?: Applicant | undefined;
   isLoading: boolean;
   loadingFailed: boolean;
   createDateTime: Date | undefined;
   loaded: boolean;
-  documents: Document[]
+  documents?: Document[]
 }
 
 export interface ManagedApplication {
@@ -108,10 +110,10 @@ const INITIAL_STATE: ManagedApplication = {
     referrer: "",
     referrerId: "",
     processingOfficer: "",
-    processingOfficerId: 0,
+    processingOfficerId: undefined,
     jointLoan: false,
     loaded: false,
-    applicationStatus: [],
+    applicationStatus: undefined,
     createDateTime: undefined,
     primaryApplicant: {
       personalInformation: {
@@ -181,7 +183,7 @@ const INITIAL_STATE: ManagedApplication = {
       propertyOfferElaboration: "",
       applicantOptionalNote: "",
       referralOption: "",
-      applicantsAgreedOnConditions: false,
+      applicantAgreedOnConditions: false,
     },
     isLoading: false,
     loadingFailed: false,
@@ -210,13 +212,30 @@ export const updateApplicationAsync = createAsyncThunk(
   }
 );
 
+export const createApplicationAsync = createAsyncThunk(
+  "managedApplication/createApplication",
+  async (data: Application) => {
+    const response = await createApplication(data);
+    return {
+      application: response.data as any,
+    };
+  }
+);
+
+
 export const applicationSlice = createSlice({
   name: "managedApplication",
   initialState: INITIAL_STATE,
   reducers: {
+
     setJoinLoanApplication: (state, action) => {
       state.application.jointLoan = action.payload;
       state.application.loaded = false;
+    },
+
+    setReferrerId: (state, action) => {
+      console.log(action.payload);
+      state.application.referrerId = action.payload
     },
 
     setApplication: (state, action) => {
@@ -329,6 +348,22 @@ export const applicationSlice = createSlice({
       state.application.isLoading = false;
       state.application.loadingFailed = true;
     });
+
+    builder.addCase(createApplicationAsync.pending, (state) => {
+      state.application.isLoading = true;
+      state.application.loadingFailed = false;
+    });
+    builder.addCase(createApplicationAsync.fulfilled, (state, action) => {
+      state.application = action.payload.application;
+      state.application.isLoading = false;
+      state.application.loadingFailed = false;
+      state.application.loaded = false;
+    });
+    builder.addCase(createApplicationAsync.rejected, (state) => {
+      state = { ...state };
+      state.application.isLoading = false;
+      state.application.loadingFailed = true;
+    });
   },
 });
 
@@ -346,5 +381,6 @@ export const {
   removePrimaryApplicant,
   addOrUpdateGeneralInformation,
   resetApplication,
+  setReferrerId
 } = applicationSlice.actions;
 export default applicationSlice.reducer;

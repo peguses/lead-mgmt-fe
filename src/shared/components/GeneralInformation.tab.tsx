@@ -10,7 +10,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useEffect, useImperativeHandle, useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import GroupIcon from "@mui/icons-material/Group";
 import { NumericFormat } from "react-number-format";
@@ -20,12 +20,11 @@ import React from "react";
 
 interface GeneralInformationProps {
   onSubmit?: (data: any) => void;
-  onValid?: (isValid: boolean) => void;
   readonly?: boolean;
+  nextNotification?: string;
 }
 
-const GeneralInformationTab = React.forwardRef(
-  ({ onSubmit, onValid, readonly = false }: GeneralInformationProps, ref) => {
+const GeneralInformationTab: React.FC<GeneralInformationProps> = ({ onSubmit, readonly = false,nextNotification }: GeneralInformationProps) => {
     const [hasOfferForProperty, setHasOfferForProperty] =
       useState<boolean>(false);
 
@@ -44,7 +43,7 @@ const GeneralInformationTab = React.forwardRef(
       formState: { errors, isValid },
       clearErrors,
     } = useForm<any>({
-      mode: "all",
+      mode: "onSubmit",
       defaultValues: generalInformation
         ? generalInformation
         : {
@@ -57,28 +56,28 @@ const GeneralInformationTab = React.forwardRef(
           },
     });
 
-    const triggerSubmit = () => {
-      if (!readonly && onSubmit) {
-        handleSubmit(onSubmit)();
+    const transformData = (data: any): GeneralInformation => {
+
+      return {
+        ...data,
+        hasPropertyOffer: data.hasPropertyOffer === undefined ? false : true,
+        applicantAgreedOnConditions: data.applicantAgreedOnConditions === undefined ? false : true,
       }
-    };
+    }
+  
+
+    useEffect(() => {
+      if (!readonly && onSubmit && nextNotification!== "1") {
+        handleSubmit((data) => { onSubmit(transformData(data))})()
+      }
+    }, [nextNotification]);
 
     useEffect(() => {
       setHasOfferForProperty(generalInformation?.hasPropertyOffer || false);
       setHasAcceptAgreement(
-        generalInformation?.applicantsAgreedOnConditions || false
+        generalInformation?.applicantAgreedOnConditions || false
       );
     }, [generalInformation]);
-
-    useImperativeHandle(ref, () => ({
-      triggerSubmit,
-    }));
-
-    useEffect(() => {
-      if (!readonly && hasAcceptAgreement && onValid) {
-        onValid(isValid && !!errors && hasAcceptAgreement);
-      }
-    }, [isValid, errors, hasAcceptAgreement, readonly, onValid]);
 
     return (
       <>
@@ -196,7 +195,7 @@ const GeneralInformationTab = React.forwardRef(
             fullWidth
             disabled={readonly}
             {...register("propertyOfferElaboration", {
-              required: hasOfferForProperty,
+              required: "property offer elaboration required",
             })}
             error={!!errors.propertyOfferElaboration}
             helperText={
@@ -266,9 +265,9 @@ const GeneralInformationTab = React.forwardRef(
           Are you agree with terms & privacy conditions? *
         </Typography>
 
-        <FormControl error={Boolean(errors.applicantsAgreedOnConditions)}>
+        <FormControl error={Boolean(errors.applicantAgreedOnConditions)}>
           <Controller
-            name="applicantsAgreedOnConditions"
+            name="applicantAgreedOnConditions"
             control={control}
             rules={{ required: "Please select Yes/No" }}
             disabled={readonly}
@@ -276,9 +275,9 @@ const GeneralInformationTab = React.forwardRef(
               <RadioGroup
                 {...field}
                 row
-                name="applicantsAgreedOnConditions"
+                name="applicantAgreedOnConditions"
                 onChange={(e) => {
-                  clearErrors("applicantsAgreedOnConditions");
+                  clearErrors("applicantAgreedOnConditions");
                   field.onChange(e);
                   setHasAcceptAgreement(false);
                   if (e.target.value === "true") {
@@ -292,7 +291,7 @@ const GeneralInformationTab = React.forwardRef(
                     readonly ? (
                       <Radio
                         checked={
-                          generalInformation?.applicantsAgreedOnConditions
+                          generalInformation?.applicantAgreedOnConditions
                         }
                         disabled={true}
                       />
@@ -308,7 +307,7 @@ const GeneralInformationTab = React.forwardRef(
                     readonly ? (
                       <Radio
                         checked={
-                          !generalInformation?.applicantsAgreedOnConditions
+                          !generalInformation?.applicantAgreedOnConditions
                         }
                         disabled={true}
                       />
@@ -330,6 +329,5 @@ const GeneralInformationTab = React.forwardRef(
       </>
     );
   }
-);
 
 export default GeneralInformationTab;

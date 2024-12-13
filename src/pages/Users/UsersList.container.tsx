@@ -18,7 +18,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { Visibility, WrapText } from "@mui/icons-material";
+import { Visibility } from "@mui/icons-material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { fetchUsersAsync, Users } from "../../shared/redux/users.slice";
@@ -56,7 +56,7 @@ export const UsersListContainer: React.FC<any> = () => {
   });
 
   const referrerUrl = (referrerToken?: string) =>{
-    return referrerToken ? `${window.location.origin}/?referrerToken=${referrerToken}` : "";
+    return referrerToken ? `${window.location.origin}?referrerToken=${referrerToken}` : "";
   }
 
 

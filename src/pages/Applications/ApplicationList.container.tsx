@@ -287,7 +287,7 @@ export const ApplicationListContainer: React.FC<any> = () => {
                         </StyledTableCell>
                       )}
                       <StyledTableCell align="left">
-                        {findLatestStatus(row?.applicationStatus).note}
+                        {findLatestStatus(row?.applicationStatus)?.note}
                       </StyledTableCell>
                       <StyledTableCell align="right" sx={{ minWidth: "200px" }}>
                         <Grid container spacing={1} justifyContent="flex-end">

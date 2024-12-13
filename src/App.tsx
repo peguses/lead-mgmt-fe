@@ -74,7 +74,7 @@ function App() {
         >
           <Routes>
             <Route path="/login" element={<LoginPageContainer />} />
-            <Route path="/" element={<LandingPageContainer />} />
+            <Route path="/apply" element={<LandingPageContainer />} />
             <Route path="/status" element={<ApplicationStatusContainer />}/>
             <Route element={<RequireAuth />}>
               <Route

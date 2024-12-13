@@ -26,3 +26,7 @@ export const dropApplication = async(applicationId: number): Promise<AxiosRespon
 export const updateApplication = async(applicationId: number, data: Application):Promise<AxiosResponse<Application>> => {
     return apiKit.patch(`/applications/${applicationId}`, {...data})
 }
+
+export const createApplication = async(data: Application):Promise<AxiosResponse<Application>> => {
+    return apiKit.post(`/applications`, {...data})
+}

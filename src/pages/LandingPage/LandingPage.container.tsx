@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import PersonalInformationTab from "../../shared/components/PersonalInformation.tab";
-import { batch, useDispatch } from "react-redux";
+import { batch } from "react-redux";
 import GeneralInformationTab from "../../shared/components/GeneralInformation.tab";
 import ArrowCircleRightOutlinedIcon from "@mui/icons-material/ArrowCircleRightOutlined";
 import ArrowCircleLeftOutlinedIcon from "@mui/icons-material/ArrowCircleLeftOutlined";
@@ -27,13 +27,19 @@ import {
   addOrUpdatePrimaryApplicantPersonalInformation,
   addOrUpdateSecondaryApplicantFinancialInformation,
   addOrUpdateSecondaryApplicantPersonalInformation,
+  Application,
+  createApplicationAsync,
   FinancialInformation,
   GeneralInformation,
   PersonalInformation,
   removeGeneralInformation,
   removeSecondaryApplicant,
   setJoinLoanApplication,
+  setReferrerId,
 } from "../../shared/redux/application.slice";
+import { useAppDispatch, useAppSelector } from "../../shared/redux/hooks";
+import { useLocation } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
 
 interface Step {
   id: number;
@@ -41,7 +47,20 @@ interface Step {
 }
 
 export const LandingPageContainer: React.FC<any> = () => {
-  const dispatch = useDispatch();
+
+  const [personalInfoStateUUID, setPersonalInfoStateUUID] = useState("1");
+
+  const [financialInfoStateUUID, setFinancialInfoStateUUID] = useState('1');
+
+  const [generalInfoStateUUID, setGeneralInfoStateUUID] = useState('1');
+
+  const location = useLocation();
+
+  const queryParams = new URLSearchParams(location.search);
+
+  const referrerToken = queryParams.get("referrerToken");
+
+  const dispatch = useAppDispatch();
 
   const [activeStep, setActiveStep] = useState<number>(0);
 
@@ -68,23 +87,7 @@ export const LandingPageContainer: React.FC<any> = () => {
   const [applicationGeneralInfoValid, setApplicationGeneralInfoValid] =
     useState<boolean>(false);
 
-  const [allowWorkTab, setAllowWorkTab] = useState<boolean>(false);
-
-  const [allowGeneralTab, setAllowGeneralTab] = useState<boolean>(false);
-
   const [allowSubmit, setAllowSubmit] = useState<boolean>(false);
-
-  const applicantOnePersonalInformationRef = useRef<any>();
-
-  const applicantTwoPersonalInformationRef = useRef<any>();
-
-  const applicantOneWorkInfoRef = useRef<any>();
-
-  const applicantTwoWorkInfoRef = useRef<any>();
-
-  const applicationOneFinancialInfoRef = useRef<any>();
-
-  const applicationTwoFinancialInfoRef = useRef<any>();
 
   const applicationGeneralInfoRef = useRef<any>();
 
@@ -95,6 +98,10 @@ export const LandingPageContainer: React.FC<any> = () => {
     { id: 3, completed: false },
   ]);
 
+  const application = useAppSelector((state): Application | undefined => {
+    return state?.managedApplication.application;
+  });
+
   useEffect(() => {
     setAllowSubmit(applicationGeneralInfoValid);
     setCompletedStep(2, applicationGeneralInfoValid);
@@ -104,10 +111,8 @@ export const LandingPageContainer: React.FC<any> = () => {
     if (jointLoan) {
       const valid =
         applicationOneFinancialValid && applicationTwoFinancialValid;
-      setAllowGeneralTab(valid);
       setCompletedStep(1, valid);
     } else {
-      setAllowGeneralTab(applicationOneFinancialValid);
       setCompletedStep(1, applicationOneFinancialValid);
     }
   }, [applicationOneFinancialValid, applicationTwoFinancialValid, jointLoan]);
@@ -125,11 +130,9 @@ export const LandingPageContainer: React.FC<any> = () => {
     if (jointLoan) {
       const valid =
         applicantOnePersonalInfoValid && applicantTwoPersonalInfoValid;
-      setAllowWorkTab(valid);
       setCompletedStep(0, valid);
     } else {
       setCompletedStep(0, applicantOnePersonalInfoValid);
-      setAllowWorkTab(applicantOnePersonalInfoValid);
     }
   }, [applicantOnePersonalInfoValid, applicantTwoPersonalInfoValid, jointLoan]);
 
@@ -139,44 +142,16 @@ export const LandingPageContainer: React.FC<any> = () => {
   ];
 
   const handlePersonalInformationSubmit = () => {
-    batch(() => {
-      if (applicantOnePersonalInformationRef?.current) {
-        applicantOnePersonalInformationRef.current.triggerSubmit();
-      }
-
-      if (applicantTwoPersonalInformationRef?.current) {
-        applicantTwoPersonalInformationRef.current.triggerSubmit();
-      }
-    });
-    setActiveStep(1);
-  };
-
-  const handleWorkInformationSubmit = () => {
-    batch(() => {
-      if (applicantOneWorkInfoRef?.current) {
-        applicantOneWorkInfoRef.current.triggerSubmit();
-      }
-
-      if (applicantTwoWorkInfoRef?.current) {
-        applicantTwoWorkInfoRef.current.triggerSubmit();
-      }
-    });
-
-    setActiveStep(5);
+    setPersonalInfoStateUUID(uuidv4());
   };
 
   const handleFinancialInformationSubmit = () => {
-    batch(() => {
-      if (applicationOneFinancialInfoRef?.current) {
-        applicationOneFinancialInfoRef.current.triggerSubmit();
-      }
+    setFinancialInfoStateUUID(uuidv4());
+ 
+  };
 
-      if (applicationTwoFinancialInfoRef?.current) {
-        applicationTwoFinancialInfoRef.current.triggerSubmit();
-      }
-    });
-
-    setActiveStep(2);
+  const handleSubmit = () => {
+    setGeneralInfoStateUUID(uuidv4())
   };
 
   const setCompletedStep = (step: number, state: boolean) => {
@@ -189,28 +164,34 @@ export const LandingPageContainer: React.FC<any> = () => {
     setCompleted(steps);
   };
 
-  const handleSubmit = () => {
-    batch(() => {
-      if (applicationGeneralInfoRef?.current) {
-        applicationGeneralInfoRef.current.triggerSubmit();
-      }
-    });
-  };
-
   const onPrimaryPersonalInformationSubmit = (data: PersonalInformation) => {
+    dispatch(setReferrerId(referrerToken ? referrerToken : ""));
+    setActiveStep(1);
     dispatch(addOrUpdatePrimaryApplicantPersonalInformation(data));
-  };
-
-  const onPrimaryFinancialInfoSubmit = (data: FinancialInformation) => {
-    dispatch(addOrUpdatePrimaryApplicantFinancialInformation(data));
-  };
-
-  const onGeneralInfoInfoSubmit = (data: GeneralInformation) => {
-    dispatch(addOrUpdateGeneralInformation(data));
   };
 
   const onSecondaryPersonalInformationSubmit = (data: PersonalInformation) => {
     dispatch(addOrUpdateSecondaryApplicantPersonalInformation(data));
+  };
+
+  const onPrimaryFinancialInfoSubmit = (data: FinancialInformation) => {
+    dispatch(addOrUpdatePrimaryApplicantFinancialInformation(data));
+    setActiveStep(2);
+  };
+
+  const onGeneralInfoInfoSubmit = (data: GeneralInformation) => {
+    dispatch(addOrUpdateGeneralInformation(data));
+    
+    if (application) {
+      dispatch(
+        createApplicationAsync({
+          ...application,
+          secondaryApplicant: application.jointLoan
+            ? application.secondaryApplicant
+            : undefined,
+        })
+      );
+    }
   };
 
   const onSecondaryFinancialInfoSubmit = (data: FinancialInformation) => {
@@ -278,7 +259,7 @@ export const LandingPageContainer: React.FC<any> = () => {
         justifyContent={"center"}
         size={
           jointLoan && activeStep !== 2
-            ? {xl: 8, lg: 8, md: 12, sm: 12, xs: 12}
+            ? { xl: 8, lg: 8, md: 12, sm: 12, xs: 12 }
             : { xl: 4, lg: 4, md: 12, sm: 12, xs: 12 }
         }
         sx={{ marginTop: "5px", marginBottom: "20px" }}
@@ -388,39 +369,28 @@ export const LandingPageContainer: React.FC<any> = () => {
                 <Grid container size={12} spacing={2}>
                   <Grid size={{ xl: 6, lg: 6, md: 6, sm: 12, xs: 12 }}>
                     <PersonalInformationTab
-                      key={1}
                       applicant={"primaryApplicant"}
-                      onValid={(isValid) =>
-                        setApplicantOnePersonalInfoValid(isValid)
-                      }
                       onSubmit={(data) =>
                         onPrimaryPersonalInformationSubmit(data)
                       }
-                      ref={applicantOnePersonalInformationRef}
+                      nextNotification={personalInfoStateUUID}
                     />
                   </Grid>
                   <Grid size={{ xl: 6, lg: 6, md: 6, sm: 12, xs: 12 }}>
                     <PersonalInformationTab
-                      key={2}
                       applicant={"secondaryApplicant"}
-                      onValid={(isValid) =>
-                        setApplicantTwoPersonalInfoValid(isValid)
-                      }
                       onSubmit={(data) =>
                         onSecondaryPersonalInformationSubmit(data)
                       }
-                      ref={applicantTwoPersonalInformationRef}
+                      nextNotification={personalInfoStateUUID}
                     />
                   </Grid>
                 </Grid>
               ) : (
                 <PersonalInformationTab
                   applicant={"primaryApplicant"}
-                  onValid={(isValid) =>
-                    setApplicantOnePersonalInfoValid(isValid)
-                  }
                   onSubmit={(data) => onPrimaryPersonalInformationSubmit(data)}
-                  ref={applicantOnePersonalInformationRef}
+                  nextNotification={personalInfoStateUUID}
                 />
               )}
               <Grid container justifyContent={"end"}>
@@ -434,7 +404,7 @@ export const LandingPageContainer: React.FC<any> = () => {
                     color="primary"
                     fullWidth
                     endIcon={<ArrowCircleRightOutlinedIcon />}
-                    disabled={!allowWorkTab}
+                    // disabled={!allowWorkTab}
                   >
                     Next
                   </Button>
@@ -448,36 +418,19 @@ export const LandingPageContainer: React.FC<any> = () => {
                 <Grid container size={12} spacing={2}>
                   <Grid size={{ xl: 6, lg: 6, md: 6, sm: 12, xs: 12 }}>
                     <FinancialInformationTab
-                      key={1}
                       applicant={"primaryApplicant"}
-                      onValid={(isValid) =>
-                        setApplicationOneFinancialValid(isValid)
-                      }
-                      onSubmit={(data) => onPrimaryFinancialInfoSubmit(data)}
-                      ref={applicationOneFinancialInfoRef}
-                    />
+                      onSubmit={(data) => onPrimaryFinancialInfoSubmit(data)} nextNotification={financialInfoStateUUID}                    />
                   </Grid>
                   <Grid size={{ xl: 6, lg: 6, md: 6, sm: 12, xs: 12 }}>
                     <FinancialInformationTab
-                      key={2}
                       applicant={"secondaryApplicant"}
-                      onValid={(isValid) =>
-                        setApplicationTwoFinancialValid(isValid)
-                      }
-                      onSubmit={(data) => onSecondaryFinancialInfoSubmit(data)}
-                      ref={applicationTwoFinancialInfoRef}
-                    />
+                      onSubmit={(data) => onSecondaryFinancialInfoSubmit(data)} nextNotification={financialInfoStateUUID}                    />
                   </Grid>
                 </Grid>
               ) : (
                 <FinancialInformationTab
-                  applicant={"primaryApplicant"}
-                  onValid={(isValid) =>
-                    setApplicationOneFinancialValid(isValid)
-                  }
-                  onSubmit={(data) => onPrimaryFinancialInfoSubmit(data)}
-                  ref={applicationOneFinancialInfoRef}
-                />
+                    applicant={"primaryApplicant"}
+                    onSubmit={(data) => onPrimaryFinancialInfoSubmit(data)} nextNotification={financialInfoStateUUID}                />
               )}
               <Grid container justifyContent={"end"}>
                 <Grid
@@ -490,7 +443,7 @@ export const LandingPageContainer: React.FC<any> = () => {
                     color="primary"
                     fullWidth
                     endIcon={<ArrowCircleRightOutlinedIcon />}
-                    disabled={!allowGeneralTab}
+                    // disabled={!allowGeneralTab}
                   >
                     Next
                   </Button>
@@ -501,10 +454,7 @@ export const LandingPageContainer: React.FC<any> = () => {
           {activeStep === 2 && (
             <Fragment>
               <GeneralInformationTab
-                onValid={(isValid) => setApplicationGeneralInfoValid(isValid)}
-                onSubmit={(data) => onGeneralInfoInfoSubmit(data)}
-                ref={applicationGeneralInfoRef}
-              />
+                onSubmit={(data) => onGeneralInfoInfoSubmit(data)} nextNotification={generalInfoStateUUID}/>
               <Grid container justifyContent={"end"}>
                 <Grid
                   size={{ xl: 3, lg: 3, md: 6, sm: 12, xs: 12 }}
@@ -516,7 +466,7 @@ export const LandingPageContainer: React.FC<any> = () => {
                     color="primary"
                     fullWidth
                     startIcon={<CheckCircleOutlineOutlinedIcon />}
-                    disabled={!allowSubmit}
+                    // disabled={!allowSubmit}
                   >
                     Submit
                   </Button>

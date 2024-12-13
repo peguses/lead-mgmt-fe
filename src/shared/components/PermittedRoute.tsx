@@ -19,7 +19,7 @@ function PermittedRoute({
   });
 
   if (!isFound) {
-    return <Navigate replace to="/" />;
+    return <Navigate replace to="/apply" />;
   }
   return children;
 

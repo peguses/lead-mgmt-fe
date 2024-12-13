@@ -202,24 +202,19 @@ export const ApplicationViewContainer: React.FC<any> = () => {
                   <Grid container size={12} spacing={2}>
                     <Grid size={{ xl: 6, lg: 6, md: 6, sm: 12, xs: 12 }}>
                       <PersonalInformationTab
-                        key={1}
                         applicant={"primaryApplicant"}
-                        readonly={true}
-                      />
+                        readonly={true} nextNotification={""}                      />
                     </Grid>
                     <Grid size={{ xl: 6, lg: 6, md: 6, sm: 12, xs: 12 }}>
                       <PersonalInformationTab
-                        key={2}
                         applicant={"secondaryApplicant"}
-                        readonly={true}
-                      />
+                        readonly={true} nextNotification={""}                      />
                     </Grid>
                   </Grid>
                 ) : (
                   <PersonalInformationTab
-                    applicant={"primaryApplicant"}
-                    readonly={true}
-                  />
+                      applicant={"primaryApplicant"}
+                      readonly={true} nextNotification={""}                  />
                 )}
                 <Grid container justifyContent={"end"}>
                   <Grid
