@@ -156,6 +156,7 @@ export const LandingPageContainer: React.FC<any> = () => {
       dispatch(
         createApplicationAsync({
           ...application,
+          generalInformation: data,
           secondaryApplicant: application.jointLoan
             ? application.secondaryApplicant
             : undefined,
