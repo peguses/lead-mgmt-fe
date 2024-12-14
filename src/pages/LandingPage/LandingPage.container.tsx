@@ -124,7 +124,6 @@ export const LandingPageContainer: React.FC<any> = () => {
   }
 
   useEffect(() => {
-    console.log(completed)
     setCurrentStep(activeStep(completed));
   }, [completed])
 
@@ -296,7 +295,7 @@ export const LandingPageContainer: React.FC<any> = () => {
             />
           </Box>
         </Grid>
-        <Grid>
+        <Grid size={12}>
           {current === 0 && (
             <Fragment>
               <Grid>

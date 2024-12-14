@@ -128,6 +128,7 @@ const FinancialInformationTab : React.FC<FinancialInformationProps> = (
                 variant={readonly ? "filled" : "outlined"}
                 size="small"
                 disabled={readonly}
+                value={""}
                 thousandSeparator=","
                 valueIsNumericString={false}
                 decimalScale={2}

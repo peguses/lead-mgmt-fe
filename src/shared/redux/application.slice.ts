@@ -23,7 +23,7 @@ export interface WorkInformation {
 }
 
 export interface GeneralInformation {
-  numberOfDependant: number;
+  numberOfDependant: number |undefined;
   hasPropertyOffer: boolean;
   propertyOfferElaboration: string;
   applicantOptionalNote: string;
@@ -32,21 +32,21 @@ export interface GeneralInformation {
 }
 
 export interface FinancialInformation {
-  annualIncome: number;
-  lengthOfEmployment: number;
-  totalAmountSaved: number;
+  annualIncome: number | undefined;
+  lengthOfEmployment: number | undefined;
+  totalAmountSaved: number | undefined;
   parentWillBeGuarantors: boolean | undefined;
-  totalLoanAmount: number;
-  totalLoanRepayments: number;
-  helpDebtTotalAmount: number;
-  totalExistingHomeLoanAmount: number;
-  totalExistingHomeLoanRepaymentAmt: number;
-  totalPropertyValue: number;
-  totalCreditCardLimits: number;
-  livingExpenses: number;
+  totalLoanAmount: number | undefined;
+  totalLoanRepayments: number | undefined;
+  helpDebtTotalAmount: number | undefined;
+  totalExistingHomeLoanAmount: number | undefined;
+  totalExistingHomeLoanRepaymentAmt: number | undefined;
+  totalPropertyValue: number | undefined;
+  totalCreditCardLimits: number | undefined;
+  livingExpenses: number | undefined;
   wereBankrupted: boolean | undefined;
   hasDefaulted: boolean | undefined;
-  defaultedReason: string;
+  defaultedReason: string | undefined;
 }
 
 export interface PersonalInformation {
@@ -57,9 +57,9 @@ export interface PersonalInformation {
   state: string;
   residencyStatus: string;
   investmentType: string;
-  firstTimeBuyer: boolean | undefined;
-  stateCapitalCityBuyer: boolean | undefined;
-  buyerAgreedToConnectWithAgent: boolean | undefined;
+  firstTimeBuyer: boolean;
+  stateCapitalCityBuyer: boolean;
+  buyerAgreedToConnectWithAgent: boolean;
 }
 
 export interface Applicant {
@@ -124,26 +124,26 @@ const INITIAL_STATE: ManagedApplication = {
         state: "",
         residencyStatus: "",
         investmentType: "",
-        firstTimeBuyer: undefined,
-        stateCapitalCityBuyer: undefined,
-        buyerAgreedToConnectWithAgent: undefined,
+        firstTimeBuyer: true,
+        stateCapitalCityBuyer: false,
+        buyerAgreedToConnectWithAgent: true,
       },
       financialInformation: {
-        annualIncome: 0,
-        lengthOfEmployment: 0,
-        totalAmountSaved: 0,
+        annualIncome: undefined,
+        lengthOfEmployment: undefined,
+        totalAmountSaved: undefined,
         parentWillBeGuarantors: undefined,
-        totalLoanAmount: 0,
-        totalLoanRepayments: 0,
-        helpDebtTotalAmount: 0,
-        totalExistingHomeLoanAmount: 0,
-        totalExistingHomeLoanRepaymentAmt: 0,
-        totalPropertyValue: 0,
-        totalCreditCardLimits: 0,
-        livingExpenses: 0,
+        totalLoanAmount: undefined,
+        totalLoanRepayments: undefined,
+        helpDebtTotalAmount: undefined,
+        totalExistingHomeLoanAmount: undefined,
+        totalExistingHomeLoanRepaymentAmt: undefined,
+        totalPropertyValue: undefined,
+        totalCreditCardLimits: undefined,
+        livingExpenses: undefined,
         wereBankrupted: undefined,
         hasDefaulted: undefined,
-        defaultedReason: "",
+        defaultedReason: undefined,
       },
     },
     secondaryApplicant: {
@@ -155,30 +155,30 @@ const INITIAL_STATE: ManagedApplication = {
         state: "",
         residencyStatus: "",
         investmentType: "",
-        firstTimeBuyer: undefined,
-        stateCapitalCityBuyer: undefined,
-        buyerAgreedToConnectWithAgent: undefined,
+        firstTimeBuyer: true,
+        stateCapitalCityBuyer: false,
+        buyerAgreedToConnectWithAgent: false,
       },
       financialInformation: {
-        annualIncome: 0,
-        lengthOfEmployment: 0,
-        totalAmountSaved: 0,
+        annualIncome: undefined,
+        lengthOfEmployment: undefined,
+        totalAmountSaved: undefined,
         parentWillBeGuarantors: undefined,
-        totalLoanAmount: 0,
-        totalLoanRepayments: 0,
-        helpDebtTotalAmount: 0,
-        totalExistingHomeLoanAmount: 0,
-        totalExistingHomeLoanRepaymentAmt: 0,
-        totalPropertyValue: 0,
-        totalCreditCardLimits: 0,
-        livingExpenses: 0,
+        totalLoanAmount: undefined,
+        totalLoanRepayments: undefined,
+        helpDebtTotalAmount: undefined,
+        totalExistingHomeLoanAmount: undefined,
+        totalExistingHomeLoanRepaymentAmt: undefined,
+        totalPropertyValue: undefined,
+        totalCreditCardLimits: undefined,
+        livingExpenses: undefined,
         wereBankrupted: undefined,
         hasDefaulted: undefined,
-        defaultedReason: "",
+        defaultedReason: undefined,
       },
     },
     generalInformation: {
-      numberOfDependant: 0,
+      numberOfDependant: undefined,
       hasPropertyOffer: false,
       propertyOfferElaboration: "",
       applicantOptionalNote: "",

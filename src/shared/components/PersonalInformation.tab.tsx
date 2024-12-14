@@ -60,9 +60,9 @@ const PersonalInformationTab: React.FC<PersonalInformationProps> = ({
           state: "",
           residencyStatus: "",
           investmentType: "",
-          firstTimeBuyer: "",
-          stateCapitalCityBuyer: "",
-          buyerAgreedToConnectWithAgent: "",
+          firstTimeBuyer: '',
+          stateCapitalCityBuyer: false,
+          buyerAgreedToConnectWithAgent: false,
         },
   });
 
@@ -388,8 +388,8 @@ const PersonalInformationTab: React.FC<PersonalInformationProps> = ({
             <RadioGroup
               {...field}
               row
-              defaultValue=""
               name="firstTimeBuyer"
+              defaultValue={true}
               onChange={(e) => {
                 clearErrors("firstTimeBuyer");
                 field.onChange(e);
@@ -443,12 +443,13 @@ const PersonalInformationTab: React.FC<PersonalInformationProps> = ({
           name="stateCapitalCityBuyer"
           control={control}
           disabled={readonly}
+
           rules={{ required: "Please select Yes/No" }} // Validation rule
           render={({ field }) => (
             <RadioGroup
               {...field}
               row
-              defaultValue=""
+              defaultValue={false}
               name="stateCapitalCityBuyer"
               onChange={(e) => {
                 clearErrors("stateCapitalCityBuyer");
@@ -512,7 +513,7 @@ const PersonalInformationTab: React.FC<PersonalInformationProps> = ({
             <RadioGroup
               {...field}
               row
-              defaultValue=""
+              defaultValue={false}
               name="buyerAgreedToConnectWithAgent"
               onChange={(e) => {
                 clearErrors("buyerAgreedToConnectWithAgent");
