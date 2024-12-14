@@ -40,17 +40,19 @@ import {
   setReferrerId,
 } from "../../shared/redux/application.slice";
 import { useAppDispatch, useAppSelector } from "../../shared/redux/hooks";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { PersonalInformationTab } from "../../shared/components/PersonalInformation.tab";
 
 interface Step {
   id: number;
   completed: boolean;
-  currentStep: boolean
+  currentStep: boolean;
 }
 
 export const ApplyViewContainer: React.FC<any> = () => {
+
+  const navigate = useNavigate();
   
   const [personalInfoStateUUID, setPersonalInfoStateUUID] = useState("1");
 
@@ -76,23 +78,25 @@ export const ApplyViewContainer: React.FC<any> = () => {
 
   const [forward, setForward] = useState<boolean>(false);
 
-  const [alert, setAlert] = useState<string | undefined> (undefined);
+  const [alert, setAlert] = useState<string | undefined>(undefined);
 
-  const [submitting, setSubmitting] = useState<boolean> (false);
+  const [submitting, setSubmitting] = useState<boolean>(false);
 
   const [completed, setCompleted] = useState<Step[]>([
     { id: 0, completed: false, currentStep: true },
-    { id: 1, completed: false, currentStep: false},
-    { id: 2, completed: false, currentStep: false},
+    { id: 1, completed: false, currentStep: false },
+    { id: 2, completed: false, currentStep: false },
   ]);
 
   const application = useAppSelector((state): Application | undefined => {
     return state?.managedApplication.application;
   });
 
-  const managedApplication = useAppSelector((state): ManagedApplication | undefined => {
-    return state?.managedApplication;
-  })
+  const managedApplication = useAppSelector(
+    (state): ManagedApplication | undefined => {
+      return state?.managedApplication;
+    }
+  );
 
   const applicantStatus = [
     { code: "1APP", name: "1 Applicant" },
@@ -131,15 +135,15 @@ export const ApplyViewContainer: React.FC<any> = () => {
       if (s.id === step) {
         return { ...s, currentStep: true };
       }
-      return {...s, currentStep: false};
+      return { ...s, currentStep: false };
     });
-  
+
     setCompleted(steps);
-  }
+  };
 
   useEffect(() => {
     setCurrentStep(activeStep(completed));
-  }, [completed])
+  }, [completed]);
 
   useEffect(() => {
     if (back || forward) {
@@ -153,19 +157,23 @@ export const ApplyViewContainer: React.FC<any> = () => {
   }, []);
 
   useEffect(() => {
-
-    if (managedApplication?.loadingFailed && managedApplication?.errorMessageIfFailed) {
+    if (
+      managedApplication?.loadingFailed &&
+      managedApplication?.errorMessageIfFailed
+    ) {
       setAlert(managedApplication.errorMessageIfFailed);
     } else {
       setAlert(undefined);
     }
-
-  }, [managedApplication?.errorMessageIfFailed, managedApplication?.loadingFailed])
+  }, [
+    managedApplication?.errorMessageIfFailed,
+    managedApplication?.loadingFailed,
+  ]);
 
   const onPrimaryPersonalInformationSubmit = (data: PersonalInformation) => {
     dispatch(setReferrerId(referrerToken ? referrerToken : ""));
     dispatch(addOrUpdatePrimaryApplicantPersonalInformation(data));
-    if (!jointLoan && forward) setActiveStep(1); 
+    if (!jointLoan && forward) setActiveStep(1);
   };
 
   const onSecondaryPersonalInformationSubmit = (data: PersonalInformation) => {
@@ -185,7 +193,7 @@ export const ApplyViewContainer: React.FC<any> = () => {
 
   const onGeneralInfoInfoSubmit = (data: GeneralInformation) => {
     dispatch(addOrUpdateGeneralInformation(data));
-    dispatch(resetApplicationSubmitError())
+    dispatch(resetApplicationSubmitError());
 
     if (application && submitting) {
       dispatch(
@@ -197,9 +205,10 @@ export const ApplyViewContainer: React.FC<any> = () => {
             : undefined,
         })
       ).then((err: any) => {
-        console.log(managedApplication)
-      }
-      );
+        if (!err.error) {
+          navigate("/status");
+        }
+      });
     }
   };
 
@@ -217,14 +226,14 @@ export const ApplyViewContainer: React.FC<any> = () => {
   };
 
   const backStep = () => {
-    return activeStep(completed).id !== 0 ? activeStep(completed)-1 : 0;
-  }
+    return activeStep(completed).id !== 0 ? activeStep(completed) - 1 : 0;
+  };
 
   const handleBack = () => {
     setActiveStep(backStep());
     setForward(false);
     setBack(true);
-    dispatch(resetApplicationSubmitError())
+    dispatch(resetApplicationSubmitError());
     setSubmitting(false);
   };
 
@@ -255,7 +264,7 @@ export const ApplyViewContainer: React.FC<any> = () => {
 
   const activeStep = (completed: any[]) => {
     return completed.find((s) => s.currentStep)?.id;
-  }
+  };
 
   return (
     <Grid container justifyContent={"center"}>
@@ -480,7 +489,7 @@ export const ApplyViewContainer: React.FC<any> = () => {
               </Grid>
             </Fragment>
           )}
-          {current  === 2 && (
+          {current === 2 && (
             <Fragment>
               <GeneralInformationTab
                 onSubmit={(data) => onGeneralInfoInfoSubmit(data)}
@@ -488,7 +497,9 @@ export const ApplyViewContainer: React.FC<any> = () => {
                 allowNext={(allow: boolean) => {
                   setAllowNextStep(allow);
                   setCompletedStep(2, allow);
-                } } alert={alert}              />
+                }}
+                alert={alert}
+              />
               <Grid container justifyContent={"end"}>
                 <Grid
                   size={{ xl: 3, lg: 3, md: 6, sm: 12, xs: 12 }}
@@ -513,4 +524,3 @@ export const ApplyViewContainer: React.FC<any> = () => {
     </Grid>
   );
 };
-

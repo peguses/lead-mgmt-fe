@@ -328,7 +328,7 @@ export const applicationSlice = createSlice({
       state.loadingFailed = false;
     });
     builder.addCase(createApplicationAsync.fulfilled, (state, action) => {
-      state.application = action.payload.application;
+      state.application = INITIAL_STATE.application;
       state.isLoading = false;
       state.loadingFailed = false;
       state.errorMessageIfFailed = undefined;
@@ -337,7 +337,6 @@ export const applicationSlice = createSlice({
       state.isLoading = false;
       state.loadingFailed = true;
       state.errorMessageIfFailed = action.payload
-      state.application = { ...state.application} ;
 
     });
   },

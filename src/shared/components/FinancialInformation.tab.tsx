@@ -86,7 +86,7 @@ const FinancialInformationTab : React.FC<FinancialInformationProps> = (
         annualIncome: data?.annualIncome ? parseFloat(String(data?.annualIncome)?.replace(/,/g, '')) : 0,
         totalAmountSaved: data?.totalAmountSaved ? parseFloat(String(data?.totalAmountSaved)?.replace(/,/g, '')) : 0,
         totalLoanAmount: data?.totalLoanAmount ? parseFloat(String(data?.totalLoanAmount)?.replace(/,/g, '')) : 0,
-        totalLoanRepayments: data?.totalLoanRepayment ? parseFloat(String(data?.totalLoanRepayment)?.replace(/,/g, '')) : 0,
+        totalLoanRepayments: data?.totalLoanRepayments ? parseFloat(String(data?.totalLoanRepayments)?.replace(/,/g, '')) : 0,
         helpDebtTotalAmount: data?.helpDebtTotalAmount ? parseFloat(String(data?.helpDebtTotalAmount)?.replace(/,/g, '')) : 0,
         totalExistingHomeLoanAmount: data?.totalExistingHomeLoanAmount ? parseFloat(String(data?.totalExistingHomeLoanAmount)?.replace(/,/g, '')) : 0,
         totalExistingHomeLoanRepaymentAmt: data?.totalExistingHomeLoanRepaymentAmt ? parseFloat(String(data?.totalExistingHomeLoanRepaymentAmt)?.replace(/,/g, '')) : 0,

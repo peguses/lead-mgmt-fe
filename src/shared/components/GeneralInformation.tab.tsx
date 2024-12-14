@@ -59,7 +59,7 @@ const GeneralInformationTab: React.FC<GeneralInformationProps> = ({
           propertyOfferElaboration: "",
           applicantOptionalNote: "",
           referralOption: "",
-          applicantsAgreedOnConditions: false,
+          applicantAgreedOnConditions: false,
         },
   });
 
