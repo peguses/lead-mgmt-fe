@@ -62,6 +62,8 @@ const GeneralInformationTab: React.FC<GeneralInformationProps> = ({ onSubmit, re
         ...data,
         hasPropertyOffer: data.hasPropertyOffer === undefined ? false : true,
         applicantAgreedOnConditions: data.applicantAgreedOnConditions === undefined ? false : true,
+        numberOfDependant: parseFloat(data?.numberOfDependant?.replace(/,/g, '')) || 0,
+
       }
     }
   

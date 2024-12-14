@@ -83,10 +83,10 @@ export interface Document {
 }
 
 export interface Application {
-  applicationId: number;
+  applicationId: number | undefined;
   referrer: string | undefined;
   referrerId: string;
-  processingOfficer: string;
+  processingOfficer: string | undefined;
   processingOfficerId: number | undefined;
   jointLoan: boolean;
   generalInformation: GeneralInformation | undefined;
@@ -106,10 +106,10 @@ export interface ManagedApplication {
 
 const INITIAL_STATE: ManagedApplication = {
   application: {
-    applicationId: 0,
-    referrer: "",
+    applicationId: undefined,
+    referrer: undefined,
     referrerId: "",
-    processingOfficer: "",
+    processingOfficer: undefined,
     processingOfficerId: undefined,
     jointLoan: false,
     loaded: false,
@@ -205,7 +205,7 @@ export const fetchApplicationAsync = createAsyncThunk(
 export const updateApplicationAsync = createAsyncThunk(
   "managedApplication/updateApplication",
   async (data: Application) => {
-    const response = await updateApplication(data.applicationId, data);
+    const response = await updateApplication(data?.applicationId || 0, data);
     return {
       application: response.data as any,
     };
