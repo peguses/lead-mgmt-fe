@@ -15,7 +15,7 @@ export const fetchApplication = async ({applicationId, filterBy , filter}: Filer
     return apiKit.get(`/applications/${applicationId}`);
 }
 
-export const fetchApplications = async(): Promise<AxiosResponse<Application[]>> => {
+export const fetchApplications = async(): Promise<AxiosResponse<any>> => {
     return apiKit.get("/applications")
 }
 

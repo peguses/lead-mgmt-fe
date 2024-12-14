@@ -17,8 +17,8 @@ const INITIAL_STATE: Applications = {
 export const fetchApplicationsAsync = createAsyncThunk(
   "applications/fetchApplications",
   async () => {
+    console.log("fetchApplicationsAsync")
     const response = await fetchApplications();
-    console.log(response)
     return {
       applications: response.data as any,
     };
@@ -55,7 +55,7 @@ export const applicationsSlice = createSlice({
     });
     builder.addCase(fetchApplicationsAsync.fulfilled, (state, action) => {
       console.log(action.payload.applications);
-      state.applications = action.payload.applications;
+      state.applications = action.payload.applications.data;
       state.isLoading = false;
       state.loadingFailed = false;
     });

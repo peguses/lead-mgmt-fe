@@ -149,7 +149,7 @@ const GeneralInformationTab: React.FC<GeneralInformationProps> = ({ onSubmit, re
                 onChange={(e: any) => {
                   clearErrors("hasPropertyOffer");
                   setHasOfferForProperty(false);
-                  if (e.target.value === true) {
+                  if (e.target.value === "true") {
                     setHasOfferForProperty(true);
                   }
                   field.onChange(e);

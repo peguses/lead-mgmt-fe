@@ -19,7 +19,7 @@ export interface FinancialInformation {
   annualIncome: number | undefined;
   lengthOfEmployment: number | undefined;
   totalAmountSaved: number | undefined;
-  parentWillBeGuarantors: boolean | undefined;
+  parentWillBeGuarantors: boolean;
   totalLoanAmount: number | undefined;
   totalLoanRepayments: number | undefined;
   helpDebtTotalAmount: number | undefined;
@@ -29,7 +29,7 @@ export interface FinancialInformation {
   totalCreditCardLimits: number | undefined;
   livingExpenses: number | undefined;
   wereBankrupted: boolean | undefined;
-  hasDefaulted: boolean | undefined;
+  hasDefaulted: boolean;
   defaultedReason: string | undefined;
 }
 

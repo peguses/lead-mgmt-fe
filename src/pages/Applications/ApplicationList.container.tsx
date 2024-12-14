@@ -38,8 +38,6 @@ import {
 } from "../../shared/redux/applications.slice";
 import { useAppDispatch, useAppSelector } from "../../shared/redux/hooks";
 import Moment from "react-moment";
-import { fetchUsersAsync, Users } from "../../shared/redux/users.slice";
-import { IRole } from "../../shared/redux/role.slice";
 import {
   Application,
   fetchApplicationAsync,
@@ -47,8 +45,11 @@ import {
   updateApplicationAsync,
 } from "../../shared/redux/application.slice";
 import { findLatestStatus } from "../../shared/utils/find.application.status.util";
+import { fetchUsersAsync, Users } from "../../shared/redux/users.slice";
+import { IRole } from "../../shared/redux/role.slice";
 
 export const ApplicationListContainer: React.FC<any> = () => {
+
   const dispatch = useAppDispatch();
 
   const isSmallScreen = useMediaQuery("(max-width: 900px)");
@@ -113,9 +114,10 @@ export const ApplicationListContainer: React.FC<any> = () => {
   };
 
   useEffect(() => {
+    console.log("fetchApplicationsAsync")
     dispatch(fetchApplicationsAsync());
     // dispatch(fetchUsersAsync());
-    dispatch(resetApplication());
+    // dispatch(resetApplication());
   }, []);
 
   const applications = useAppSelector((state): Applications | undefined => {

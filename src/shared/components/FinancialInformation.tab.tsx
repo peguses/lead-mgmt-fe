@@ -760,7 +760,8 @@ const FinancialInformationTab : React.FC<FinancialInformationProps> = (
                 onChange={(e: any) => {
                   clearErrors("hasDefaulted");
                   setHasDefaulted(false);
-                  if (e.target.value === true) {
+                  // console.log(e.target.value == true);
+                  if (e.target.value === "true") {
                     setHasDefaulted(true);
                   }
                   field.onChange(e);
@@ -810,9 +811,9 @@ const FinancialInformationTab : React.FC<FinancialInformationProps> = (
             multiline
             rows={2}
             fullWidth
-            disabled={readonly}
+            disabled={readonly && !hasDefaulted}
             {...register("defaultedReason", {
-              required: hasDefaulted,
+              required: hasDefaulted ? "Defaulted reason is required": false,
             })}
             error={!!errors.defaultedReason}
             helperText={
