@@ -27,7 +27,7 @@ interface PersonalInformationProps {
   allowNext?: (allow: boolean) => void
 }
 
-const PersonalInformationTab: React.FC<PersonalInformationProps> = ({
+export const PersonalInformationTab: React.FC<PersonalInformationProps> = ({
   applicant,
   onSubmit,
   readonly = false,
@@ -60,7 +60,7 @@ const PersonalInformationTab: React.FC<PersonalInformationProps> = ({
           state: "",
           residencyStatus: "",
           investmentType: "",
-          firstTimeBuyer: '',
+          firstTimeBuyer: true,
           stateCapitalCityBuyer: false,
           buyerAgreedToConnectWithAgent: false,
         },
@@ -114,7 +114,7 @@ const PersonalInformationTab: React.FC<PersonalInformationProps> = ({
     if (!readonly && onSubmit && nextNotification!== "1") {
       handleSubmit((data) => { onSubmit(transformData(data))})()
     }
-  }, [nextNotification])
+  }, [nextNotification]);
 
   return (
     <>
@@ -383,7 +383,6 @@ const PersonalInformationTab: React.FC<PersonalInformationProps> = ({
           name="firstTimeBuyer"
           control={control}
           disabled={readonly}
-          rules={{ required: "Please select Yes/No" }}
           render={({ field }) => (
             <RadioGroup
               {...field}
@@ -443,8 +442,6 @@ const PersonalInformationTab: React.FC<PersonalInformationProps> = ({
           name="stateCapitalCityBuyer"
           control={control}
           disabled={readonly}
-
-          rules={{ required: "Please select Yes/No" }} // Validation rule
           render={({ field }) => (
             <RadioGroup
               {...field}
@@ -507,7 +504,6 @@ const PersonalInformationTab: React.FC<PersonalInformationProps> = ({
         <Controller
           name="buyerAgreedToConnectWithAgent"
           control={control}
-          rules={{ required: "Please select Yes/No" }}
           disabled={readonly}
           render={({ field }) => (
             <RadioGroup
@@ -565,4 +561,3 @@ const PersonalInformationTab: React.FC<PersonalInformationProps> = ({
   );
 };
 
-export default PersonalInformationTab;

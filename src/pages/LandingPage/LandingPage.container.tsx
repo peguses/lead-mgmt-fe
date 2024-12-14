@@ -11,7 +11,6 @@ import {
   Stepper,
 } from "@mui/material";
 import React, { Fragment, useEffect, useState } from "react";
-import PersonalInformationTab from "../../shared/components/PersonalInformation.tab";
 import GeneralInformationTab from "../../shared/components/GeneralInformation.tab";
 import ArrowCircleRightOutlinedIcon from "@mui/icons-material/ArrowCircleRightOutlined";
 import ArrowCircleLeftOutlinedIcon from "@mui/icons-material/ArrowCircleLeftOutlined";
@@ -39,6 +38,7 @@ import {
 import { useAppDispatch, useAppSelector } from "../../shared/redux/hooks";
 import { useLocation } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
+import { PersonalInformationTab } from "../../shared/components/PersonalInformation.tab";
 
 interface Step {
   id: number;

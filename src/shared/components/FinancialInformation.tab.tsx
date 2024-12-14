@@ -58,7 +58,7 @@ const FinancialInformationTab : React.FC<FinancialInformationProps> = (
             annualIncome: undefined,
             lengthOfEmployment: undefined,
             totalAmountSaved: undefined,
-            parentWillBeGuarantors: undefined,
+            parentWillBeGuarantors: false,
             totalLoanAmount: undefined,
             totalLoanRepayments: undefined,
             helpDebtTotalAmount: undefined,
@@ -67,8 +67,8 @@ const FinancialInformationTab : React.FC<FinancialInformationProps> = (
             totalPropertyValue: undefined,
             totalCreditCardLimits: undefined,
             livingExpenses: undefined,
-            wereBankrupted: undefined,
-            hasDefaulted: undefined,
+            wereBankrupted: false,
+            hasDefaulted: false,
             defaultedReason: undefined,
           },
     });
@@ -690,7 +690,7 @@ const FinancialInformationTab : React.FC<FinancialInformationProps> = (
           <Controller
             name="wereBankrupted"
             control={control}
-            rules={{ required: "Please select Yes/No" }} // Validation rule
+            // rules={{ required: "Please select Yes/No" }} // Validation rule
             disabled={readonly}
             render={({ field }) => (
               <RadioGroup
@@ -752,7 +752,7 @@ const FinancialInformationTab : React.FC<FinancialInformationProps> = (
           <Controller
             name="hasDefaulted"
             control={control}
-            rules={{ required: "Please select Yes/No" }} // Validation rule
+            // rules={{ required: "Please select Yes/No" }} // Validation rule
             disabled={readonly}
             render={({ field }) => (
               <RadioGroup
