@@ -6,22 +6,6 @@ import {
 } from "../services/application.service";
 import { ApplicationStatus } from "./application.status.slice";
 
-export interface WorkInformation {
-  employmentType: string;
-  occupation: string;
-  employerContactName: string;
-  businessName: string;
-  employerPhoneNumber: string;
-  employerEmail: string;
-  employerABN: string;
-  employerAddress: string;
-  employerSuburb: string;
-  employerState: string;
-  employerPostCode: string;
-  currentEmploymentStartDate: Date;
-  probationaryEmployee: boolean;
-}
-
 export interface GeneralInformation {
   numberOfDependant: number |undefined;
   hasPropertyOffer: boolean;
@@ -64,7 +48,6 @@ export interface PersonalInformation {
 
 export interface Applicant {
   personalInformation?: PersonalInformation;
-  workInformation?: WorkInformation;
   financialInformation?: FinancialInformation;
 }
 
@@ -249,13 +232,6 @@ export const applicationSlice = createSlice({
       };
     },
 
-    addOrUpdatePrimaryApplicantWorkInformation: (state, action) => {
-      state.application.primaryApplicant = {
-        ...state.application.primaryApplicant,
-        workInformation: action.payload,
-      };
-    },
-
     addOrUpdatePrimaryApplicantFinancialInformation: (state, action) => {
       state.application.primaryApplicant = {
         ...state.application.primaryApplicant,
@@ -267,13 +243,6 @@ export const applicationSlice = createSlice({
       state.application.secondaryApplicant = {
         ...state.application.secondaryApplicant,
         personalInformation: action.payload,
-      };
-    },
-
-    addOrUpdateSecondaryApplicantWorkInformation: (state, action) => {
-      state.application.secondaryApplicant = {
-        ...state.application.secondaryApplicant,
-        workInformation: action.payload,
       };
     },
 
@@ -296,7 +265,6 @@ export const applicationSlice = createSlice({
       state.application.primaryApplicant = {
         ...state.application.primaryApplicant,
         personalInformation: undefined,
-        workInformation: undefined,
         financialInformation: undefined,
       };
     },
@@ -305,7 +273,6 @@ export const applicationSlice = createSlice({
       state.application.secondaryApplicant = {
         ...state.application.secondaryApplicant,
         personalInformation: undefined,
-        workInformation: undefined,
         financialInformation: undefined,
       };
     },
@@ -370,10 +337,8 @@ export const {
   setApplication,
   setJoinLoanApplication,
   addOrUpdatePrimaryApplicantPersonalInformation,
-  addOrUpdatePrimaryApplicantWorkInformation,
   addOrUpdatePrimaryApplicantFinancialInformation,
   addOrUpdateSecondaryApplicantPersonalInformation,
-  addOrUpdateSecondaryApplicantWorkInformation,
   addOrUpdateSecondaryApplicantFinancialInformation,
   removeSecondaryApplicant,
   removeGeneralInformation,

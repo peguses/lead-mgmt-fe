@@ -19,6 +19,7 @@ import { NumericFormat } from "react-number-format";
 import { FinancialInformation } from "../redux/application.slice";
 import { useAppSelector } from "../redux/hooks";
 import React from "react";
+import { NumericFormatWrapper } from "./NumericFormatWrapper";
 
 interface FinancialInformationProps {
   applicant: string;
@@ -123,12 +124,11 @@ const FinancialInformationTab : React.FC<FinancialInformationProps> = (
             control={control}
             rules={{ required: "Annual income (before taxes) is required" }}
             render={({ field }) => (
-              <NumericFormat
+              <NumericFormatWrapper
                 variant={readonly ? "filled" : "outlined"}
                 {...field}
                 size="small"
                 disabled={readonly}
-                value={""}
                 thousandSeparator=","
                 valueIsNumericString={false}
                 decimalScale={2}
@@ -162,7 +162,7 @@ const FinancialInformationTab : React.FC<FinancialInformationProps> = (
             control={control}
             rules={{ required: "Length of employment is required" }}
             render={({ field }) => (
-              <NumericFormat
+              <NumericFormatWrapper
                 {...field}
                 customInput={TextField}
                 size="small"
@@ -206,7 +206,7 @@ const FinancialInformationTab : React.FC<FinancialInformationProps> = (
             control={control}
             rules={{ required: "Total amount saved is required" }}
             render={({ field }) => (
-              <NumericFormat
+              <NumericFormatWrapper
                 {...field}
                 customInput={TextField}
                 thousandSeparator=","
@@ -255,13 +255,12 @@ const FinancialInformationTab : React.FC<FinancialInformationProps> = (
           <Controller
             name="parentWillBeGuarantors"
             control={control}
-            rules={{ required: "Please select Yes/No" }} // Validation rule
             disabled={readonly}
             render={({ field }) => (
               <RadioGroup
                 {...field}
                 row
-                defaultValue=""
+                defaultValue={false}
                 name="parentWillBeGuarantors"
                 onChange={(e) => {
                   clearErrors("parentWillBeGuarantors");
@@ -362,7 +361,7 @@ const FinancialInformationTab : React.FC<FinancialInformationProps> = (
             control={control}
             rules={{ required: "Total loans amount is required" }}
             render={({ field }) => (
-              <NumericFormat
+              <NumericFormatWrapper
                 {...field}
                 customInput={TextField}
                 thousandSeparator=","
@@ -408,7 +407,7 @@ const FinancialInformationTab : React.FC<FinancialInformationProps> = (
             control={control}
             rules={{ required: "Total help debt amount is required" }}
             render={({ field }) => (
-              <NumericFormat
+              <NumericFormatWrapper
                 {...field}
                 customInput={TextField}
                 thousandSeparator=","
@@ -456,7 +455,7 @@ const FinancialInformationTab : React.FC<FinancialInformationProps> = (
             control={control}
             rules={{ required: "Total existing home loan amount is required" }}
             render={({ field }) => (
-              <NumericFormat
+              <NumericFormatWrapper
                 {...field}
                 customInput={TextField}
                 thousandSeparator=","
@@ -507,7 +506,7 @@ const FinancialInformationTab : React.FC<FinancialInformationProps> = (
               required: "Total existing home loan repayment is required",
             }}
             render={({ field }) => (
-              <NumericFormat
+              <NumericFormatWrapper
                 {...field}
                 customInput={TextField}
                 thousandSeparator=","
@@ -553,7 +552,7 @@ const FinancialInformationTab : React.FC<FinancialInformationProps> = (
             control={control}
             rules={{ required: "Total estimated property value is required" }}
             render={({ field }) => (
-              <NumericFormat
+              <NumericFormatWrapper
                 {...field}
                 customInput={TextField}
                 thousandSeparator=","
@@ -599,7 +598,7 @@ const FinancialInformationTab : React.FC<FinancialInformationProps> = (
             control={control}
             rules={{ required: "Total credit card limit is required" }}
             render={({ field }) => (
-              <NumericFormat
+              <NumericFormatWrapper
                 {...field}
                 customInput={TextField}
                 thousandSeparator=","
@@ -646,7 +645,7 @@ const FinancialInformationTab : React.FC<FinancialInformationProps> = (
             control={control}
             rules={{ required: "Living expenses is required" }}
             render={({ field }) => (
-              <NumericFormat
+              <NumericFormatWrapper
                 {...field}
                 customInput={TextField}
                 thousandSeparator=","
@@ -758,10 +757,10 @@ const FinancialInformationTab : React.FC<FinancialInformationProps> = (
                 row
                 defaultValue={true}
                 name="hasDefaulted"
-                onChange={(e) => {
+                onChange={(e: any) => {
                   clearErrors("hasDefaulted");
                   setHasDefaulted(false);
-                  if (e.target.value === "true") {
+                  if (e.target.value === true) {
                     setHasDefaulted(true);
                   }
                   field.onChange(e);

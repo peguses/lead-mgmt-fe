@@ -46,7 +46,8 @@ interface Step {
   currentStep: boolean
 }
 
-export const LandingPageContainer: React.FC<any> = () => {
+export const ApplyViewContainer: React.FC<any> = () => {
+  
   const [personalInfoStateUUID, setPersonalInfoStateUUID] = useState("1");
 
   const [financialInfoStateUUID, setFinancialInfoStateUUID] = useState("1");

@@ -13,10 +13,10 @@ import {
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import GroupIcon from "@mui/icons-material/Group";
-import { NumericFormat } from "react-number-format";
 import { GeneralInformation } from "../redux/application.slice";
 import { useAppSelector } from "../redux/hooks";
 import React from "react";
+import { NumericFormatWrapper } from "./NumericFormatWrapper";
 
 interface GeneralInformationProps {
   onSubmit?: (data: any) => void;
@@ -49,11 +49,11 @@ const GeneralInformationTab: React.FC<GeneralInformationProps> = ({ onSubmit, re
         ? generalInformation
         : {
             numberOfDependant: "",
-            hasPropertyOffer: "",
+            hasPropertyOffer: false,
             propertyOfferElaboration: "",
             applicantOptionalNote: "",
             referralOption: "",
-            applicantsAgreedOnConditions: "",
+            applicantsAgreedOnConditions: false,
           },
     });
 
@@ -68,7 +68,6 @@ const GeneralInformationTab: React.FC<GeneralInformationProps> = ({ onSubmit, re
       }
     }
   
-
     useEffect(() => {
       if (allowNext) allowNext(isValid);
     }, [isValid])
@@ -97,7 +96,7 @@ const GeneralInformationTab: React.FC<GeneralInformationProps> = ({ onSubmit, re
             control={control}
             rules={{ required: "Number of dependant is required" }}
             render={({ field }) => (
-              <NumericFormat
+              <NumericFormatWrapper
                 {...field}
                 variant={readonly ? "filled" : "outlined"}
                 size="small"
@@ -145,12 +144,12 @@ const GeneralInformationTab: React.FC<GeneralInformationProps> = ({ onSubmit, re
               <RadioGroup
                 {...field}
                 row
-                defaultValue=""
+                defaultValue={false}
                 name="hasPropertyOffer"
-                onChange={(e) => {
+                onChange={(e: any) => {
                   clearErrors("hasPropertyOffer");
                   setHasOfferForProperty(false);
-                  if (e.target.value === "true") {
+                  if (e.target.value === true) {
                     setHasOfferForProperty(true);
                   }
                   field.onChange(e);

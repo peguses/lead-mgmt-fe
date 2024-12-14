@@ -3,7 +3,6 @@ import { Box } from "@mui/material";
 import "./App.css";
 import { useEffect, useState } from "react";
 import { ApplicationDrawerComponent } from "./shared/components/ApplicationDrawer.component";
-import { LandingPageContainer } from "./pages/LandingPage/LandingPage.container";
 import { ApplicationListContainer } from "./pages/Applications/ApplicationList.container";
 import { ApplicationNavbarComponent } from "./shared/components/ApplicationNavbar.component";
 import { ApplicationFooterComponent } from "./shared/components/ApplicationFooter.component";
@@ -26,6 +25,8 @@ import httpApiKit from "./shared/helpers/axios-http-kit";
 import PermittedRoute from "./shared/components/PermittedRoute";
 import { Permission } from "./shared/redux/role.slice";
 import usePermission from "./shared/hooks/usePermission";
+import { ApplyViewContainer } from "./pages/Applications/ApplyView.container";
+import { fetchStatusesAsync } from "./shared/redux/application.status.slice";
 
 function App() {
   const [open, setOpen] = useState(false);
@@ -74,7 +75,7 @@ function App() {
         >
           <Routes>
             <Route path="/login" element={<LoginPageContainer />} />
-            <Route path="/apply" element={<LandingPageContainer />} />
+            <Route path="/apply" element={<ApplyViewContainer />} />
             <Route path="/status" element={<ApplicationStatusContainer />}/>
             <Route element={<RequireAuth />}>
               <Route
