@@ -124,8 +124,8 @@ const FinancialInformationTab : React.FC<FinancialInformationProps> = (
             rules={{ required: "Annual income (before taxes) is required" }}
             render={({ field }) => (
               <NumericFormat
-                {...field}
                 variant={readonly ? "filled" : "outlined"}
+                {...field}
                 size="small"
                 disabled={readonly}
                 value={""}
@@ -690,7 +690,6 @@ const FinancialInformationTab : React.FC<FinancialInformationProps> = (
           <Controller
             name="wereBankrupted"
             control={control}
-            // rules={{ required: "Please select Yes/No" }} // Validation rule
             disabled={readonly}
             render={({ field }) => (
               <RadioGroup
@@ -752,7 +751,6 @@ const FinancialInformationTab : React.FC<FinancialInformationProps> = (
           <Controller
             name="hasDefaulted"
             control={control}
-            // rules={{ required: "Please select Yes/No" }} // Validation rule
             disabled={readonly}
             render={({ field }) => (
               <RadioGroup
