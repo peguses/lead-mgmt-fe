@@ -24,9 +24,11 @@ import { useAppDispatch, useAppSelector } from "../../shared/redux/hooks";
 import {
   Application,
   fetchApplicationAsync,
+  ManagedApplication,
 } from "../../shared/redux/application.slice";
 import { ApplicationStatusUpdateModal } from "../../shared/components/Application.status.update.modal";
 import { PersonalInformationTab } from "../../shared/components/PersonalInformation.tab";
+import { ManagedModalProps } from "@mui/material/Modal/ModalManager";
 
 interface Step {
   id: number;
@@ -46,8 +48,8 @@ export const ApplicationViewContainer: React.FC<any> = () => {
     dispatch(fetchApplicationAsync({ applicationId }));
   }, [applicationId]);
 
-  const application = useAppSelector((state): Application | undefined => {
-    return state?.managedApplication.application;
+  const application = useAppSelector((state): ManagedApplication | undefined => {
+    return state?.managedApplication;
   });
 
   const [activeStep, setActiveStep] = useState<number>(0);
@@ -279,7 +281,7 @@ export const ApplicationViewContainer: React.FC<any> = () => {
             )}
             {activeStep === 2 && (
               <Fragment>
-                <GeneralInformationTab readonly={true} />
+                <GeneralInformationTab readonly={true} alert={undefined} />
                 <Grid container justifyContent={"end"}>
                   <Grid
                     size={{ xl: 3, lg: 3, md: 6, sm: 12, xs: 12 }}
@@ -303,7 +305,7 @@ export const ApplicationViewContainer: React.FC<any> = () => {
       </Grid>
       <ApplicationStatusUpdateModal
         open={openUpdateModal}
-        application={application}
+        application={application?.application}
         onClose={() => setOpenUpdateModal(false)}
       />
     </Grid>

@@ -24,6 +24,7 @@ import { useEffect, useState } from "react";
 import {
   Application,
   fetchApplicationAsync,
+  ManagedApplication,
   resetApplication,
 } from "../../shared/redux/application.slice";
 import { useAppDispatch, useAppSelector } from "../../shared/redux/hooks";
@@ -103,8 +104,8 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
     p: 4,
   };
 
-  const application = useAppSelector((state): Application => {
-    return state?.managedApplication.application;
+  const application = useAppSelector((state): ManagedApplication => {
+    return state?.managedApplication;
   });
 
   const handleFilter = ({ filerKey, filterValue }) => {
@@ -118,7 +119,7 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
   }, []);
 
   useEffect(() => {
-    if (!application.isLoading && application.loaded) {
+    if (!application.isLoading && application.application) {
       setViewStatusModelOpen(false);
     }
   }, [application.isLoading, application]);
@@ -138,7 +139,7 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
                 variant={"filled"}
                 fullWidth
                 value={
-                  findLatestStatus(application.applicationStatus)?.status.name
+                  findLatestStatus(application.application.applicationStatus)?.status.name
                 }
                 disabled={true}
                 slotProps={{
@@ -164,7 +165,7 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
                   },
                 }}
                 value={moment(
-                  findLatestStatus(application.applicationStatus)
+                  findLatestStatus(application.application.applicationStatus)
                     ?.createDateTime
                 ).format("yyyy-MM-DD:HH:hh")}
                 disabled={true}
@@ -180,7 +181,7 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
                     shrink: true,
                   },
                 }}
-                value={application.processingOfficer}
+                value={application.application.processingOfficer}
                 disabled={true}
               />
 
@@ -194,7 +195,7 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
                     shrink: true,
                   },
                 }}
-                value={application.referrer}
+                value={application.application.referrer}
                 disabled={true}
               />
 
@@ -210,14 +211,14 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
                   },
                 }}
                 fullWidth
-                value={findLatestStatus(application.applicationStatus)?.note}
+                value={findLatestStatus(application.application.applicationStatus)?.note}
                 disabled={true}
               />
             </>
           )}
           {!isSmallScreen && (
             <Grid container sx={{ marginTop: "20px" }} size={12}>
-              {application.documents?.length !== 0 && (
+              {application.application.documents?.length !== 0 && (
                 <TableContainer>
                   <Table sx={{ minWidth: 650 }} aria-label="lead table">
                     <TableHead>
@@ -234,7 +235,7 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
                       </StyledTableRow>
                     </TableHead>
                     <TableBody>
-                      {application?.documents?.map((row, index) => (
+                      {application?.application.documents?.map((row, index) => (
                         <StyledTableRow
                           key={`${row.name}${index}`}
                           sx={{
@@ -270,7 +271,7 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
                 VIEW STATUS
               </Button>
             </Grid>
-            {application.applicationId !== 0 && !application.isLoading && (
+            {application.application.applicationId !== 0 && !application.isLoading && (
               <Grid size={{ xl: 4, lg: 6, md: 12, sm: 12, xs: 12 }}>
                 <Button
                   onClick={() => setUploadDocumentModelOpen(true)}

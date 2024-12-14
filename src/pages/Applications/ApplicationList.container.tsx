@@ -41,6 +41,7 @@ import Moment from "react-moment";
 import {
   Application,
   fetchApplicationAsync,
+  ManagedApplication,
   resetApplication,
   updateApplicationAsync,
 } from "../../shared/redux/application.slice";
@@ -125,8 +126,8 @@ export const ApplicationListContainer: React.FC<any> = () => {
   });
 
   const managedApplication = useAppSelector(
-    (state): Application | undefined => {
-      return state?.managedApplication.application;
+    (state): ManagedApplication | undefined => {
+      return state?.managedApplication;
     }
   );
 
@@ -147,7 +148,7 @@ export const ApplicationListContainer: React.FC<any> = () => {
     if (managedApplication) {
       dispatch(
         updateApplicationAsync({
-          ...managedApplication,
+          ...managedApplication.application,
           processingOfficerId: processingOfficer,
         })
       );
@@ -161,20 +162,20 @@ export const ApplicationListContainer: React.FC<any> = () => {
   useEffect(() => {
     if (
       !managedApplication?.isLoading &&
-      !managedApplication?.loadingFailed &&
-      managedApplication?.loaded
+      !managedApplication?.loadingFailed
+      // managedApplication?.loaded
     ) {
       setOpenAssign(true);
     }
 
-    if (!managedApplication?.loaded) {
-      setOpenAssign(false);
-    }
+    // if (!managedApplication?.loaded) {
+    //   setOpenAssign(false);
+    // }
   }, [
     managedApplication,
     managedApplication?.isLoading,
     managedApplication?.loadingFailed,
-    managedApplication?.loaded,
+    // managedApplication?.loaded,
   ]);
 
   return (

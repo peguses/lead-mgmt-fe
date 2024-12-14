@@ -36,9 +36,9 @@ function App() {
   const { hasPermission } = usePermission();
 
   useEffect(() => {
-    dispatch(removeSecondaryApplicant());
-    dispatch(removePrimaryApplicant());
-    dispatch(removeGeneralInformation());
+    // dispatch(removeSecondaryApplicant());
+    // dispatch(removePrimaryApplicant());
+    // dispatch(removeGeneralInformation());
     dispatch(resetApplication());
     dispatch(resetManagedUser());
     // dispatch(fetchStatusesAsync())

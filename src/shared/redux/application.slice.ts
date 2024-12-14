@@ -76,8 +76,6 @@ export interface Application {
   applicationStatus: Status[] | undefined;
   primaryApplicant: Applicant | undefined;
   secondaryApplicant?: Applicant | undefined;
-  isLoading: boolean;
-  loadingFailed: boolean;
   createDateTime: Date | undefined;
   loaded: boolean;
   documents?: Document[]
@@ -85,9 +83,15 @@ export interface Application {
 
 export interface ManagedApplication {
   application: Application;
+  errorMessageIfFailed: any | undefined,
+  isLoading: boolean,
+  loadingFailed: boolean,
 }
 
 const INITIAL_STATE: ManagedApplication = {
+  errorMessageIfFailed: "",
+  isLoading: false,
+  loadingFailed: false,
   application: {
     applicationId: undefined,
     referrer: undefined,
@@ -168,8 +172,8 @@ const INITIAL_STATE: ManagedApplication = {
       referralOption: "",
       applicantAgreedOnConditions: false,
     },
-    isLoading: false,
-    loadingFailed: false,
+    // isLoading: false,
+    // loadingFailed: false,
     documents: []
   },
 };
@@ -197,11 +201,15 @@ export const updateApplicationAsync = createAsyncThunk(
 
 export const createApplicationAsync = createAsyncThunk(
   "managedApplication/createApplication",
-  async (data: Application) => {
-    const response = await createApplication(data);
-    return {
-      application: response.data as any,
-    };
+  async (data: Application, {rejectWithValue}) => {
+    try {
+      const response = await createApplication(data);
+      return {
+        application: response.data as any,
+      };
+    } catch (error: any) {
+      return rejectWithValue(error.response.data.errors);
+    }
   }
 );
 
@@ -278,57 +286,60 @@ export const applicationSlice = createSlice({
     },
 
     resetApplication: (state) => {
-      state.application = INITIAL_STATE.application;
+      state = INITIAL_STATE;
     },
+
+    resetApplicationSubmitError:(state) => {
+      state.errorMessageIfFailed = undefined
+    }
   },
 
   extraReducers: (builder) => {
     builder.addCase(fetchApplicationAsync.pending, (state) => {
-      state.application.isLoading = true;
-      state.application.loadingFailed = false;
+      state.isLoading = true;
+      state.loadingFailed = false;
     });
     builder.addCase(fetchApplicationAsync.fulfilled, (state, action) => {
       state.application = action.payload.application;
-      state.application.isLoading = false;
-      state.application.loadingFailed = false;
-      state.application.loaded = true;
+      state.isLoading = false;
+      state.loadingFailed = false;
     });
     builder.addCase(fetchApplicationAsync.rejected, (state) => {
       state = { ...state };
-      state.application.isLoading = false;
-      state.application.loadingFailed = true;
+      state.isLoading = false;
+      state.loadingFailed = true;
     });
 
     builder.addCase(updateApplicationAsync.pending, (state) => {
-      state.application.isLoading = true;
-      state.application.loadingFailed = false;
+      state.isLoading = true;
+      state.loadingFailed = false;
     });
     builder.addCase(updateApplicationAsync.fulfilled, (state, action) => {
       state.application = action.payload.application;
-      state.application.isLoading = false;
-      state.application.loadingFailed = false;
-      state.application.loaded = false;
+      state.isLoading = false;
+      state.loadingFailed = false;
     });
     builder.addCase(updateApplicationAsync.rejected, (state) => {
       state = { ...state };
-      state.application.isLoading = false;
-      state.application.loadingFailed = true;
+      state.isLoading = false;
+      state.loadingFailed = true;
     });
 
     builder.addCase(createApplicationAsync.pending, (state) => {
-      state.application.isLoading = true;
-      state.application.loadingFailed = false;
+      state.isLoading = true;
+      state.loadingFailed = false;
     });
     builder.addCase(createApplicationAsync.fulfilled, (state, action) => {
       state.application = action.payload.application;
-      state.application.isLoading = false;
-      state.application.loadingFailed = false;
-      state.application.loaded = false;
+      state.isLoading = false;
+      state.loadingFailed = false;
+      state.errorMessageIfFailed = undefined;
     });
-    builder.addCase(createApplicationAsync.rejected, (state) => {
-      state = { ...state };
-      state.application.isLoading = false;
-      state.application.loadingFailed = true;
+    builder.addCase(createApplicationAsync.rejected, (state, action) => {
+      state.isLoading = false;
+      state.loadingFailed = true;
+      state.errorMessageIfFailed = action.payload
+
     });
   },
 });
@@ -345,6 +356,7 @@ export const {
   removePrimaryApplicant,
   addOrUpdateGeneralInformation,
   resetApplication,
-  setReferrerId
+  setReferrerId,
+  resetApplicationSubmitError
 } = applicationSlice.actions;
 export default applicationSlice.reducer;

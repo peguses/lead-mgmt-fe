@@ -15,7 +15,6 @@ import SavingsIcon from "@mui/icons-material/Savings";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import PaidIcon from "@mui/icons-material/Paid";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { NumericFormat } from "react-number-format";
 import { FinancialInformation } from "../redux/application.slice";
 import { useAppSelector } from "../redux/hooks";
 import React from "react";
@@ -316,7 +315,7 @@ const FinancialInformationTab : React.FC<FinancialInformationProps> = (
             control={control}
             rules={{ required: "Total loans amount is required" }}
             render={({ field }) => (
-              <NumericFormat
+              <NumericFormatWrapper
                 {...field}
                 customInput={TextField}
                 variant={readonly ? "filled" : "outlined"}
