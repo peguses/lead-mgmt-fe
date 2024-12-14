@@ -234,7 +234,6 @@ export const applicationSlice = createSlice({
     },
 
     setReferrerId: (state, action) => {
-      console.log(action.payload);
       state.application.referrerId = action.payload
     },
 

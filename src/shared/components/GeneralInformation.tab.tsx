@@ -22,9 +22,10 @@ interface GeneralInformationProps {
   onSubmit?: (data: any) => void;
   readonly?: boolean;
   nextNotification?: string;
+  allowNext?: (allow: boolean) => void
 }
 
-const GeneralInformationTab: React.FC<GeneralInformationProps> = ({ onSubmit, readonly = false,nextNotification }: GeneralInformationProps) => {
+const GeneralInformationTab: React.FC<GeneralInformationProps> = ({ onSubmit, readonly = false, nextNotification, allowNext }: GeneralInformationProps) => {
     const [hasOfferForProperty, setHasOfferForProperty] =
       useState<boolean>(false);
 
@@ -62,11 +63,15 @@ const GeneralInformationTab: React.FC<GeneralInformationProps> = ({ onSubmit, re
         ...data,
         hasPropertyOffer: data.hasPropertyOffer === undefined ? false : true,
         applicantAgreedOnConditions: data.applicantAgreedOnConditions === undefined ? false : true,
-        numberOfDependant: parseFloat(data?.numberOfDependant?.replace(/,/g, '')) || 0,
+        numberOfDependant: data?.numberOfDependant ? parseFloat(data?.numberOfDependant?.replace(/,/g, '')) : 0,
 
       }
     }
   
+
+    useEffect(() => {
+      if (allowNext) allowNext(isValid);
+    }, [isValid])
 
     useEffect(() => {
       if (!readonly && onSubmit && nextNotification!== "1") {

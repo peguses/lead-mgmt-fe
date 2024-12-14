@@ -24,19 +24,21 @@ interface PersonalInformationProps {
   onSubmit?: (data: any) => void;
   readonly?: boolean;
   nextNotification?: string
+  allowNext?: (allow: boolean) => void
 }
 
 const PersonalInformationTab: React.FC<PersonalInformationProps> = ({
   applicant,
   onSubmit,
   readonly = false,
-  nextNotification
+  nextNotification,
+  allowNext
 }: PersonalInformationProps) => {
   
   const applicantInformation = useAppSelector(
     (state): PersonalInformation | undefined => {
-      return state?.managedApplication.application?.[applicant]
-        .personalInformation;
+      return state?.managedApplication?.application?.[applicant]
+        ?.personalInformation;
     }
   );
 
@@ -63,6 +65,10 @@ const PersonalInformationTab: React.FC<PersonalInformationProps> = ({
           buyerAgreedToConnectWithAgent: "",
         },
   });
+
+  useEffect(() => {
+    if (allowNext) allowNext(isValid);
+  }, [isValid]);
 
   const residencyStatus = [
     { code: "AC", name: "Australian Citizen" },
@@ -524,7 +530,7 @@ const PersonalInformationTab: React.FC<PersonalInformationProps> = ({
                       disabled={true}
                     />
                   ) : (
-                    <Radio value={false} />
+                    <Radio/>
                   )
                 }
                 label="Yes"

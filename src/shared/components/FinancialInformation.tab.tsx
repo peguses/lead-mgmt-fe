@@ -25,6 +25,7 @@ interface FinancialInformationProps {
   onSubmit?: (data: any) => void;
   readonly?: boolean;
   nextNotification?: string;
+  allowNext?: (allow: boolean) => void
 }
 
 const FinancialInformationTab : React.FC<FinancialInformationProps> = (
@@ -32,13 +33,14 @@ const FinancialInformationTab : React.FC<FinancialInformationProps> = (
       applicant,
       onSubmit,
       readonly = false,
-      nextNotification
+      nextNotification,
+      allowNext
     }: FinancialInformationProps,
   ) => {
 
     const financialInformation = useAppSelector(
       (state): FinancialInformation | undefined => {
-        return state?.managedApplication.application?.[applicant].financialInformation;
+        return state?.managedApplication?.application?.[applicant]?.financialInformation;
       }
     );
 
@@ -71,22 +73,26 @@ const FinancialInformationTab : React.FC<FinancialInformationProps> = (
           },
     });
 
+    useEffect(() => {
+      if (allowNext) allowNext(isValid);
+    }, [isValid])
+
     const [hasDefaulted, setHasDefaulted] = useState<boolean>(false);
 
     const transformData = (data: any): FinancialInformation => {
-
+      console.log(data);
       return {
         ...data,
-        annualIncome: parseFloat(data?.annualIncome?.replace(/,/g, '')) || 0,
-        totalAmountSaved: parseFloat(data?.totalAmountSaved?.replace(/,/g, '')) || 0,
-        totalLoanAmount: parseFloat(data?.totalLoanAmount?.replace(/,/g, '')) || 0,
-        totalLoanRepayments: parseFloat(data?.totalLoanRepayment?.replace(/,/g, '')) || 0,
-        helpDebtTotalAmount: parseFloat(data?.helpDebtTotalAmount?.replace(/,/g, '')) || 0,
-        totalExistingHomeLoanAmount: parseFloat(data?.totalExistingHomeLoanAmount?.replace(/,/g, '')) || 0,
-        totalExistingHomeLoanRepaymentAmt: parseFloat(data?.totalExistingHomeLoanRepaymentAmt?.replace(/,/g, '')) || 0,
-        totalPropertyValue: parseFloat(data.totalPropertyValue?.replace(/,/g, '')) || 0,
-        totalCreditCardLimits: parseFloat(data?.totalCreditCardLimits?.replace(/,/g, '')) || 0,
-        livingExpenses: parseFloat(data?.livingExpenses?.replace(/,/g, '')) || 0,
+        annualIncome: data?.annualIncome ? parseFloat(String(data?.annualIncome)?.replace(/,/g, '')) : 0,
+        totalAmountSaved: data?.totalAmountSaved ? parseFloat(String(data?.totalAmountSaved)?.replace(/,/g, '')) : 0,
+        totalLoanAmount: data?.totalLoanAmount ? parseFloat(String(data?.totalLoanAmount)?.replace(/,/g, '')) : 0,
+        totalLoanRepayments: data?.totalLoanRepayment ? parseFloat(String(data?.totalLoanRepayment)?.replace(/,/g, '')) : 0,
+        helpDebtTotalAmount: data?.helpDebtTotalAmount ? parseFloat(String(data?.helpDebtTotalAmount)?.replace(/,/g, '')) : 0,
+        totalExistingHomeLoanAmount: data?.totalExistingHomeLoanAmount ? parseFloat(String(data?.totalExistingHomeLoanAmount)?.replace(/,/g, '')) : 0,
+        totalExistingHomeLoanRepaymentAmt: data?.totalExistingHomeLoanRepaymentAmt ? parseFloat(String(data?.totalExistingHomeLoanRepaymentAmt)?.replace(/,/g, '')) : 0,
+        totalPropertyValue: data.totalPropertyValue ? parseFloat(String(data.totalPropertyValue)?.replace(/,/g, '')) : 0,
+        totalCreditCardLimits: data?.totalCreditCardLimits ? parseFloat(String(data?.totalCreditCardLimits)?.replace(/,/g, '')) : 0,
+        livingExpenses: data?.livingExpenses ? parseFloat(String(data?.livingExpenses)?.replace(/,/g, '')) : 0,
         wereBankrupted: data?.wereBankrupted === undefined ? false : true,
         hasDefaulted: data?.hasDefaulted === undefined ? false : true,
         parentWillBeGuarantors:

@@ -10,9 +10,8 @@ import {
   StepLabel,
   Stepper,
 } from "@mui/material";
-import React, { Fragment, useEffect, useRef, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import PersonalInformationTab from "../../shared/components/PersonalInformation.tab";
-import { batch } from "react-redux";
 import GeneralInformationTab from "../../shared/components/GeneralInformation.tab";
 import ArrowCircleRightOutlinedIcon from "@mui/icons-material/ArrowCircleRightOutlined";
 import ArrowCircleLeftOutlinedIcon from "@mui/icons-material/ArrowCircleLeftOutlined";
@@ -47,12 +46,11 @@ interface Step {
 }
 
 export const LandingPageContainer: React.FC<any> = () => {
-
   const [personalInfoStateUUID, setPersonalInfoStateUUID] = useState("1");
 
-  const [financialInfoStateUUID, setFinancialInfoStateUUID] = useState('1');
+  const [financialInfoStateUUID, setFinancialInfoStateUUID] = useState("1");
 
-  const [generalInfoStateUUID, setGeneralInfoStateUUID] = useState('1');
+  const [generalInfoStateUUID, setGeneralInfoStateUUID] = useState("1");
 
   const location = useLocation();
 
@@ -66,75 +64,17 @@ export const LandingPageContainer: React.FC<any> = () => {
 
   const [jointLoan, setJointLoan] = useState<boolean>(false);
 
-  const [applicantOnePersonalInfoValid, setApplicantOnePersonalInfoValid] =
-    useState<boolean>(false);
-
-  const [applicantTwoPersonalInfoValid, setApplicantTwoPersonalInfoValid] =
-    useState<boolean>(false);
-
-  const [applicantOneWorkInfoValid, setApplicantOneWorkInfoValid] =
-    useState<boolean>(false);
-
-  const [applicantTwoWorkInfoValid, setApplicantTwoWorkInfoValid] =
-    useState<boolean>(false);
-
-  const [applicationOneFinancialValid, setApplicationOneFinancialValid] =
-    useState<boolean>(false);
-
-  const [applicationTwoFinancialValid, setApplicationTwoFinancialValid] =
-    useState<boolean>(false);
-
-  const [applicationGeneralInfoValid, setApplicationGeneralInfoValid] =
-    useState<boolean>(false);
-
-  const [allowSubmit, setAllowSubmit] = useState<boolean>(false);
-
-  const applicationGeneralInfoRef = useRef<any>();
+  const [allowNextStep, setAllowNextStep] = useState<boolean>(false);
 
   const [completed, setCompleted] = useState<Step[]>([
     { id: 0, completed: false },
     { id: 1, completed: false },
     { id: 2, completed: false },
-    { id: 3, completed: false },
   ]);
 
   const application = useAppSelector((state): Application | undefined => {
     return state?.managedApplication.application;
   });
-
-  useEffect(() => {
-    setAllowSubmit(applicationGeneralInfoValid);
-    setCompletedStep(2, applicationGeneralInfoValid);
-  }, [applicationGeneralInfoValid]);
-
-  useEffect(() => {
-    if (jointLoan) {
-      const valid =
-        applicationOneFinancialValid && applicationTwoFinancialValid;
-      setCompletedStep(1, valid);
-    } else {
-      setCompletedStep(1, applicationOneFinancialValid);
-    }
-  }, [applicationOneFinancialValid, applicationTwoFinancialValid, jointLoan]);
-
-  useEffect(() => {
-    if (jointLoan) {
-      const valid = applicantOneWorkInfoValid && applicantTwoWorkInfoValid;
-      setCompletedStep(5, valid);
-    } else {
-      setCompletedStep(5, applicantOneWorkInfoValid);
-    }
-  }, [applicantOneWorkInfoValid, applicantTwoWorkInfoValid, jointLoan]);
-
-  useEffect(() => {
-    if (jointLoan) {
-      const valid =
-        applicantOnePersonalInfoValid && applicantTwoPersonalInfoValid;
-      setCompletedStep(0, valid);
-    } else {
-      setCompletedStep(0, applicantOnePersonalInfoValid);
-    }
-  }, [applicantOnePersonalInfoValid, applicantTwoPersonalInfoValid, jointLoan]);
 
   const applicantStatus = [
     { code: "1APP", name: "1 Applicant" },
@@ -147,11 +87,10 @@ export const LandingPageContainer: React.FC<any> = () => {
 
   const handleFinancialInformationSubmit = () => {
     setFinancialInfoStateUUID(uuidv4());
- 
   };
 
   const handleSubmit = () => {
-    setGeneralInfoStateUUID(uuidv4())
+    setGeneralInfoStateUUID(uuidv4());
   };
 
   const setCompletedStep = (step: number, state: boolean) => {
@@ -166,22 +105,28 @@ export const LandingPageContainer: React.FC<any> = () => {
 
   const onPrimaryPersonalInformationSubmit = (data: PersonalInformation) => {
     dispatch(setReferrerId(referrerToken ? referrerToken : ""));
-    setActiveStep(1);
     dispatch(addOrUpdatePrimaryApplicantPersonalInformation(data));
+    if (!jointLoan) setActiveStep(1);
   };
 
   const onSecondaryPersonalInformationSubmit = (data: PersonalInformation) => {
     dispatch(addOrUpdateSecondaryApplicantPersonalInformation(data));
+    if (jointLoan) setActiveStep(1);
   };
 
   const onPrimaryFinancialInfoSubmit = (data: FinancialInformation) => {
     dispatch(addOrUpdatePrimaryApplicantFinancialInformation(data));
-    setActiveStep(2);
+    if (!jointLoan) setActiveStep(2);
+  };
+
+  const onSecondaryFinancialInfoSubmit = (data: FinancialInformation) => {
+    dispatch(addOrUpdateSecondaryApplicantFinancialInformation(data));
+    if (jointLoan) setActiveStep(2);
   };
 
   const onGeneralInfoInfoSubmit = (data: GeneralInformation) => {
     dispatch(addOrUpdateGeneralInformation(data));
-    
+
     if (application) {
       dispatch(
         createApplicationAsync({
@@ -194,18 +139,8 @@ export const LandingPageContainer: React.FC<any> = () => {
     }
   };
 
-  const onSecondaryFinancialInfoSubmit = (data: FinancialInformation) => {
-    dispatch(addOrUpdateSecondaryApplicantFinancialInformation(data));
-  };
-
   const handleSingleApplication = () => {
     setJointLoan(false);
-    setApplicantOnePersonalInfoValid(false);
-    setApplicantTwoPersonalInfoValid(true);
-    setApplicantOneWorkInfoValid(false);
-    setApplicantTwoWorkInfoValid(true);
-    setApplicationOneFinancialValid(false);
-    setApplicationTwoFinancialValid(true);
     dispatch(setJoinLoanApplication(false));
     dispatch(removeSecondaryApplicant());
     dispatch(removeGeneralInformation());
@@ -213,19 +148,18 @@ export const LandingPageContainer: React.FC<any> = () => {
 
   const handleJointApplication = () => {
     setJointLoan(true);
-    setApplicantTwoPersonalInfoValid(false);
-    setApplicantOnePersonalInfoValid(false);
-    setApplicantOneWorkInfoValid(false);
-    setApplicantTwoWorkInfoValid(false);
-    setApplicationOneFinancialValid(false);
-    setApplicationTwoFinancialValid(false);
     dispatch(setJoinLoanApplication(true));
     dispatch(removeGeneralInformation());
   };
 
   const handleBack = () => {
-    setActiveStep(activeStep !== 0 ? activeStep - 1 : 0);
+    const step = activeStep - 1;
+    setActiveStep(step);
   };
+
+  useEffect(() => {
+    console.log(activeStep);
+  }, [activeStep]);
 
   const stepColor = (step: number) => {
     let color: string = "text.secondary";
@@ -374,6 +308,7 @@ export const LandingPageContainer: React.FC<any> = () => {
                         onPrimaryPersonalInformationSubmit(data)
                       }
                       nextNotification={personalInfoStateUUID}
+                      allowNext={(allow: boolean) => {}}
                     />
                   </Grid>
                   <Grid size={{ xl: 6, lg: 6, md: 6, sm: 12, xs: 12 }}>
@@ -383,6 +318,10 @@ export const LandingPageContainer: React.FC<any> = () => {
                         onSecondaryPersonalInformationSubmit(data)
                       }
                       nextNotification={personalInfoStateUUID}
+                      allowNext={(allow: boolean) => {
+                        setAllowNextStep(allow);
+                        setCompletedStep(0, true);
+                      }}
                     />
                   </Grid>
                 </Grid>
@@ -391,6 +330,10 @@ export const LandingPageContainer: React.FC<any> = () => {
                   applicant={"primaryApplicant"}
                   onSubmit={(data) => onPrimaryPersonalInformationSubmit(data)}
                   nextNotification={personalInfoStateUUID}
+                  allowNext={(allow: boolean) => {
+                    setAllowNextStep(allow);
+                    setCompletedStep(0, true);
+                  }}
                 />
               )}
               <Grid container justifyContent={"end"}>
@@ -404,7 +347,7 @@ export const LandingPageContainer: React.FC<any> = () => {
                     color="primary"
                     fullWidth
                     endIcon={<ArrowCircleRightOutlinedIcon />}
-                    // disabled={!allowWorkTab}
+                    disabled={!allowNextStep}
                   >
                     Next
                   </Button>
@@ -419,18 +362,33 @@ export const LandingPageContainer: React.FC<any> = () => {
                   <Grid size={{ xl: 6, lg: 6, md: 6, sm: 12, xs: 12 }}>
                     <FinancialInformationTab
                       applicant={"primaryApplicant"}
-                      onSubmit={(data) => onPrimaryFinancialInfoSubmit(data)} nextNotification={financialInfoStateUUID}                    />
+                      onSubmit={(data) => onPrimaryFinancialInfoSubmit(data)}
+                      nextNotification={financialInfoStateUUID}
+                      allowNext={(allow: boolean) => {}}
+                    />
                   </Grid>
                   <Grid size={{ xl: 6, lg: 6, md: 6, sm: 12, xs: 12 }}>
                     <FinancialInformationTab
                       applicant={"secondaryApplicant"}
-                      onSubmit={(data) => onSecondaryFinancialInfoSubmit(data)} nextNotification={financialInfoStateUUID}                    />
+                      onSubmit={(data) => onSecondaryFinancialInfoSubmit(data)}
+                      nextNotification={financialInfoStateUUID}
+                      allowNext={(allow: boolean) => {
+                        setAllowNextStep(allow);
+                        setCompletedStep(1, true);
+                      }}
+                    />
                   </Grid>
                 </Grid>
               ) : (
                 <FinancialInformationTab
-                    applicant={"primaryApplicant"}
-                    onSubmit={(data) => onPrimaryFinancialInfoSubmit(data)} nextNotification={financialInfoStateUUID}                />
+                  applicant={"primaryApplicant"}
+                  onSubmit={(data) => onPrimaryFinancialInfoSubmit(data)}
+                  nextNotification={financialInfoStateUUID}
+                  allowNext={(allow: boolean) => {
+                    setAllowNextStep(allow);
+                    setCompletedStep(1, true);
+                  }}
+                />
               )}
               <Grid container justifyContent={"end"}>
                 <Grid
@@ -443,7 +401,7 @@ export const LandingPageContainer: React.FC<any> = () => {
                     color="primary"
                     fullWidth
                     endIcon={<ArrowCircleRightOutlinedIcon />}
-                    // disabled={!allowGeneralTab}
+                    disabled={!allowNextStep}
                   >
                     Next
                   </Button>
@@ -454,7 +412,13 @@ export const LandingPageContainer: React.FC<any> = () => {
           {activeStep === 2 && (
             <Fragment>
               <GeneralInformationTab
-                onSubmit={(data) => onGeneralInfoInfoSubmit(data)} nextNotification={generalInfoStateUUID}/>
+                onSubmit={(data) => onGeneralInfoInfoSubmit(data)}
+                nextNotification={generalInfoStateUUID}
+                allowNext={(allow: boolean) => {
+                  setAllowNextStep(allow);
+                  setCompletedStep(1, true);
+                }}
+              />
               <Grid container justifyContent={"end"}>
                 <Grid
                   size={{ xl: 3, lg: 3, md: 6, sm: 12, xs: 12 }}
@@ -466,7 +430,7 @@ export const LandingPageContainer: React.FC<any> = () => {
                     color="primary"
                     fullWidth
                     startIcon={<CheckCircleOutlineOutlinedIcon />}
-                    // disabled={!allowSubmit}
+                    disabled={!allowNextStep}
                   >
                     Submit
                   </Button>
