@@ -93,10 +93,10 @@ const FinancialInformationTab : React.FC<FinancialInformationProps> = (
         totalPropertyValue: data.totalPropertyValue ? parseFloat(String(data.totalPropertyValue)?.replace(/,/g, '')) : 0,
         totalCreditCardLimits: data?.totalCreditCardLimits ? parseFloat(String(data?.totalCreditCardLimits)?.replace(/,/g, '')) : 0,
         livingExpenses: data?.livingExpenses ? parseFloat(String(data?.livingExpenses)?.replace(/,/g, '')) : 0,
-        wereBankrupted: data?.wereBankrupted === undefined ? false : true,
-        hasDefaulted: data?.hasDefaulted === undefined ? false : true,
+        wereBankrupted: data?.wereBankrupted === "true" ? true : false,
+        hasDefaulted: data?.hasDefaulted === "true" ? true : false,
         parentWillBeGuarantors:
-          data?.parentWillBeGuarantors === undefined ? false : true,
+          data?.parentWillBeGuarantors === "true" ? true : false,
       }
     }
 

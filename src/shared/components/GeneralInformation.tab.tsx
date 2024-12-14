@@ -66,9 +66,9 @@ const GeneralInformationTab: React.FC<GeneralInformationProps> = ({
   const transformData = (data: any): GeneralInformation => {
     return {
       ...data,
-      hasPropertyOffer: data.hasPropertyOffer === undefined ? false : true,
+      hasPropertyOffer: data.hasPropertyOffer === "true" ? true : false,
       applicantAgreedOnConditions:
-        data.applicantAgreedOnConditions === undefined ? false : true,
+        data.applicantAgreedOnConditions === "true" ? true : false,
       numberOfDependant: data?.numberOfDependant
         ? parseFloat(String(data?.numberOfDependant)?.replace(/,/g, ""))
         : 0,
@@ -154,7 +154,6 @@ const GeneralInformationTab: React.FC<GeneralInformationProps> = ({
         <Controller
           name="hasPropertyOffer"
           control={control}
-          rules={{ required: "Please select Yes/No" }}
           disabled={readonly}
           render={({ field }) => (
             <RadioGroup

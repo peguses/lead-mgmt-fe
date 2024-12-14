@@ -172,8 +172,6 @@ const INITIAL_STATE: ManagedApplication = {
       referralOption: "",
       applicantAgreedOnConditions: false,
     },
-    // isLoading: false,
-    // loadingFailed: false,
     documents: []
   },
 };
@@ -208,7 +206,7 @@ export const createApplicationAsync = createAsyncThunk(
         application: response.data as any,
       };
     } catch (error: any) {
-      return rejectWithValue(error.response.data.errors);
+      return rejectWithValue(error.response.data.errors || error.response.data.message);
     }
   }
 );
@@ -339,6 +337,7 @@ export const applicationSlice = createSlice({
       state.isLoading = false;
       state.loadingFailed = true;
       state.errorMessageIfFailed = action.payload
+      state.application = { ...state.application} ;
 
     });
   },

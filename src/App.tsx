@@ -26,7 +26,7 @@ import PermittedRoute from "./shared/components/PermittedRoute";
 import { Permission } from "./shared/redux/role.slice";
 import usePermission from "./shared/hooks/usePermission";
 import { ApplyViewContainer } from "./pages/Applications/ApplyView.container";
-import { fetchStatusesAsync } from "./shared/redux/application.status.slice";
+
 
 function App() {
   const [open, setOpen] = useState(false);

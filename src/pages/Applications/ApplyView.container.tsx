@@ -43,7 +43,6 @@ import { useAppDispatch, useAppSelector } from "../../shared/redux/hooks";
 import { useLocation } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { PersonalInformationTab } from "../../shared/components/PersonalInformation.tab";
-import { resetManagedUser } from "../../shared/redux/managed.user.slice";
 
 interface Step {
   id: number;
