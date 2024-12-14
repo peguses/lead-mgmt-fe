@@ -43,6 +43,7 @@ import { v4 as uuidv4 } from "uuid";
 interface Step {
   id: number;
   completed: boolean;
+  currentStep: boolean
 }
 
 export const LandingPageContainer: React.FC<any> = () => {
@@ -60,16 +61,20 @@ export const LandingPageContainer: React.FC<any> = () => {
 
   const dispatch = useAppDispatch();
 
-  const [activeStep, setActiveStep] = useState<number>(0);
+  const [current, setCurrentStep] = useState<number>(0);
 
   const [jointLoan, setJointLoan] = useState<boolean>(false);
 
   const [allowNextStep, setAllowNextStep] = useState<boolean>(false);
 
+  const [back, setBack] = useState<boolean>(false);
+
+  const [forward, setForward] = useState<boolean>(false)
+
   const [completed, setCompleted] = useState<Step[]>([
-    { id: 0, completed: false },
-    { id: 1, completed: false },
-    { id: 2, completed: false },
+    { id: 0, completed: false, currentStep: true },
+    { id: 1, completed: false, currentStep: false},
+    { id: 2, completed: false, currentStep: false},
   ]);
 
   const application = useAppSelector((state): Application | undefined => {
@@ -83,10 +88,14 @@ export const LandingPageContainer: React.FC<any> = () => {
 
   const handlePersonalInformationSubmit = () => {
     setPersonalInfoStateUUID(uuidv4());
+    setForward(true);
+    setBack(false);
   };
 
   const handleFinancialInformationSubmit = () => {
     setFinancialInfoStateUUID(uuidv4());
+    setForward(true);
+    setBack(false);
   };
 
   const handleSubmit = () => {
@@ -103,25 +112,41 @@ export const LandingPageContainer: React.FC<any> = () => {
     setCompleted(steps);
   };
 
+  const setActiveStep = (step: number) => {
+    const steps = completed.map((s: Step) => {
+      if (s.id === step) {
+        return { ...s, currentStep: true };
+      }
+      return {...s, currentStep: false};
+    });
+  
+    setCompleted(steps);
+  }
+
+  useEffect(() => {
+    console.log(completed)
+    setCurrentStep(activeStep(completed));
+  }, [completed])
+
   const onPrimaryPersonalInformationSubmit = (data: PersonalInformation) => {
     dispatch(setReferrerId(referrerToken ? referrerToken : ""));
     dispatch(addOrUpdatePrimaryApplicantPersonalInformation(data));
-    if (!jointLoan) setActiveStep(1);
+    if (!jointLoan && forward) setActiveStep(1); 
   };
 
   const onSecondaryPersonalInformationSubmit = (data: PersonalInformation) => {
     dispatch(addOrUpdateSecondaryApplicantPersonalInformation(data));
-    if (jointLoan) setActiveStep(1);
+    if (jointLoan && forward) setActiveStep(1);
   };
 
   const onPrimaryFinancialInfoSubmit = (data: FinancialInformation) => {
     dispatch(addOrUpdatePrimaryApplicantFinancialInformation(data));
-    if (!jointLoan) setActiveStep(2);
+    if (!jointLoan && forward) setActiveStep(2);
   };
 
   const onSecondaryFinancialInfoSubmit = (data: FinancialInformation) => {
     dispatch(addOrUpdateSecondaryApplicantFinancialInformation(data));
-    if (jointLoan) setActiveStep(2);
+    if (jointLoan && forward) setActiveStep(2);
   };
 
   const onGeneralInfoInfoSubmit = (data: GeneralInformation) => {
@@ -152,18 +177,19 @@ export const LandingPageContainer: React.FC<any> = () => {
     dispatch(removeGeneralInformation());
   };
 
-  const handleBack = () => {
-    const step = activeStep - 1;
-    setActiveStep(step);
-  };
+  const backStep = () => {
+      return activeStep(completed).id !== 0 ? activeStep(completed)-1 : 0;
+  }
 
-  useEffect(() => {
-    console.log(activeStep);
-  }, [activeStep]);
+  const handleBack = () => {
+    setActiveStep(backStep());
+    setForward(false);
+    setBack(true);
+  };
 
   const stepColor = (step: number) => {
     let color: string = "text.secondary";
-    if (activeStep === step) {
+    if (current === step) {
       color = "primary.main";
     }
 
@@ -186,20 +212,24 @@ export const LandingPageContainer: React.FC<any> = () => {
     return completed.find((s) => s.id === step)?.completed;
   };
 
+  const activeStep = (completed: any[]) => {
+    return completed.find((s) => s.currentStep)?.id;
+  }
+
   return (
     <Grid container justifyContent={"center"}>
       <Grid
         container
         justifyContent={"center"}
         size={
-          jointLoan && activeStep !== 2
+          jointLoan && current !== 2
             ? { xl: 8, lg: 8, md: 12, sm: 12, xs: 12 }
             : { xl: 4, lg: 4, md: 12, sm: 12, xs: 12 }
         }
         sx={{ marginTop: "5px", marginBottom: "20px" }}
       >
         <Grid size={12}>
-          <Stepper nonLinear activeStep={activeStep}>
+          <Stepper nonLinear activeStep={current}>
             <Step key={"personal"} completed={isStepCompleted(0)}>
               <StepLabel
                 icon={<PersonIcon />}
@@ -252,7 +282,7 @@ export const LandingPageContainer: React.FC<any> = () => {
               variant="text"
               disableRipple
               onClick={handleBack}
-              disabled={activeStep === 0}
+              disabled={current === 0}
             >
               Back
             </Button>
@@ -266,7 +296,7 @@ export const LandingPageContainer: React.FC<any> = () => {
           </Box>
         </Grid>
         <Grid>
-          {activeStep === 0 && (
+          {current === 0 && (
             <Fragment>
               <Grid>
                 <FormControl fullWidth sx={{ marginTop: "5px" }} size="small">
@@ -320,7 +350,7 @@ export const LandingPageContainer: React.FC<any> = () => {
                       nextNotification={personalInfoStateUUID}
                       allowNext={(allow: boolean) => {
                         setAllowNextStep(allow);
-                        setCompletedStep(0, true);
+                        setCompletedStep(0, allow);
                       }}
                     />
                   </Grid>
@@ -332,7 +362,7 @@ export const LandingPageContainer: React.FC<any> = () => {
                   nextNotification={personalInfoStateUUID}
                   allowNext={(allow: boolean) => {
                     setAllowNextStep(allow);
-                    setCompletedStep(0, true);
+                    setCompletedStep(0, allow);
                   }}
                 />
               )}
@@ -355,7 +385,7 @@ export const LandingPageContainer: React.FC<any> = () => {
               </Grid>
             </Fragment>
           )}
-          {activeStep === 1 && (
+          {current === 1 && (
             <Fragment>
               {jointLoan ? (
                 <Grid container size={12} spacing={2}>
@@ -374,7 +404,7 @@ export const LandingPageContainer: React.FC<any> = () => {
                       nextNotification={financialInfoStateUUID}
                       allowNext={(allow: boolean) => {
                         setAllowNextStep(allow);
-                        setCompletedStep(1, true);
+                        setCompletedStep(1, allow);
                       }}
                     />
                   </Grid>
@@ -386,7 +416,7 @@ export const LandingPageContainer: React.FC<any> = () => {
                   nextNotification={financialInfoStateUUID}
                   allowNext={(allow: boolean) => {
                     setAllowNextStep(allow);
-                    setCompletedStep(1, true);
+                    setCompletedStep(1, allow);
                   }}
                 />
               )}
@@ -409,14 +439,14 @@ export const LandingPageContainer: React.FC<any> = () => {
               </Grid>
             </Fragment>
           )}
-          {activeStep === 2 && (
+          {current  === 2 && (
             <Fragment>
               <GeneralInformationTab
                 onSubmit={(data) => onGeneralInfoInfoSubmit(data)}
                 nextNotification={generalInfoStateUUID}
                 allowNext={(allow: boolean) => {
                   setAllowNextStep(allow);
-                  setCompletedStep(1, true);
+                  setCompletedStep(2, allow);
                 }}
               />
               <Grid container justifyContent={"end"}>

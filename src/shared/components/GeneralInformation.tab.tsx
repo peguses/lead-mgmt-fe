@@ -202,7 +202,7 @@ const GeneralInformationTab: React.FC<GeneralInformationProps> = ({ onSubmit, re
             fullWidth
             disabled={readonly}
             {...register("propertyOfferElaboration", {
-              required: "property offer elaboration required",
+              required: hasOfferForProperty ?  "property offer elaboration required" : false,
             })}
             error={!!errors.propertyOfferElaboration}
             helperText={
