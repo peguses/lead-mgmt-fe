@@ -42,7 +42,7 @@ function App() {
     // dispatch(removeGeneralInformation());
     dispatch(resetApplication());
     dispatch(resetManagedUser());
-    // dispatch(fetchStatusesAsync())
+    dispatch(fetchStatusesAsync())
   }, [dispatch]);
 
   httpApiKit.interceptors.request.use(

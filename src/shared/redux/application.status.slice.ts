@@ -2,8 +2,9 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { fetchStatuses } from "../services/status.service";
 
 export interface ApplicationStatus {
-  name: string;
+  id: number;
   status: string;
+  note: string;
 }
 
 export interface ApplicationStatues {
@@ -24,7 +25,7 @@ export const fetchStatusesAsync = createAsyncThunk(
     async () => {
       const response = await fetchStatuses();
       return {
-        statuses: response.data as any,
+        statuses: response.data.data as any,
       };
     }
   );
@@ -40,7 +41,7 @@ export const applicationStatusSlice = createSlice({
         state.loadingFailed = false;
       });
       builder.addCase(fetchStatusesAsync.fulfilled, (state, action) => {
-        state.applicationStatuses = [...action.payload.statuses];
+        state.applicationStatuses = action.payload.statuses;
         state.isLoading = false;
         state.loadingFailed = false;
       });

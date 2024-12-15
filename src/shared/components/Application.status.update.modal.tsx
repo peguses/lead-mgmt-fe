@@ -15,7 +15,8 @@ import { ApplicationStatues } from "../redux/application.status.slice";
 import { Controller, useForm } from "react-hook-form";
 import CheckCircle from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
-import { findLatestStatus } from "../utils/find.application.status.util";
+import { findLatestStatus, findLatestStatusNote } from "../utils/find.application.status.util";
+import { useState } from "react";
 
 interface ApplicationStatusUpdateModalProps {
   open: boolean;
@@ -26,6 +27,8 @@ interface ApplicationStatusUpdateModalProps {
 export const ApplicationStatusUpdateModal: React.FC<
   ApplicationStatusUpdateModalProps
 > = ({ open, application, onClose }) => {
+
+  const [defaultNote, setDefaultNote] = useState<string>();
 
   const {
     control,
@@ -58,6 +61,10 @@ export const ApplicationStatusUpdateModal: React.FC<
     boxShadow: 24,
     p: 4,
   };
+
+  const defaultNoteById = (id: number): string | undefined => {
+    return applicationStatuses?.applicationStatuses.find((status) => status.id === id)?.note
+  }
 
   const onSubmit = () => {};
 
@@ -98,9 +105,7 @@ export const ApplicationStatusUpdateModal: React.FC<
             size="small"
             fullWidth
             value={
-              ""
-              // findLatestStatus(application?.applicationStatus ?? [])?.status
-              //   .name
+              findLatestStatus(application?.applicationStatus ?? [])
             }
             disabled={true}
             label="Current status"
@@ -122,8 +127,7 @@ export const ApplicationStatusUpdateModal: React.FC<
             multiline
             rows={4}
             value={
-              ""
-              // findLatestStatus(application?.applicationStatus ?? [])?.note
+              findLatestStatusNote(application?.applicationStatus ?? [])
             }
             disabled={true}
             label="Current note"
@@ -161,14 +165,15 @@ export const ApplicationStatusUpdateModal: React.FC<
                   displayEmpty
                   onChange={(e) => {
                     clearErrors("status");
+                    setDefaultNote(defaultNoteById(e.target.value));
                     field.onChange(e);
                   }}
                 >
                   {applicationStatuses &&
                     !applicationStatuses?.isLoading &&
-                    applicationStatuses.applicationStatuses?.map((stateObj) => (
-                      <MenuItem key={stateObj.status} value={stateObj.status}>
-                        {stateObj.name}
+                    applicationStatuses?.applicationStatuses?.map((stateObj) => (
+                      <MenuItem key={stateObj.id} value={stateObj.id}>
+                        {stateObj.status}
                       </MenuItem>
                     ))}
                 </Select>
@@ -185,13 +190,14 @@ export const ApplicationStatusUpdateModal: React.FC<
             fullWidth
             multiline
             rows={5}
+            value={defaultNote}
             sx={{ marginTop: "5px" }}
             {...register("note", {
               required: "Note is required",
             })}
-            error={!!errors.referralOption}
+            error={!!errors.note}
             helperText={
-              errors.referralOption ? String(errors.referralOption.message) : ""
+              errors.note ? String(errors.note.message) : ""
             }
             placeholder={"How did you hear about us"}
           />
