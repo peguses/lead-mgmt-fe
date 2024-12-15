@@ -8,9 +8,7 @@ import {
   Button,
 } from "@mui/material";
 import { SyntheticEvent, useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import ArrowCircleLeftIcon from "@mui/icons-material/ArrowCircleLeft";
-import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
+import { useNavigate } from "react-router-dom";
 import NotificationsNoneRoundedIcon from "@mui/icons-material/NotificationsNoneRounded";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
@@ -21,6 +19,9 @@ import { setViewport } from "../redux/common.slice";
 import styled from "@emotion/styled";
 import usePermission from "../hooks/usePermission";
 import { Permission } from "../redux/role.slice";
+import ArrowCircleLeftRoundedIcon from '@mui/icons-material/ArrowCircleLeftRounded';
+import ArrowCircleRightRoundedIcon from '@mui/icons-material/ArrowCircleRightRounded';
+
 
 interface Menu {
   id: number;
@@ -33,20 +34,20 @@ export const ApplicationDrawerComponent: React.FC<any> = ({
 }) => {
   const StyledButton = styled(Button)({
     textTransform: "none",
-    color: "#1E3A5F",
+    color: "white",
     "& .MuiTypography-root": {
       fontWeight: 700,
     },
     "&:hover": {
-      backgroundColor: "#F0F8FF",
-      color: "#1E3A5F",
+      backgroundColor: "#939292",
+      color: "#ebebed",
       fontWeight: 700,
     },
     "& .MuiListItemIcon-root": {
-      color: "#1E3A5F",
+      color: "white",
       fontWeight: 700,
     },
-    borderRadius: "0px"
+    borderRadius: "0px",
   });
 
   const [selectedMenu, setSelectedMenu] = useState<Menu[]>([
@@ -114,7 +115,7 @@ export const ApplicationDrawerComponent: React.FC<any> = ({
           width: open ? 240 : 60,
           boxSizing: "border-box",
           overflowY: "clip",
-          backgroundColor: "white"
+          backgroundColor: "#454545",
         },
       }}
       variant="persistent"
@@ -131,18 +132,22 @@ export const ApplicationDrawerComponent: React.FC<any> = ({
         <IconButton
           onClick={toggleSidebar}
           sx={{
-            height: "24px",
-            width: "24px",
+            height: "36px",
+            width: "36px",
             position: "fixed",
             top: "75px",
-            left: open ? "227px" : "47px",
-            boxShadow: 3,
+            left: open ? "223px" : "43px",
+            boxShadow: 4,
             zIndex: (theme) => theme.zIndex.snackbar,
             overflowY: "clip",
-            color: "#1E3A5F"
+            color: "black",
           }}
         >
-          {menuOpen ? <ArrowCircleLeftIcon /> : <ArrowCircleRightIcon />}
+          {menuOpen ? (
+            <ArrowCircleLeftRoundedIcon sx={{ height: "36px", width: "36px"}} />
+          ) : (
+            <ArrowCircleRightRoundedIcon sx={{ height: "36px", width: "36px"}}/>
+          )}
         </IconButton>
       )}
       <List sx={{ marginTop: "80px" }}>
@@ -156,12 +161,12 @@ export const ApplicationDrawerComponent: React.FC<any> = ({
           sx={
             isSelectedMenu(1)
               ? {
-                  backgroundColor: "#B0C4DE",
+                  backgroundColor: "#737171",
                   color: "white",
                   fontWeight: 700,
                   "&:hover": {
-                    backgroundColor: "#B0C4DE",
-                    color: "white",
+                    backgroundColor: "#737171",
+                    color: "#ebebed",
                     fontWeight: 700,
                   },
                   "& .MuiListItemIcon-root": {
@@ -173,7 +178,7 @@ export const ApplicationDrawerComponent: React.FC<any> = ({
           }
         >
           <ListItemIcon>
-            <HomeOutlinedIcon/>
+            <HomeOutlinedIcon />
           </ListItemIcon>
           {menuOpen && <ListItemText primary="Home" />}
         </ListItem>
@@ -188,11 +193,11 @@ export const ApplicationDrawerComponent: React.FC<any> = ({
           sx={
             isSelectedMenu(2)
               ? {
-                  backgroundColor: "#B0C4DE",
+                  backgroundColor: "#737171",
                   color: "white",
                   fontWeight: 700,
                   "&:hover": {
-                    backgroundColor: "#B0C4DE",
+                    backgroundColor: "#737171",
                     color: "white",
                     fontWeight: 700,
                   },
@@ -210,73 +215,75 @@ export const ApplicationDrawerComponent: React.FC<any> = ({
           {menuOpen && <ListItemText primary="Inquiry Status" />}
         </ListItem>
 
-        {hasPermission ([Permission.VIEW_APPLICATIONS]) && (<ListItem
-          component={StyledButton}
-          onClick={() => {
-            navigate("/applications");
-            setSelectedMenuItem(3, true);
-          }}
-          disableRipple
-          sx={
-            isSelectedMenu(3)
-              ? {
-                  backgroundColor: "#B0C4DE",
-                  color: "white",
-                  fontWeight: 700,
-                  "&:hover": {
-                    backgroundColor: "#B0C4DE",
+        {hasPermission([Permission.VIEW_APPLICATIONS]) && (
+          <ListItem
+            component={StyledButton}
+            onClick={() => {
+              navigate("/applications");
+              setSelectedMenuItem(3, true);
+            }}
+            disableRipple
+            sx={
+              isSelectedMenu(3)
+                ? {
+                    backgroundColor: "#737171",
                     color: "white",
                     fontWeight: 700,
-                  },
-                  "& .MuiListItemIcon-root": {
-                    color: "white",
-                    fontWeight: 700,
-                  },
-                }
-              : {}
-          }
-        >
-          <ListItemIcon>
-            <NotificationsNoneRoundedIcon />
-          </ListItemIcon>
-          {menuOpen && <ListItemText primary="Applications" />}
-        </ListItem>
+                    "&:hover": {
+                      backgroundColor: "#737171",
+                      color: "#ebebed",
+                      fontWeight: 700,
+                    },
+                    "& .MuiListItemIcon-root": {
+                      color: "white",
+                      fontWeight: 700,
+                    },
+                  }
+                : {}
+            }
+          >
+            <ListItemIcon>
+              <NotificationsNoneRoundedIcon />
+            </ListItemIcon>
+            {menuOpen && <ListItemText primary="Applications" />}
+          </ListItem>
         )}
 
-        {hasPermission ([Permission.VIEW_USERS]) && (<ListItem
-          component={StyledButton}
-          onClick={() => {
-            navigate("/users");
-            setSelectedMenuItem(4, true);
-          }}
-          disableRipple
-          sx={
-            isSelectedMenu(4)
-              ? {
-                  backgroundColor: "#B0C4DE",
-                  color: "white",
-                  fontWeight: 700,
-                  "& .MuiTypography-root": {
-                    fontWeight: 700,
-                  },
-                  "&:hover": {
-                    backgroundColor: "#B0C4DE",
+        {hasPermission([Permission.VIEW_USERS]) && (
+          <ListItem
+            component={StyledButton}
+            onClick={() => {
+              navigate("/users");
+              setSelectedMenuItem(4, true);
+            }}
+            disableRipple
+            sx={
+              isSelectedMenu(4)
+                ? {
+                    backgroundColor: "#737171",
                     color: "white",
                     fontWeight: 700,
-                  },
-                  "& .MuiListItemIcon-root": {
-                    color: "white",
-                    fontWeight: 700,
-                  },
-                }
-              : {}
-          }
-        >
-          <ListItemIcon>
-            <PeopleAltOutlinedIcon />
-          </ListItemIcon>
-          {menuOpen && <ListItemText primary="Users" />}
-        </ListItem>
+                    "& .MuiTypography-root": {
+                      fontWeight: 700,
+                    },
+                    "&:hover": {
+                      backgroundColor: "#737171",
+                      color: "#ebebed",
+                      fontWeight: 700,
+                    },
+                    "& .MuiListItemIcon-root": {
+                      color: "white",
+                      fontWeight: 700,
+                    },
+                  }
+                : {}
+            }
+          >
+            <ListItemIcon>
+              <PeopleAltOutlinedIcon />
+            </ListItemIcon>
+            {menuOpen && <ListItemText primary="Users" />}
+          </ListItem>
         )}
       </List>
     </SwipeableDrawer>

@@ -7,7 +7,7 @@ import {
 import { ApplicationStatus } from "./application.status.slice";
 
 export interface GeneralInformation {
-  numberOfDependant: number |undefined;
+  numberOfDependant: number | undefined;
   hasPropertyOffer: boolean;
   propertyOfferElaboration: string;
   applicantOptionalNote: string;
@@ -52,7 +52,7 @@ export interface Applicant {
 }
 
 export interface Status {
-  statusId: number
+  statusId: number;
   note: string;
   status: ApplicationStatus | string;
   userId: number;
@@ -78,14 +78,14 @@ export interface Application {
   secondaryApplicant?: Applicant | undefined;
   createDateTime: Date | undefined;
   loaded: boolean;
-  documents?: Document[]
+  documents?: Document[];
 }
 
 export interface ManagedApplication {
   application: Application;
-  errorMessageIfFailed: any | undefined,
-  isLoading: boolean,
-  loadingFailed: boolean,
+  errorMessageIfFailed: any | undefined;
+  isLoading: boolean;
+  loadingFailed: boolean;
 }
 
 const INITIAL_STATE: ManagedApplication = {
@@ -172,7 +172,7 @@ const INITIAL_STATE: ManagedApplication = {
       referralOption: "",
       applicantAgreedOnConditions: false,
     },
-    documents: []
+    documents: [],
   },
 };
 
@@ -180,7 +180,11 @@ export const fetchApplicationAsync = createAsyncThunk(
   "managedApplication/fetchApplication",
   async (props: any) => {
     const { applicationId, filterBy, filter } = props;
-    const response = await fetchApplication({applicationId, filterBy, filter});
+    const response = await fetchApplication({
+      applicationId,
+      filterBy,
+      filter,
+    });
     console.log(response);
     return {
       application: response.data.data as any,
@@ -190,41 +194,49 @@ export const fetchApplicationAsync = createAsyncThunk(
 
 export const assignOfficeAsync = createAsyncThunk(
   "managedApplication/updateApplication",
-  async (data: Application | any) => {
-    const response = await updateApplication(data?.applicationId || 0, { processingOfficerId: data.processingOfficerId });
-    return {
-      application: response.data as any,
-    };
+  async (data: Application | any, { rejectWithValue }) => {
+    try {
+      const response = await updateApplication(data?.applicationId || 0, {
+        processingOfficerId: data.processingOfficerId,
+      });
+      return {
+        application: response.data as any,
+      };
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response.data.errors || error.response.data.message
+      );
+    }
   }
 );
 
 export const createApplicationAsync = createAsyncThunk(
   "managedApplication/createApplication",
-  async (data: Application, {rejectWithValue}) => {
+  async (data: Application, { rejectWithValue }) => {
     try {
       const response = await createApplication(data);
       return {
         application: response.data as any,
       };
     } catch (error: any) {
-      return rejectWithValue(error.response.data.errors || error.response.data.message);
+      return rejectWithValue(
+        error.response.data.errors || error.response.data.message
+      );
     }
   }
 );
-
 
 export const applicationSlice = createSlice({
   name: "managedApplication",
   initialState: INITIAL_STATE,
   reducers: {
-
     setJoinLoanApplication: (state, action) => {
       state.application.jointLoan = action.payload;
       state.application.loaded = false;
     },
 
     setReferrerId: (state, action) => {
-      state.application.referrerId = action.payload
+      state.application.referrerId = action.payload;
     },
 
     setApplication: (state, action) => {
@@ -288,9 +300,9 @@ export const applicationSlice = createSlice({
       state = INITIAL_STATE;
     },
 
-    resetApplicationSubmitError:(state) => {
-      state.errorMessageIfFailed = undefined
-    }
+    resetApplicationSubmitError: (state) => {
+      state.errorMessageIfFailed = undefined;
+    },
   },
 
   extraReducers: (builder) => {
@@ -317,11 +329,12 @@ export const applicationSlice = createSlice({
       state.application = action.payload.application;
       state.isLoading = false;
       state.loadingFailed = false;
+      state.errorMessageIfFailed = undefined;
     });
-    builder.addCase(assignOfficeAsync.rejected, (state) => {
-      state = { ...state };
+    builder.addCase(assignOfficeAsync.rejected, (state, action) => {
       state.isLoading = false;
       state.loadingFailed = true;
+      state.errorMessageIfFailed = action.payload;
     });
 
     builder.addCase(createApplicationAsync.pending, (state) => {
@@ -329,7 +342,7 @@ export const applicationSlice = createSlice({
       state.loadingFailed = false;
     });
     builder.addCase(createApplicationAsync.fulfilled, (state, action) => {
-      state.application = INITIAL_STATE.application;
+      state.application = action.payload.application;
       state.isLoading = false;
       state.loadingFailed = false;
       state.errorMessageIfFailed = undefined;
@@ -337,8 +350,7 @@ export const applicationSlice = createSlice({
     builder.addCase(createApplicationAsync.rejected, (state, action) => {
       state.isLoading = false;
       state.loadingFailed = true;
-      state.errorMessageIfFailed = action.payload
-
+      state.errorMessageIfFailed = action.payload;
     });
   },
 });
@@ -356,6 +368,6 @@ export const {
   addOrUpdateGeneralInformation,
   resetApplication,
   setReferrerId,
-  resetApplicationSubmitError
+  resetApplicationSubmitError,
 } = applicationSlice.actions;
 export default applicationSlice.reducer;

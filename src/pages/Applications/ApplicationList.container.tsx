@@ -173,14 +173,15 @@ export const ApplicationListContainer: React.FC<any> = () => {
 
   const handleAssign = (officer: any) => {
     const { processingOfficer } = officer;
-    // if (managedApplication) {
       dispatch(
         assignOfficeAsync({
           applicationId: managedApplication?.application.applicationId,
           processingOfficerId: processingOfficer,
         })
-      );
-    // }
+      ).then((error: any) => {
+        dispatch(fetchApplicationsAsync({ page: page, limit: rowsPerPage }))
+        setOpenAssign(false);
+      })
   };
 
   const openAssignModel = async (applicationId: number | undefined) => {
