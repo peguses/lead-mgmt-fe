@@ -85,7 +85,7 @@ export const UsersListContainer: React.FC<any> = () => {
 
   const dispatch = useAppDispatch();
 
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
@@ -328,9 +328,9 @@ export const UsersListContainer: React.FC<any> = () => {
               <TablePagination
                 rowsPerPageOptions={[5, 10, 25]}
                 component="div"
-                count={usersList?.pagination?.total || 0}
-                rowsPerPage={rowsPerPage || 10}
-                page={page || 0}
+                count={usersList?.pagination?.total}
+                rowsPerPage={rowsPerPage}
+                page={page}
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
               />

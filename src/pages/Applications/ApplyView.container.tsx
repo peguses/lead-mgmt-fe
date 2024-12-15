@@ -185,6 +185,7 @@ export const ApplyViewContainer: React.FC<any> = () => {
   };
 
   const onPrimaryFinancialInfoSubmit = (data: FinancialInformation) => {
+    console.log(data);
     dispatch(addOrUpdatePrimaryApplicantFinancialInformation(data));
     if (!jointLoan && forward) setActiveStep(2);
   };

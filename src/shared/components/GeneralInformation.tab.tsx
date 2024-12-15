@@ -31,7 +31,7 @@ const GeneralInformationTab: React.FC<GeneralInformationProps> = ({
   readonly = false,
   nextNotification,
   allowNext,
-  alert
+  alert,
 }: GeneralInformationProps) => {
   const [hasOfferForProperty, setHasOfferForProperty] =
     useState<boolean>(false);
@@ -97,12 +97,16 @@ const GeneralInformationTab: React.FC<GeneralInformationProps> = ({
   return (
     <>
       {alert && (
-         
-      <Alert
-      severity="error"
-      sx={{ marginTop: "20px", marginBottom: "10px", fontSize: "14px", fontWeight: 700 }}
-    >
-      <AlertTitle>Important</AlertTitle>
+        <Alert
+          severity="error"
+          sx={{
+            marginTop: "20px",
+            marginBottom: "10px",
+            fontSize: "14px",
+            fontWeight: 700,
+          }}
+        >
+          <AlertTitle>Important</AlertTitle>
           {alert}
         </Alert>
       )}
@@ -172,30 +176,12 @@ const GeneralInformationTab: React.FC<GeneralInformationProps> = ({
             >
               <FormControlLabel
                 value={true}
-                control={
-                  readonly ? (
-                    <Radio
-                      checked={generalInformation?.hasPropertyOffer}
-                      disabled={true}
-                    />
-                  ) : (
-                    <Radio />
-                  )
-                }
+                control={<Radio disabled={readonly} />}
                 label="Yes"
               />
               <FormControlLabel
                 value={false}
-                control={
-                  readonly ? (
-                    <Radio
-                      checked={!generalInformation?.hasPropertyOffer}
-                      disabled={true}
-                    />
-                  ) : (
-                    <Radio />
-                  )
-                }
+                control={<Radio disabled={readonly} />}
                 label="No"
               />
             </RadioGroup>
@@ -266,7 +252,7 @@ const GeneralInformationTab: React.FC<GeneralInformationProps> = ({
         }
         placeholder={"How did you hear about us"}
       />
-      
+
       <Alert
         severity="info"
         sx={{ marginTop: "20px", fontSize: "14px", fontWeight: 700 }}
@@ -304,30 +290,12 @@ const GeneralInformationTab: React.FC<GeneralInformationProps> = ({
             >
               <FormControlLabel
                 value={true}
-                control={
-                  readonly ? (
-                    <Radio
-                      checked={generalInformation?.applicantAgreedOnConditions}
-                      disabled={true}
-                    />
-                  ) : (
-                    <Radio />
-                  )
-                }
+                control={<Radio disabled={readonly} />}
                 label="Yes"
               />
               <FormControlLabel
                 value={false}
-                control={
-                  readonly ? (
-                    <Radio
-                      checked={!generalInformation?.applicantAgreedOnConditions}
-                      disabled={true}
-                    />
-                  ) : (
-                    <Radio />
-                  )
-                }
+                control={<Radio disabled={true} />}
                 label="No"
               />
             </RadioGroup>
