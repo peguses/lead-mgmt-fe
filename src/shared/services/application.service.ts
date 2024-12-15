@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
 import apiKit from '../helpers/axios-http-kit';
-import { Application } from '../redux/application.slice';
+import { Application, UpdateStatusRequest } from '../redux/application.slice';
 
 export interface Filer {
     applicationId?: number;
@@ -32,4 +32,8 @@ export const updateApplication = async(applicationId: number, data: any):Promise
 
 export const createApplication = async(data: Application):Promise<AxiosResponse<any>> => {
     return apiKit.post(`/applications`, {...data})
+}
+
+export const createStatus = (statusRequest: UpdateStatusRequest): Promise<AxiosResponse<any>> => {
+    return apiKit.post("/application-status", {...statusRequest})
 }

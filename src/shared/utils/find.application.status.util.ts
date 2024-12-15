@@ -7,3 +7,4 @@ export const findLatestStatus = (status: Status[] | undefined): any => {
 export const findLatestStatusNote = (status: Status[] | undefined): string => {
     return status && status.length === 1 ? status[0].note : "";
 }
+

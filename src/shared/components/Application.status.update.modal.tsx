@@ -9,7 +9,7 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import { Application } from "../redux/application.slice";
+import { Application, createApplicationStatusAsync } from "../redux/application.slice";
 import { useAppSelector } from "../redux/hooks";
 import { ApplicationStatues } from "../redux/application.status.slice";
 import { Controller, useForm } from "react-hook-form";
@@ -17,6 +17,8 @@ import CheckCircle from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { findLatestStatus, findLatestStatusNote } from "../utils/find.application.status.util";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { ApplicationUser } from "../redux/application.user.slice";
 
 interface ApplicationStatusUpdateModalProps {
   open: boolean;
@@ -30,6 +32,12 @@ export const ApplicationStatusUpdateModal: React.FC<
 
   const [defaultNote, setDefaultNote] = useState<string>();
 
+  const dispatch = useDispatch();
+
+  const currentUser = useAppSelector((state): ApplicationUser | undefined => {
+    return state?.applicationUser;
+  });
+
   const {
     control,
     register,
@@ -37,9 +45,9 @@ export const ApplicationStatusUpdateModal: React.FC<
     formState: { errors, isValid },
     clearErrors,
   } = useForm<any>({
-    mode: "all",
+    mode: "onSubmit",
     defaultValues: {
-      status: "",
+      status: 0,
       note: "",
     },
   });
@@ -66,7 +74,17 @@ export const ApplicationStatusUpdateModal: React.FC<
     return applicationStatuses?.applicationStatuses.find((status) => status.id === id)?.note
   }
 
-  const onSubmit = () => {};
+  const onSubmit = (data: any) => {
+    console.log(data)
+    dispatch(
+      createApplicationStatusAsync({
+        applicationId: 1,
+        statusId: 1,
+        userId: 1,
+        note: data?.note,
+      }: UpdateStatusRequest)
+    );
+  };
 
   const applicantsName = () => {
     const primaryApplicant = `${application?.primaryApplicant?.personalInformation?.firstName} ${application?.primaryApplicant?.personalInformation?.lastName}`;
@@ -190,7 +208,7 @@ export const ApplicationStatusUpdateModal: React.FC<
             fullWidth
             multiline
             rows={5}
-            value={defaultNote}
+            defaultValue={defaultNote}
             sx={{ marginTop: "5px" }}
             {...register("note", {
               required: "Note is required",

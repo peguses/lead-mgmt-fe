@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
   createApplication,
+  createStatus,
   fetchApplication,
   updateApplication,
 } from "../services/application.service";
@@ -79,6 +80,14 @@ export interface Application {
   createDateTime: Date | undefined;
   loaded: boolean;
   documents?: Document[];
+}
+
+
+export interface UpdateStatusRequest {
+  applicationId: number;
+  statusId: number;
+  userId: number;
+  note: string;
 }
 
 export interface ManagedApplication {
@@ -226,6 +235,22 @@ export const createApplicationAsync = createAsyncThunk(
   }
 );
 
+export const createApplicationStatusAsync = createAsyncThunk(
+  "managedApplication/createStatus",
+  async (data: UpdateStatusRequest, { rejectWithValue }) => {
+    try {
+      const response = await createStatus(data);
+      return {
+        status: response.data as any,
+      };
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response.data.errors || error.response.data.message
+      );
+    }
+  }
+);
+
 export const applicationSlice = createSlice({
   name: "managedApplication",
   initialState: INITIAL_STATE,
@@ -348,6 +373,22 @@ export const applicationSlice = createSlice({
       state.errorMessageIfFailed = undefined;
     });
     builder.addCase(createApplicationAsync.rejected, (state, action) => {
+      state.isLoading = false;
+      state.loadingFailed = true;
+      state.errorMessageIfFailed = action.payload;
+    });
+
+    builder.addCase(createApplicationStatusAsync.pending, (state) => {
+      state.isLoading = true;
+      state.loadingFailed = false;
+    });
+    builder.addCase(createApplicationStatusAsync.fulfilled, (state, action) => {
+      state.application.applicationStatus = action.payload.status;
+      state.isLoading = false;
+      state.loadingFailed = false;
+      state.errorMessageIfFailed = undefined;
+    });
+    builder.addCase(createApplicationStatusAsync.rejected, (state, action) => {
       state.isLoading = false;
       state.loadingFailed = true;
       state.errorMessageIfFailed = action.payload;

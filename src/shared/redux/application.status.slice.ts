@@ -28,7 +28,7 @@ export const fetchStatusesAsync = createAsyncThunk(
         statuses: response.data.data as any,
       };
     }
-  );
+);
 
 export const applicationStatusSlice = createSlice({
     name: "applicationStatuses",
