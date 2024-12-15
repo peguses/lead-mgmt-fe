@@ -23,8 +23,8 @@ interface PersonalInformationProps {
   applicant: string;
   onSubmit?: (data: any) => void;
   readonly?: boolean;
-  nextNotification?: string
-  allowNext?: (allow: boolean) => void
+  nextNotification?: string;
+  allowNext?: (allow: boolean) => void;
 }
 
 export const PersonalInformationTab: React.FC<PersonalInformationProps> = ({
@@ -32,9 +32,8 @@ export const PersonalInformationTab: React.FC<PersonalInformationProps> = ({
   onSubmit,
   readonly = false,
   nextNotification,
-  allowNext
+  allowNext,
 }: PersonalInformationProps) => {
-  
   const applicantInformation = useAppSelector(
     (state): PersonalInformation | undefined => {
       return state?.managedApplication?.application?.[applicant]
@@ -98,21 +97,21 @@ export const PersonalInformationTab: React.FC<PersonalInformationProps> = ({
   };
 
   const transformData = (data: any): PersonalInformation => {
-
     return {
       ...data,
-        firstTimeBuyer: data.firstTimeBuyer === undefined ? false : true,
-        stateCapitalCityBuyer:
-          data.stateCapitalCityBuyer === undefined ? false : true,
-        buyerAgreedToConnectWithAgent:
-          data.buyerAgreedToConnectWithAgent === undefined ? false : true,
-    }
-  }
-
+      firstTimeBuyer: data.firstTimeBuyer === "true" ? true : false,
+      stateCapitalCityBuyer:
+        data.stateCapitalCityBuyer === "true" ? true : false,
+      buyerAgreedToConnectWithAgent:
+        data.buyerAgreedToConnectWithAgent === "true" ? true : false,
+    };
+  };
 
   useEffect(() => {
-    if (!readonly && onSubmit && nextNotification!== "1") {
-      handleSubmit((data) => { onSubmit(transformData(data))})()
+    if (!readonly && onSubmit && nextNotification !== "1") {
+      handleSubmit((data) => {
+        onSubmit(transformData(data));
+      })();
     }
   }, [nextNotification]);
 
@@ -396,30 +395,12 @@ export const PersonalInformationTab: React.FC<PersonalInformationProps> = ({
             >
               <FormControlLabel
                 value={true}
-                control={
-                  readonly ? (
-                    <Radio
-                      checked={applicantInformation?.firstTimeBuyer}
-                      disabled={true}
-                    />
-                  ) : (
-                    <Radio />
-                  )
-                }
+                control={<Radio disabled={readonly} />}
                 label="Yes"
               />
               <FormControlLabel
                 value={false}
-                control={
-                  readonly ? (
-                    <Radio
-                      checked={!applicantInformation?.firstTimeBuyer}
-                      disabled={true}
-                    />
-                  ) : (
-                    <Radio />
-                  )
-                }
+                control={<Radio disabled={readonly} />}
                 label="No"
               />
             </RadioGroup>
@@ -455,34 +436,12 @@ export const PersonalInformationTab: React.FC<PersonalInformationProps> = ({
             >
               <FormControlLabel
                 value={true}
-                control={
-                  readonly ? (
-                    <Radio
-                      checked={
-                        applicantInformation?.stateCapitalCityBuyer === true
-                      }
-                      disabled={true}
-                    />
-                  ) : (
-                    <Radio />
-                  )
-                }
+                control={<Radio disabled={readonly} />}
                 label="Yes"
               />
               <FormControlLabel
                 value={false}
-                control={
-                  readonly ? (
-                    <Radio
-                      checked={
-                        !applicantInformation?.stateCapitalCityBuyer === false
-                      }
-                      disabled={true}
-                    />
-                  ) : (
-                    <Radio />
-                  )
-                }
+                control={<Radio disabled={readonly} />}
                 label="No"
               />
             </RadioGroup>
@@ -518,34 +477,12 @@ export const PersonalInformationTab: React.FC<PersonalInformationProps> = ({
             >
               <FormControlLabel
                 value={true}
-                control={
-                  readonly ? (
-                    <Radio
-                      checked={
-                        applicantInformation?.buyerAgreedToConnectWithAgent
-                      }
-                      disabled={true}
-                    />
-                  ) : (
-                    <Radio/>
-                  )
-                }
+                control={<Radio disabled={readonly} />}
                 label="Yes"
               />
               <FormControlLabel
                 value={false}
-                control={
-                  readonly ? (
-                    <Radio
-                      checked={
-                        !applicantInformation?.buyerAgreedToConnectWithAgent
-                      }
-                      disabled={true}
-                    />
-                  ) : (
-                    <Radio />
-                  )
-                }
+                control={<Radio disabled={readonly} />}
                 label="No"
               />
             </RadioGroup>
@@ -560,4 +497,3 @@ export const PersonalInformationTab: React.FC<PersonalInformationProps> = ({
     </>
   );
 };
-
