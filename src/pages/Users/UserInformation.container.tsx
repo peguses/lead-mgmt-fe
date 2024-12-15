@@ -1,7 +1,6 @@
 import { useParams } from "react-router-dom";
 import { UserInformationComponent } from "../../shared/components/UserInformation.component";
-import { useEffect, useId } from "react";
-import { fetchRolesAsync, Roles } from "../../shared/redux/role.slice";
+import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../shared/redux/hooks";
 import {
   fetchUserAsync,
@@ -9,8 +8,10 @@ import {
   resetManagedUser,
   UserManagedAction,
 } from "../../shared/redux/managed.user.slice";
+import { Roles } from "../../shared/redux/role.slice";
 
 export const UserInformationContainer: React.FC<any> = () => {
+
   const { userId } = useParams();
 
   const dispatch = useAppDispatch();

@@ -90,7 +90,7 @@ export const UserInformationComponent: React.FC<UserInformationProps> = ({
   } = useForm<any>({
     mode: "all",
     defaultValues: user
-      ? { ...user, role: { id: user.role.id }, referrerToken: referrerUrl(user.referrerToken) }
+      ? { ...user, role: { id: user?.role?.id }, referrerToken: referrerUrl(user.referrerToken) }
       : {
           id: 1,
           firstName: "",
