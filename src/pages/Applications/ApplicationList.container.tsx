@@ -39,22 +39,27 @@ import { useAppDispatch, useAppSelector } from "../../shared/redux/hooks";
 import Moment from "react-moment";
 import {
   Application,
+  assignOfficeAsync,
   fetchApplicationAsync,
   ManagedApplication,
-  setReferrerId,
-  updateApplicationAsync,
+  resetApplication,
+  setReferrerId
 } from "../../shared/redux/application.slice";
-import { findLatestStatus, findLatestStatusNote } from "../../shared/utils/find.application.status.util";
-import { Users } from "../../shared/redux/users.slice";
+import {
+  findLatestStatus,
+  findLatestStatusNote,
+} from "../../shared/utils/find.application.status.util";
+import { fetchUsersAsync, Users } from "../../shared/redux/users.slice";
 import { IRole } from "../../shared/redux/role.slice";
-import FilterDropdown, { Filter } from "../../shared/components/TableFilter.dialog";
+import FilterDropdown, {
+  Filter,
+} from "../../shared/components/TableFilter.dialog";
 import RefreshIcon from "@mui/icons-material/Refresh";
-import CreditCardIcon from '@mui/icons-material/CreditCard';
+import CreditCardIcon from "@mui/icons-material/CreditCard";
 import { ApplicationUser } from "../../shared/redux/application.user.slice";
 import { ApplicationFilters } from "../../shared/constants/UserFilters.constant";
 
 export const ApplicationListContainer: React.FC<any> = () => {
-
   const dispatch = useAppDispatch();
 
   const isSmallScreen = useMediaQuery("(max-width: 900px)");
@@ -115,9 +120,9 @@ export const ApplicationListContainer: React.FC<any> = () => {
 
   const [applications, setApplications] = useState<Application[]>([]);
 
-  const [isApplicationsLoading, setIsApplicationsLoading] = useState<boolean | undefined>(
-    false
-  );
+  const [isApplicationsLoading, setIsApplicationsLoading] = useState<
+    boolean | undefined
+  >(false);
 
   const applicationsList = useAppSelector((state): Applications | undefined => {
     return state?.applications;
@@ -131,9 +136,8 @@ export const ApplicationListContainer: React.FC<any> = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchApplicationsAsync({page: page, limit: rowsPerPage}));
-    // dispatch(fetchUsersAsync());
-    // dispatch(resetApplication());
+    dispatch(fetchApplicationsAsync({ page: page, limit: rowsPerPage }));
+    dispatch(resetApplication());
   }, []);
 
   useEffect(() => {
@@ -142,9 +146,8 @@ export const ApplicationListContainer: React.FC<any> = () => {
   }, [applicationsList]);
 
   useEffect(() => {
-    dispatch(fetchApplicationsAsync({page: page, limit: rowsPerPage}));
-  }, [dispatch,  page, rowsPerPage]);
-
+    dispatch(fetchApplicationsAsync({ page: page, limit: rowsPerPage }));
+  }, [dispatch, page, rowsPerPage]);
 
   const managedApplication = useAppSelector(
     (state): ManagedApplication | undefined => {
@@ -153,8 +156,8 @@ export const ApplicationListContainer: React.FC<any> = () => {
   );
 
   const currentUser = useAppSelector((state): ApplicationUser | undefined => {
-    return state.applicationUser
-  })
+    return state.applicationUser;
+  });
 
   const users = useAppSelector((state): Users | undefined => {
     return state?.users;
@@ -170,45 +173,35 @@ export const ApplicationListContainer: React.FC<any> = () => {
 
   const handleAssign = (officer: any) => {
     const { processingOfficer } = officer;
-    if (managedApplication) {
+    // if (managedApplication) {
       dispatch(
-        updateApplicationAsync({
-          ...managedApplication.application,
+        assignOfficeAsync({
+          applicationId: managedApplication?.application.applicationId,
           processingOfficerId: processingOfficer,
         })
       );
-    }
+    // }
+  };
+
+  const openAssignModel = async (applicationId: number | undefined) => {
+    setSelectedApplication(applicationId);
+    await Promise.all([
+      dispatch(fetchApplicationAsync({ applicationId: applicationId })),
+      dispatch(fetchUsersAsync({ page: 0, limit: 50 })),
+    ]);
+    setOpenAssign(true);
   };
 
   const handleNavigate = (applicationId: number) => {
     navigate(`/applications/${applicationId}`);
   };
 
-  useEffect(() => {
-    if (
-      !managedApplication?.isLoading &&
-      !managedApplication?.loadingFailed
-      // managedApplication?.loaded
-    ) {
-      setOpenAssign(true);
-    }
-
-    // if (!managedApplication?.loaded) {
-    //   setOpenAssign(false);
-    // }
-  }, [
-    managedApplication,
-    managedApplication?.isLoading,
-    managedApplication?.loadingFailed,
-    // managedApplication?.loaded,
-  ]);
-
   const handleRefresh = () => {
-    dispatch(fetchApplicationsAsync({page: page, limit: rowsPerPage}));
+    dispatch(fetchApplicationsAsync({ page: page, limit: rowsPerPage }));
   };
 
   const handleAdd = () => {
-    dispatch(setReferrerId(currentUser?.user?.referrerToken))
+    dispatch(setReferrerId(currentUser?.user?.referrerToken));
     navigate(`/apply`);
   };
 
@@ -228,9 +221,9 @@ export const ApplicationListContainer: React.FC<any> = () => {
           <Grid
             container
             size={{ xl: 4, lg: 6, md: 6, sm: 12, xs: 12 }}
-            spacing={{xl: 1, lg: 1, md: 1}}
+            spacing={{ xl: 1, lg: 1, md: 1 }}
           >
-            <Grid size={{xl:8, lg: 8, md: 8, sm: 10, xs: 10}}>
+            <Grid size={{ xl: 8, lg: 8, md: 8, sm: 10, xs: 10 }}>
               <Button
                 onClick={handleAdd}
                 variant="contained"
@@ -241,10 +234,13 @@ export const ApplicationListContainer: React.FC<any> = () => {
                 APPLICATION
               </Button>
             </Grid>
-            <Grid size={{xl:2, lg: 2, md: 2, sm: 1, xs: 1}}>
-              <FilterDropdown onFilter={(data: Filter) => setFilter(data)} filters={ApplicationFilters}/>
+            <Grid size={{ xl: 2, lg: 2, md: 2, sm: 1, xs: 1 }}>
+              <FilterDropdown
+                onFilter={(data: Filter) => setFilter(data)}
+                filters={ApplicationFilters}
+              />
             </Grid>
-            <Grid size={{xl:2, lg: 2, md: 2, sm:1, xs: 1}}>
+            <Grid size={{ xl: 2, lg: 2, md: 2, sm: 1, xs: 1 }}>
               <IconButton
                 onClick={handleRefresh}
                 sx={{
@@ -264,7 +260,7 @@ export const ApplicationListContainer: React.FC<any> = () => {
               </IconButton>
             </Grid>
           </Grid>
-          </Grid>
+        </Grid>
       </Grid>
       <Grid size={12} sx={{ marginTop: "10px" }}>
         {!isApplicationsLoading ? (
@@ -362,14 +358,9 @@ export const ApplicationListContainer: React.FC<any> = () => {
                           <Grid size={2}>
                             <IconButton
                               color="primary"
-                              onClick={() => {
-                                setSelectedApplication(row?.applicationId || 0);
-                                dispatch(
-                                  fetchApplicationAsync({
-                                    applicationId: row?.applicationId,
-                                  })
-                                );
-                              }}
+                              onClick={() =>
+                                openAssignModel(row?.applicationId)
+                              }
                             >
                               <AssignmentIcon />
                             </IconButton>
@@ -392,7 +383,7 @@ export const ApplicationListContainer: React.FC<any> = () => {
                 </TableBody>
               </Table>
             </TableContainer>
-           
+
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
               component="div"
@@ -405,22 +396,22 @@ export const ApplicationListContainer: React.FC<any> = () => {
           </Paper>
         ) : (
           <Backdrop
-          className="diagnose-loader"
-          sx={{
-            color: "primary.main",
-            marginRight: "20%",
-            position: "absolute",
-            inset: "0",
-            zIndex: "10",
-            backgroundColor: "primary.contrastText",
-          }}
-          open={true}
-        >
-          <CircularProgress
-            color="inherit"
-            sx={{ marginLeft: "250px", textAlign: "center" }}
-          />
-        </Backdrop>
+            className="diagnose-loader"
+            sx={{
+              color: "primary.main",
+              marginRight: "20%",
+              position: "absolute",
+              inset: "0",
+              zIndex: "10",
+              backgroundColor: "primary.contrastText",
+            }}
+            open={true}
+          >
+            <CircularProgress
+              color="inherit"
+              sx={{ marginLeft: "250px", textAlign: "center" }}
+            />
+          </Backdrop>
         )}
       </Grid>
       <Modal
@@ -446,9 +437,7 @@ export const ApplicationListContainer: React.FC<any> = () => {
             spacing={2}
             sx={{ marginTop: "10px" }}
           >
-            <Grid
-              size={{xl: 4, lg: 4, md: 4, sm: 12, xs: 12}}
-            >
+            <Grid size={{ xl: 4, lg: 4, md: 4, sm: 12, xs: 12 }}>
               <Button
                 onClick={() => {
                   handleDelete(selectedApplication || 0);
@@ -461,9 +450,7 @@ export const ApplicationListContainer: React.FC<any> = () => {
                 Delete
               </Button>
             </Grid>
-            <Grid
-               size={{xl: 4, lg: 4, md: 4, sm: 12, xs: 12}}
-            >
+            <Grid size={{ xl: 4, lg: 4, md: 4, sm: 12, xs: 12 }}>
               <Button
                 onClick={() => {
                   setOpenDelete(false);
@@ -529,7 +516,6 @@ export const ApplicationListContainer: React.FC<any> = () => {
                     {users &&
                       !users?.isLoading &&
                       users.users
-                        .filter((s) => s.role.role === IRole.processingOfficer)
                         .map((stateObj) => (
                           <MenuItem key={stateObj.email} value={stateObj.id}>
                             {`${stateObj.firstName} ${stateObj.lastName}`}
@@ -546,36 +532,38 @@ export const ApplicationListContainer: React.FC<any> = () => {
               )}
             </FormControl>
           </Grid>
-          <Grid size={12} container justifyContent={"flex-start"} spacing={2} sx={{marginTop: "10px"}}>
           <Grid
-           size={{xl: 4, lg: 4, md: 4, sm: 12, xs: 12}}
+            size={12}
+            container
+            justifyContent={"flex-start"}
+            spacing={2}
+            sx={{ marginTop: "10px" }}
           >
-            <Button
-              onClick={handleSubmit(handleAssign)}
-              variant="contained"
-              color="primary"
-              fullWidth
-              disabled={!isValid}
-              startIcon={<AssignmentIcon />}
-            >
-              Assign
-            </Button>
+            <Grid size={{ xl: 4, lg: 4, md: 4, sm: 12, xs: 12 }}>
+              <Button
+                onClick={handleSubmit(handleAssign)}
+                variant="contained"
+                color="primary"
+                fullWidth
+                disabled={!isValid}
+                startIcon={<AssignmentIcon />}
+              >
+                Assign
+              </Button>
+            </Grid>
+            <Grid size={{ xl: 4, lg: 4, md: 4, sm: 12, xs: 12 }}>
+              <Button
+                onClick={() => {
+                  setOpenAssign(false);
+                }}
+                variant="outlined"
+                fullWidth
+                startIcon={<CancelIcon />}
+              >
+                Cancel
+              </Button>
+            </Grid>
           </Grid>
-          <Grid
-            size={{xl: 4, lg: 4, md: 4, sm: 12, xs: 12}}
-          >
-            <Button
-              onClick={() => {
-                setOpenAssign(false);
-              }}
-              variant="outlined"
-              fullWidth
-              startIcon={<CancelIcon />}
-            >
-              Cancel
-            </Button>
-          </Grid>
-        </Grid>
         </Grid>
       </Modal>
     </Grid>

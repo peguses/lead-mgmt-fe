@@ -188,10 +188,10 @@ export const fetchApplicationAsync = createAsyncThunk(
   }
 );
 
-export const updateApplicationAsync = createAsyncThunk(
+export const assignOfficeAsync = createAsyncThunk(
   "managedApplication/updateApplication",
-  async (data: Application) => {
-    const response = await updateApplication(data?.applicationId || 0, data);
+  async (data: Application | any) => {
+    const response = await updateApplication(data?.applicationId || 0, { processingOfficerId: data.processingOfficerId });
     return {
       application: response.data as any,
     };
@@ -309,16 +309,16 @@ export const applicationSlice = createSlice({
       state.loadingFailed = true;
     });
 
-    builder.addCase(updateApplicationAsync.pending, (state) => {
+    builder.addCase(assignOfficeAsync.pending, (state) => {
       state.isLoading = true;
       state.loadingFailed = false;
     });
-    builder.addCase(updateApplicationAsync.fulfilled, (state, action) => {
+    builder.addCase(assignOfficeAsync.fulfilled, (state, action) => {
       state.application = action.payload.application;
       state.isLoading = false;
       state.loadingFailed = false;
     });
-    builder.addCase(updateApplicationAsync.rejected, (state) => {
+    builder.addCase(assignOfficeAsync.rejected, (state) => {
       state = { ...state };
       state.isLoading = false;
       state.loadingFailed = true;
