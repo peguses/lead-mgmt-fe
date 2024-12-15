@@ -114,6 +114,7 @@ export const ApplicationDrawerComponent: React.FC<any> = ({
           width: open ? 240 : 60,
           boxSizing: "border-box",
           overflowY: "clip",
+          backgroundColor: "white"
         },
       }}
       variant="persistent"

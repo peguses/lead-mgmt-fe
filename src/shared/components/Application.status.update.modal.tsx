@@ -63,7 +63,7 @@ export const ApplicationStatusUpdateModal: React.FC<
 
   const applicantsName = () => {
     const primaryApplicant = `${application?.primaryApplicant?.personalInformation?.firstName} ${application?.primaryApplicant?.personalInformation?.lastName}`;
-    const secondaryApplicant = `${application?.secondaryApplicant?.personalInformation?.firstName} ${application?.secondaryApplicant?.personalInformation?.lastName}`;
+    const secondaryApplicant = application?.secondaryApplicant ? `${application?.secondaryApplicant?.personalInformation?.firstName} ${application?.secondaryApplicant?.personalInformation?.lastName}` : "";
     return `${primaryApplicant} ${secondaryApplicant ? ` and ${secondaryApplicant}` : ""}`;
   };
 
