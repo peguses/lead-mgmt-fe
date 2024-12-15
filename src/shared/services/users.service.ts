@@ -18,7 +18,7 @@ export const createUser = async(data: User): Promise<AxiosResponse<User>> => {
 }
 
 export const dropUser = async(userId: number): Promise<AxiosResponse<any>> => {
-    return apiKit.delete(`/users/${userId}`);
+    return apiKit.patch(`/users/${userId}`);
 }
 
 export const updateUser = async(userId: number, data: User): Promise<AxiosResponse<User>> => {

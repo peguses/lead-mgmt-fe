@@ -15,8 +15,11 @@ export const fetchApplication = async ({applicationId, filterBy , filter}: Filer
     return apiKit.get(`/applications/${applicationId}`);
 }
 
-export const fetchApplications = async(): Promise<AxiosResponse<any>> => {
-    return apiKit.get("/applications")
+export const fetchApplications = async({page, limit, key, value}): Promise<AxiosResponse<any>> => {
+    if (key && value) {
+        return apiKit.get(`/applications?page=${page}&limit=${limit}&filterKey=${key}&filterValue=${value}`);
+    }
+    return apiKit.get(`/applications?page=${page}&limit=${limit}`);
 }
 
 export const dropApplication = async(applicationId: number): Promise<AxiosResponse<any>> => {

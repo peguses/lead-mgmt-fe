@@ -6,19 +6,29 @@ export interface Applications {
   isLoading: boolean;
   loadingFailed: boolean;
   applications: Application[];
+  pagination: any
+}
+
+export interface ApplicationsQuery {
+
+  page: number;
+  limit: number;
+  key?: string;
+  value?: any;
+
 }
 
 const INITIAL_STATE: Applications = {
   isLoading: false,
   loadingFailed: false,
   applications: [],
+  pagination: undefined
 };
 
 export const fetchApplicationsAsync = createAsyncThunk(
   "applications/fetchApplications",
-  async () => {
-    console.log("fetchApplicationsAsync")
-    const response = await fetchApplications();
+  async ({ page, limit, key, value }: ApplicationsQuery) => {
+    const response = await fetchApplications({ page, limit, key, value });
     return {
       applications: response.data as any,
     };
@@ -54,10 +64,10 @@ export const applicationsSlice = createSlice({
       state.loadingFailed = false;
     });
     builder.addCase(fetchApplicationsAsync.fulfilled, (state, action) => {
-      console.log(action.payload.applications);
       state.applications = action.payload.applications.data;
       state.isLoading = false;
       state.loadingFailed = false;
+      state.pagination = action.payload.applications.pagination;
     });
     builder.addCase(fetchApplicationsAsync.rejected, (state) => {
       state.applications = [];

@@ -4,7 +4,8 @@ import {
   FormHelperText,
   Grid2 as Grid,
   IconButton,
-  InputAdornment,
+  Backdrop,
+  CircularProgress,
   InputLabel,
   MenuItem,
   Modal,
@@ -18,7 +19,6 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-  TextField,
   Typography,
   useMediaQuery,
 } from "@mui/material";
@@ -27,7 +27,6 @@ import Paper from "@mui/material/Paper";
 import Visibility from "@mui/icons-material/Visibility";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AssignmentIcon from "@mui/icons-material/Assignment";
-import SearchIcon from "@mui/icons-material/Search";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -42,12 +41,16 @@ import {
   Application,
   fetchApplicationAsync,
   ManagedApplication,
-  resetApplication,
   updateApplicationAsync,
 } from "../../shared/redux/application.slice";
 import { findLatestStatus } from "../../shared/utils/find.application.status.util";
-import { fetchUsersAsync, Users } from "../../shared/redux/users.slice";
+import { Users } from "../../shared/redux/users.slice";
 import { IRole } from "../../shared/redux/role.slice";
+import FilterDropdown, { Filter } from "../../shared/components/TableFilter.dialog";
+import RefreshIcon from "@mui/icons-material/Refresh";
+import CreditCardIcon from '@mui/icons-material/CreditCard';
+import { ApplicationUser } from "../../shared/redux/application.user.slice";
+import { ApplicationFilters } from "../../shared/constants/UserFilters.constant";
 
 export const ApplicationListContainer: React.FC<any> = () => {
 
@@ -105,7 +108,20 @@ export const ApplicationListContainer: React.FC<any> = () => {
 
   const [openAssign, setOpenAssign] = useState<boolean>(false);
 
+  const [filter, setFilter] = useState<Filter>();
+
   const [selectedApplication, setSelectedApplication] = useState<number>();
+
+
+  const [applications, setApplications] = useState<Application[]>([]);
+
+  const [isApplicationsLoading, setIsApplicationsLoading] = useState<boolean | undefined>(
+    false
+  );
+
+  const applicationsList = useAppSelector((state): Applications | undefined => {
+    return state?.applications;
+  });
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -115,15 +131,20 @@ export const ApplicationListContainer: React.FC<any> = () => {
   };
 
   useEffect(() => {
-    console.log("fetchApplicationsAsync")
-    dispatch(fetchApplicationsAsync());
+    dispatch(fetchApplicationsAsync({page: page, limit: rowsPerPage}));
     // dispatch(fetchUsersAsync());
     // dispatch(resetApplication());
   }, []);
 
-  const applications = useAppSelector((state): Applications | undefined => {
-    return state?.applications;
-  });
+  useEffect(() => {
+    setApplications(applicationsList?.applications || []);
+    setIsApplicationsLoading(applicationsList?.isLoading);
+  }, [applicationsList]);
+
+  useEffect(() => {
+    dispatch(fetchApplicationsAsync({page: page, limit: rowsPerPage}));
+  }, [dispatch,  page, rowsPerPage]);
+
 
   const managedApplication = useAppSelector(
     (state): ManagedApplication | undefined => {
@@ -131,11 +152,16 @@ export const ApplicationListContainer: React.FC<any> = () => {
     }
   );
 
+  const currentUser = useAppSelector((state): ApplicationUser | undefined => {
+    return state.applicationUser
+  })
+
   const users = useAppSelector((state): Users | undefined => {
     return state?.users;
   });
 
   const handleChangePage = (event: unknown, newPage: number) => {
+    console.log(newPage)
     setPage(newPage);
   };
 
@@ -178,6 +204,14 @@ export const ApplicationListContainer: React.FC<any> = () => {
     // managedApplication?.loaded,
   ]);
 
+  const handleRefresh = () => {
+    dispatch(fetchApplicationsAsync({page: page, limit: rowsPerPage}));
+  };
+
+  const handleAdd = () => {
+    navigate(`/apply?referrerToken=${currentUser?.user?.referrerToken}`);
+  };
+
   return (
     <Grid container size={12}>
       <Grid container size={12} spacing={2}>
@@ -189,30 +223,51 @@ export const ApplicationListContainer: React.FC<any> = () => {
         <Grid
           container
           size={{ xl: 6, lg: 6, md: 6, sm: 12, xs: 12 }}
-          justifyContent={"end"}
+          justifyContent="flex-end"
         >
-          <Grid size={{ xl: 3, lg: 3, md: 6, sm: 12, xs: 12 }}>
-            <TextField
-              sx={{ justifySelf: "end" }}
-              label="Search"
-              variant="outlined"
-              size="small"
-              fullWidth
-              slotProps={{
-                input: {
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SearchIcon />
-                    </InputAdornment>
-                  ),
-                },
-              }}
-            />
+          <Grid
+            container
+            size={{ xl: 4, lg: 6, md: 6, sm: 12, xs: 12 }}
+            spacing={{xl: 1, lg: 1, md: 1}}
+          >
+            <Grid size={{xl:8, lg: 8, md: 8, sm: 10, xs: 10}}>
+              <Button
+                onClick={handleAdd}
+                variant="contained"
+                color="primary"
+                fullWidth
+                startIcon={<CreditCardIcon />}
+              >
+                APPLICATION
+              </Button>
+            </Grid>
+            <Grid size={{xl:2, lg: 2, md: 2, sm: 1, xs: 1}}>
+              <FilterDropdown onFilter={(data: Filter) => setFilter(data)} filters={ApplicationFilters}/>
+            </Grid>
+            <Grid size={{xl:2, lg: 2, md: 2, sm:1, xs: 1}}>
+              <IconButton
+                onClick={handleRefresh}
+                sx={{
+                  width: 36,
+                  height: 36,
+                  padding: 0,
+                  border: "2px solid",
+                  borderColor: "primary.main",
+                  borderRadius: 2,
+                  "&:hover": {
+                    backgroundColor: "rgba(0, 0, 0, 0.1)",
+                    borderColor: "#1E3A5F",
+                  },
+                }}
+              >
+                <RefreshIcon />
+              </IconButton>
+            </Grid>
           </Grid>
-        </Grid>
+          </Grid>
       </Grid>
       <Grid size={12} sx={{ marginTop: "10px" }}>
-        {!applications?.isLoading && (
+        {!isApplicationsLoading ? (
           <Paper sx={{ width: "100%", mb: 2 }}>
             <TableContainer>
               <Table sx={{ minWidth: 650 }} aria-label="lead table">
@@ -256,7 +311,7 @@ export const ApplicationListContainer: React.FC<any> = () => {
                   </StyledTableRow>
                 </TableHead>
                 <TableBody>
-                  {applications?.applications?.map((row) => (
+                  {applications?.map((row) => (
                     <StyledTableRow
                       key={row?.applicationId}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -340,13 +395,31 @@ export const ApplicationListContainer: React.FC<any> = () => {
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
               component="div"
-              count={applications?.applications.length || 0}
-              rowsPerPage={rowsPerPage}
-              page={page}
+              count={10}
+              rowsPerPage={rowsPerPage || 10}
+              page={page || 0}
               onPageChange={handleChangePage}
               onRowsPerPageChange={handleChangeRowsPerPage}
             />
           </Paper>
+        ) : (
+          <Backdrop
+          className="diagnose-loader"
+          sx={{
+            color: "primary.main",
+            marginRight: "20%",
+            position: "absolute",
+            inset: "0",
+            zIndex: "10",
+            backgroundColor: "primary.contrastText",
+          }}
+          open={true}
+        >
+          <CircularProgress
+            color="inherit"
+            sx={{ marginLeft: "250px", textAlign: "center" }}
+          />
+        </Backdrop>
         )}
       </Grid>
       <Modal

@@ -34,6 +34,7 @@ import RefreshIcon from "@mui/icons-material/Refresh";
 import { fetchRolesAsync, Roles } from "../../shared/redux/role.slice";
 import { findApplicationRole } from "../../shared/utils/find.application.role.util";
 import FilterDropdown, { Filter } from "../../shared/components/TableFilter.dialog";
+import { UserFilters } from "../../shared/constants/UserFilters.constant";
 
 export const UsersListContainer: React.FC<any> = () => {
 
@@ -56,7 +57,7 @@ export const UsersListContainer: React.FC<any> = () => {
   });
 
   const referrerUrl = (referrerToken?: string) =>{
-    return referrerToken ? `${window.location.origin}?referrerToken=${referrerToken}` : "";
+    return referrerToken ? `${window.location.origin}/apply?referrerToken=${referrerToken}` : "";
   }
 
 
@@ -171,7 +172,7 @@ export const UsersListContainer: React.FC<any> = () => {
               </Button>
             </Grid>
             <Grid size={{xl:2, lg: 2, md: 2, sm: 1, xs: 1}}>
-              <FilterDropdown onFilter={(data: Filter) => setFilter(data)}/>
+              <FilterDropdown onFilter={(data: Filter) => setFilter(data)} filters={UserFilters}/>
             </Grid>
             <Grid size={{xl:2, lg: 2, md: 2, sm:1, xs: 1}}>
               <IconButton
@@ -195,7 +196,7 @@ export const UsersListContainer: React.FC<any> = () => {
           </Grid>
         </Grid>
         <Grid size={12} sx={{ marginTop: "10px" }}>
-          {!isUsersLoading ?(
+          {!isUsersLoading ? (
             <Paper sx={{ width: "100%", mb: 2 }}>
               <TableContainer>
                 <Table sx={{ minWidth: 650 }} aria-label="lead table">
@@ -329,7 +330,7 @@ export const UsersListContainer: React.FC<any> = () => {
                 component="div"
                 count={usersList?.pagination?.total || 0}
                 rowsPerPage={rowsPerPage || 10}
-                page={Number(usersList?.pagination?.page || 0)}
+                page={page || 0}
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
               />

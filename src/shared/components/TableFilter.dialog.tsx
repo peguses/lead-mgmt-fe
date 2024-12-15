@@ -10,18 +10,23 @@ import {
 } from "@mui/material";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { Controller, useForm } from "react-hook-form";
-import { UserFilters } from "../constants/UserFilters.constant";
 
 export interface Filter {
     key: string
     value: any;
 }
 
-export interface FilterDropdownProps {
-    onFilter: (filter: Filter) => void
+export interface FilterOption {
+  key: string;
+  name: string;
 }
 
-export const FilterDropdown: React.FC<FilterDropdownProps> = ({onFilter}) => {
+export interface FilterDropdownProps {
+    onFilter: (filter: Filter) => void
+    filters: FilterOption[]
+}
+
+export const FilterDropdown: React.FC<FilterDropdownProps> = ({onFilter, filters}) => {
 
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -105,7 +110,7 @@ export const FilterDropdown: React.FC<FilterDropdownProps> = ({onFilter}) => {
                 <Autocomplete
                     size="small"
                   {...field}
-                  options={UserFilters}
+                  options={filters}
                   getOptionLabel={(filterKey) => filterKey.name}
                   onChange={(_, newValue) => field.onChange(newValue)}
                   renderInput={(params) => (
