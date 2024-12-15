@@ -35,5 +35,5 @@ export const createApplication = async(data: Application):Promise<AxiosResponse<
 }
 
 export const createStatus = (statusRequest: UpdateStatusRequest): Promise<AxiosResponse<any>> => {
-    return apiKit.post("/application-status", {...statusRequest})
+    return apiKit.post("/application-states", {...statusRequest})
 }

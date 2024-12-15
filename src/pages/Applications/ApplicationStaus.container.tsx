@@ -32,7 +32,7 @@ import { Controller, useForm } from "react-hook-form";
 import { FilterList } from "@mui/icons-material";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { useNavigate } from "react-router-dom";
-import { findLatestStatus } from "../../shared/utils/find.application.status.util";
+import { findLatestStatus, findStatus } from "../../shared/utils/find.application.status.util";
 import moment from "moment";
 import UploadIcon from "@mui/icons-material/Upload";
 import { FileUploadModal } from "../../shared/components/FileUpload.modal";
@@ -109,9 +109,11 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
   });
 
   const handleFilter = ({ filerKey, filterValue }) => {
-    dispatch(
-      fetchApplicationAsync({ filterBy: filerKey, filter: filterValue })
-    );
+    if (filerKey === "applicationId") {
+      dispatch(
+        fetchApplicationAsync({ applicationId: filterValue })
+      );
+    }
   };
 
   useEffect(() => {
@@ -139,7 +141,7 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
                 variant={"filled"}
                 fullWidth
                 value={
-                  findLatestStatus(application.application.applicationStatus)?.status.name
+                  findStatus(application.application.applicationStatus)?.status
                 }
                 disabled={true}
                 slotProps={{
@@ -165,7 +167,7 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
                   },
                 }}
                 value={moment(
-                  findLatestStatus(application.application.applicationStatus)
+                  findStatus(application.application.applicationStatus)
                     ?.createDateTime
                 ).format("yyyy-MM-DD:HH:hh")}
                 disabled={true}

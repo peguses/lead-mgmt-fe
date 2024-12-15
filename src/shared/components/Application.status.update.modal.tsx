@@ -10,14 +10,13 @@ import {
   TextField,
 } from "@mui/material";
 import { Application, createApplicationStatusAsync } from "../redux/application.slice";
-import { useAppSelector } from "../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { ApplicationStatues } from "../redux/application.status.slice";
 import { Controller, useForm } from "react-hook-form";
 import CheckCircle from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
-import { findLatestStatus, findLatestStatusNote } from "../utils/find.application.status.util";
+import { findStatus } from "../utils/find.application.status.util";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
 import { ApplicationUser } from "../redux/application.user.slice";
 
 interface ApplicationStatusUpdateModalProps {
@@ -32,7 +31,7 @@ export const ApplicationStatusUpdateModal: React.FC<
 
   const [defaultNote, setDefaultNote] = useState<string>();
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const currentUser = useAppSelector((state): ApplicationUser | undefined => {
     return state?.applicationUser;
@@ -74,16 +73,20 @@ export const ApplicationStatusUpdateModal: React.FC<
     return applicationStatuses?.applicationStatuses.find((status) => status.id === id)?.note
   }
 
-  const onSubmit = (data: any) => {
-    console.log(data)
-    dispatch(
-      createApplicationStatusAsync({
-        applicationId: 1,
-        statusId: 1,
-        userId: 1,
-        note: data?.note,
-      }: UpdateStatusRequest)
-    );
+  const onSubmit = async (data: any) => {
+    if (application?.applicationId && currentUser?.user?.id) {
+      await Promise.all([dispatch(
+        createApplicationStatusAsync({
+          applicationId: application?.applicationId,
+          statusId: data.status,
+          userId: currentUser?.user?.id,
+          note: data?.note,
+        })
+      )]);
+
+      onClose();
+
+    }
   };
 
   const applicantsName = () => {
@@ -123,7 +126,7 @@ export const ApplicationStatusUpdateModal: React.FC<
             size="small"
             fullWidth
             value={
-              findLatestStatus(application?.applicationStatus ?? [])
+              findStatus(application?.applicationStatus)?.status
             }
             disabled={true}
             label="Current status"
@@ -145,7 +148,7 @@ export const ApplicationStatusUpdateModal: React.FC<
             multiline
             rows={4}
             value={
-              findLatestStatusNote(application?.applicationStatus ?? [])
+              findStatus(application?.applicationStatus)?.note
             }
             disabled={true}
             label="Current note"

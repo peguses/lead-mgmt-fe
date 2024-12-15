@@ -194,7 +194,6 @@ export const fetchApplicationAsync = createAsyncThunk(
       filterBy,
       filter,
     });
-    console.log(response);
     return {
       application: response.data.data as any,
     };
@@ -322,7 +321,7 @@ export const applicationSlice = createSlice({
     },
 
     resetApplication: (state) => {
-      state = INITIAL_STATE;
+      state.application = INITIAL_STATE.application;
     },
 
     resetApplicationSubmitError: (state) => {
