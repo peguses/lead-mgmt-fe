@@ -171,7 +171,11 @@ export const ApplyViewContainer: React.FC<any> = () => {
   ]);
 
   const onPrimaryPersonalInformationSubmit = (data: PersonalInformation) => {
-    dispatch(setReferrerId(referrerToken ? referrerToken : ""));
+
+    if (referrerToken) {
+      dispatch(setReferrerId(referrerToken));
+    }
+
     dispatch(addOrUpdatePrimaryApplicantPersonalInformation(data));
     if (!jointLoan && forward) setActiveStep(1);
   };

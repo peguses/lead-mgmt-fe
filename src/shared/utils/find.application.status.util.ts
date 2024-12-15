@@ -1,5 +1,9 @@
 import { Status } from "../redux/application.slice";
 
-export const findLatestStatus = (status: Status[] | undefined) => {
-    return status ? [...status].sort((a, b) => new Date(b.createDateTime).getTime() - new Date(a.createDateTime).getTime())[0] : undefined;
+export const findLatestStatus = (status: Status[] | undefined): any => {
+    return status && status.length === 1 ? status[0].status : "";
+}
+
+export const findLatestStatusNote = (status: Status[] | undefined): string => {
+    return status && status.length === 1 ? status[0].note : "";
 }

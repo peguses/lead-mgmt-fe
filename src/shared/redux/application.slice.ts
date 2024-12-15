@@ -54,7 +54,7 @@ export interface Applicant {
 export interface Status {
   statusId: number
   note: string;
-  status: ApplicationStatus;
+  status: ApplicationStatus | string;
   userId: number;
   createDateTime: Date;
 }
@@ -181,8 +181,9 @@ export const fetchApplicationAsync = createAsyncThunk(
   async (props: any) => {
     const { applicationId, filterBy, filter } = props;
     const response = await fetchApplication({applicationId, filterBy, filter});
+    console.log(response);
     return {
-      application: response.data as any,
+      application: response.data.data as any,
     };
   }
 );

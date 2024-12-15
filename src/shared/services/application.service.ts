@@ -8,7 +8,7 @@ export interface Filer {
     filter?: string;
 }
 
-export const fetchApplication = async ({applicationId, filterBy , filter}: Filer): Promise <AxiosResponse<Application>> => {
+export const fetchApplication = async ({applicationId, filterBy , filter}: Filer): Promise <AxiosResponse<any>> => {
     if (filterBy && filter) {
         return apiKit.get(`/applications?${filterBy}=${filter}`);
     }

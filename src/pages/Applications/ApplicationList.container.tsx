@@ -41,9 +41,10 @@ import {
   Application,
   fetchApplicationAsync,
   ManagedApplication,
+  setReferrerId,
   updateApplicationAsync,
 } from "../../shared/redux/application.slice";
-import { findLatestStatus } from "../../shared/utils/find.application.status.util";
+import { findLatestStatus, findLatestStatusNote } from "../../shared/utils/find.application.status.util";
 import { Users } from "../../shared/redux/users.slice";
 import { IRole } from "../../shared/redux/role.slice";
 import FilterDropdown, { Filter } from "../../shared/components/TableFilter.dialog";
@@ -100,9 +101,9 @@ export const ApplicationListContainer: React.FC<any> = () => {
     clearErrors,
   } = useForm<any>();
 
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState<number>(0);
 
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState<number>(5);
 
   const [openDelete, setOpenDelete] = useState<boolean>(false);
 
@@ -111,7 +112,6 @@ export const ApplicationListContainer: React.FC<any> = () => {
   const [filter, setFilter] = useState<Filter>();
 
   const [selectedApplication, setSelectedApplication] = useState<number>();
-
 
   const [applications, setApplications] = useState<Application[]>([]);
 
@@ -161,7 +161,6 @@ export const ApplicationListContainer: React.FC<any> = () => {
   });
 
   const handleChangePage = (event: unknown, newPage: number) => {
-    console.log(newPage)
     setPage(newPage);
   };
 
@@ -209,7 +208,8 @@ export const ApplicationListContainer: React.FC<any> = () => {
   };
 
   const handleAdd = () => {
-    navigate(`/apply?referrerToken=${currentUser?.user?.referrerToken}`);
+    dispatch(setReferrerId(currentUser?.user?.referrerToken))
+    navigate(`/apply`);
   };
 
   return (
@@ -335,7 +335,7 @@ export const ApplicationListContainer: React.FC<any> = () => {
                         </StyledTableCell>
                       )}
                       <StyledTableCell align="left">
-                        {findLatestStatus(row?.applicationStatus)?.status?.name}
+                        {findLatestStatus(row?.applicationStatus)}
                       </StyledTableCell>
                       {!isSmallScreen && (
                         <StyledTableCell align="left">
@@ -345,7 +345,7 @@ export const ApplicationListContainer: React.FC<any> = () => {
                         </StyledTableCell>
                       )}
                       <StyledTableCell align="left">
-                        {findLatestStatus(row?.applicationStatus)?.note}
+                        {findLatestStatusNote(row?.applicationStatus)}
                       </StyledTableCell>
                       <StyledTableCell align="right" sx={{ minWidth: "200px" }}>
                         <Grid container spacing={1} justifyContent="flex-end">
@@ -392,12 +392,13 @@ export const ApplicationListContainer: React.FC<any> = () => {
                 </TableBody>
               </Table>
             </TableContainer>
+           
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
               component="div"
-              count={10}
-              rowsPerPage={rowsPerPage || 10}
-              page={page || 0}
+              count={Number(applicationsList?.pagination?.total)}
+              rowsPerPage={rowsPerPage}
+              page={page}
               onPageChange={handleChangePage}
               onRowsPerPageChange={handleChangeRowsPerPage}
             />

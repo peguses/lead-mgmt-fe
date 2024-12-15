@@ -98,8 +98,9 @@ export const ApplicationStatusUpdateModal: React.FC<
             size="small"
             fullWidth
             value={
-              findLatestStatus(application?.applicationStatus ?? [])?.status
-                .name
+              ""
+              // findLatestStatus(application?.applicationStatus ?? [])?.status
+              //   .name
             }
             disabled={true}
             label="Current status"
@@ -121,7 +122,8 @@ export const ApplicationStatusUpdateModal: React.FC<
             multiline
             rows={4}
             value={
-              findLatestStatus(application?.applicationStatus ?? [])?.note
+              ""
+              // findLatestStatus(application?.applicationStatus ?? [])?.note
             }
             disabled={true}
             label="Current note"
