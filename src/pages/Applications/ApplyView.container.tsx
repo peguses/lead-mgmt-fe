@@ -244,6 +244,9 @@ export const ApplyViewContainer: React.FC<any> = () => {
   };
 
   const handleBack = () => {
+    setPersonalInfoStateUUID("1");
+    setFinancialInfoStateUUID("1");
+    setGeneralInfoStateUUID("1");
     if (isStepCompleted(2)) {
       handleStateOnlySubmit();
     }
