@@ -21,6 +21,8 @@ import React from "react";
 import { NumericFormatWrapper } from "./NumericFormatWrapper";
 
 interface FinancialInformationProps {
+  onState?: (data: any) => void;
+  stateNotification?: string;
   applicant: string;
   onSubmit?: (data: any) => void;
   readonly?: boolean;
@@ -34,6 +36,8 @@ const FinancialInformationTab: React.FC<FinancialInformationProps> = ({
   readonly = false,
   nextNotification,
   allowNext,
+  onState,
+  stateNotification
 }: FinancialInformationProps) => {
   const financialInformation = useAppSelector(
     (state): FinancialInformation | undefined => {
@@ -93,7 +97,6 @@ const FinancialInformationTab: React.FC<FinancialInformationProps> = ({
   }, [financialInformation]);
 
   const transformData = (data: any): FinancialInformation => {
-    console.log(data);
     return {
       ...data,
       annualIncome: data?.annualIncome
@@ -144,6 +147,15 @@ const FinancialInformationTab: React.FC<FinancialInformationProps> = ({
       })();
     }
   }, [nextNotification]);
+
+
+  useEffect(() => {
+    if (!readonly && onState && stateNotification !== "1") {
+      handleSubmit((data) => {
+        onState(transformData(data));
+      })();
+    }
+  }, [stateNotification]);
 
   const applicantText = (code: string) => {
     return code === "primaryApplicant"

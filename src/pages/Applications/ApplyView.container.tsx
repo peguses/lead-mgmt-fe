@@ -58,6 +58,8 @@ export const ApplyViewContainer: React.FC<any> = () => {
 
   const [financialInfoStateUUID, setFinancialInfoStateUUID] = useState("1");
 
+  const [financialInfoStateOnlyUUID, setFinancialInfoStateOnlyUUID] = useState("1");
+
   const [generalInfoStateUUID, setGeneralInfoStateUUID] = useState("1");
 
   const [generalInfoStateOnlyUUID, setGeneralInfoStateOnlyUUID] = useState("1")
@@ -226,6 +228,15 @@ export const ApplyViewContainer: React.FC<any> = () => {
     dispatch(addOrUpdateGeneralInformation(data));
   };
 
+  const onPrimaryApplicantFinancialInfoState = (data: PersonalInformation) => {
+    dispatch(addOrUpdatePrimaryApplicantFinancialInformation(data));
+
+  };
+
+  const onSecondaryApplicantFinancialInfoState = (data: FinancialInformation) => {
+    dispatch(addOrUpdateSecondaryApplicantFinancialInformation(data));
+  };
+
   const handleSingleApplication = () => {
     setJointLoan(false);
     dispatch(setJoinLoanApplication(false));
@@ -250,6 +261,11 @@ export const ApplyViewContainer: React.FC<any> = () => {
     if (isStepCompleted(2)) {
       handleStateOnlySubmit();
     }
+
+    if (isStepCompleted(1)) {
+      setFinancialInfoStateOnlyUUID(uuidv4());
+    }
+
     setActiveStep(backStep());
     setForward(false);
     setBack(true);
@@ -462,8 +478,9 @@ export const ApplyViewContainer: React.FC<any> = () => {
                       applicant={"primaryApplicant"}
                       onSubmit={(data) => onPrimaryFinancialInfoSubmit(data)}
                       nextNotification={financialInfoStateUUID}
-                      allowNext={(allow: boolean) => {}}
-                    />
+                      allowNext={(allow: boolean) => { } } 
+                      onState={(data) =>onPrimaryApplicantFinancialInfoState(data)} 
+                      stateNotification={financialInfoStateOnlyUUID}/>
                   </Grid>
                   <Grid size={{ xl: 6, lg: 6, md: 6, sm: 12, xs: 12 }}>
                     <FinancialInformationTab
@@ -473,19 +490,23 @@ export const ApplyViewContainer: React.FC<any> = () => {
                       allowNext={(allow: boolean) => {
                         setAllowNextStep(allow);
                         setCompletedStep(1, allow);
-                      }}
-                    />
+                      }} 
+                      onState={(data) =>onSecondaryApplicantFinancialInfoState(data)} 
+                      stateNotification={financialInfoStateOnlyUUID}  
+                      />
                   </Grid>
                 </Grid>
               ) : (
                 <FinancialInformationTab
-                  applicant={"primaryApplicant"}
-                  onSubmit={(data) => onPrimaryFinancialInfoSubmit(data)}
-                  nextNotification={financialInfoStateUUID}
-                  allowNext={(allow: boolean) => {
-                    setAllowNextStep(allow);
-                    setCompletedStep(1, allow);
-                  }}
+                    applicant={"primaryApplicant"}
+                    onSubmit={(data) => onPrimaryFinancialInfoSubmit(data)}
+                    nextNotification={financialInfoStateUUID}
+                    allowNext={(allow: boolean) => {
+                      setAllowNextStep(allow);
+                      setCompletedStep(1, allow);
+                    } } 
+                    onState={(data) =>onPrimaryApplicantFinancialInfoState(data)} 
+                    stateNotification={financialInfoStateOnlyUUID}
                 />
               )}
               <Grid container justifyContent={"end"}>
