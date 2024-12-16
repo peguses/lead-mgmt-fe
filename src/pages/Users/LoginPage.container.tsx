@@ -6,7 +6,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
@@ -42,7 +42,7 @@ export const LoginPageContainer: React.FC<any> = () => {
     },
     "& .MuiInputLabel-root": {
       color: "rgba(255, 255, 255, 0.7)",
-    },  
+    },
     "& .MuiInputLabel-root.Mui-focused": {
       color: "rgba(255, 255, 255, 1)",
     },
@@ -63,10 +63,16 @@ export const LoginPageContainer: React.FC<any> = () => {
   });
 
   const {
-    register,
     handleSubmit,
+    control,
     formState: { errors, isValid },
-  } = useForm<any>();
+  } = useForm<any>({
+    mode: "onSubmit",
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -92,7 +98,6 @@ export const LoginPageContainer: React.FC<any> = () => {
         alignItems="center"
         justifyContent="center"
         height="calc(100vh - 200px)"
-        // sx={{ backgroundColor: "blue" }}
       >
         <Grid
           size={{ xl: 4, lg: 6, md: 6, sm: 12, xs: 12 }}
@@ -100,7 +105,6 @@ export const LoginPageContainer: React.FC<any> = () => {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            // padding: 2,
             borderRadius: 4,
             boxShadow: 3,
             height: "100%",
@@ -114,7 +118,6 @@ export const LoginPageContainer: React.FC<any> = () => {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              // backgroundColor: "white",
               height: "100%",
               backgroundColor: "#1E3A5F",
             }}
@@ -139,80 +142,130 @@ export const LoginPageContainer: React.FC<any> = () => {
                 </Alert>
               )}
               <Grid size={12}>
-                <StyledTextField
-                  variant={"outlined"}
-                  fullWidth
-                  size="small"
-                  label="Email"
-                  {...register("email", {
+                <Controller
+                  name="email"
+                  control={control}
+                  rules={{
                     required: "Email is required",
                     pattern: {
                       value: /\S+@\S+\.\S+/,
                       message: "Entered value does not match email format",
                     },
-                  })}
-                  error={!!errors.email}
-                  helperText={errors.email ? String(errors.email.message) : ""}
-                  placeholder={"Email"}
-                  slotProps={{
-                    input: {
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <EmailOutlinedIcon sx={{ color: "white" }} />
-                        </InputAdornment>
-                      ),
-                      sx: {
-                        marginTop: "20px",
-                        color: "white",
-                        fontWeight: 700,
-                        userSelect: "none",
-                      },
-                    },
                   }}
+                  render={({ field }) => (
+                    <StyledTextField
+                      {...field}
+                      variant={"outlined"}
+                      fullWidth
+                      size="small"
+                      label="Email"
+                      error={!!errors.email}
+                      helperText={
+                        errors.email ? String(errors.email.message) : ""
+                      }
+                      placeholder={"Email"}
+                      slotProps={{
+                        input: {
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <EmailOutlinedIcon sx={{ color: "white" }} />
+                            </InputAdornment>
+                          ),
+                          sx: {
+                            marginTop: "20px",
+                            color: "white",
+                            fontWeight: 700,
+                            // userSelect: "none",
+                          },
+                        },
+                      }}
+                    />
+                  )}
                 />
               </Grid>
               <Grid size={12}>
-                <StyledTextField
-                  type={showPassword ? "text" : "password"}
-                  variant={"outlined"}
-                  fullWidth
-                  size="small"
-                  label="Password"
-                  {...register("password", {
+                <Controller
+                  name="password"
+                  control={control}
+                  rules={{
                     required: "Password is required",
-                  })}
-                  error={!!errors.password}
-                  placeholder={"Password"}
-                  autoComplete="off"
-                  // tabIndex={0}
-                  slotProps={{
-                    input: {
-                      endAdornment: (
-                        <InputAdornment
-                          position="end"
-                          // onClick={handleClickShowPassword}
-                        >
-                          <div onClick={handleClickShowPassword}>
-                            {showPassword ? (
-                              <Visibility sx={{ color: "white" }} />
-                            ) : (
-                              <VisibilityOff sx={{ color: "white" }} />
-                            )}
-                          </div>
-                        </InputAdornment>
-                      ),
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <KeyIcon sx={{ color: "white" }} />
-                        </InputAdornment>
-                      ),
-                      sx: {
-                        marginTop: "20px",
-                        fontWeight: 700,
-                        color: "white",
-                      },
-                    },
                   }}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      type={showPassword ? "text" : "password"}
+                      variant={"outlined"}
+                      fullWidth
+                      size="small"
+                      label="Password"
+                      error={!!errors.password}
+                      placeholder={"Password"}
+                      autoComplete="off"
+                      tabIndex={-1}
+                      slotProps={{
+                        input: {
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <div onClick={handleClickShowPassword}>
+                                {showPassword ? (
+                                  <Visibility sx={{ color: "white" }} />
+                                ) : (
+                                  <VisibilityOff sx={{ color: "white" }} />
+                                )}
+                              </div>
+                            </InputAdornment>
+                          ),
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <KeyIcon sx={{ color: "white" }} />
+                            </InputAdornment>
+                          ),
+                          sx: {
+                            marginTop: "20px",
+                            fontWeight: 700,
+                            color: "white",
+                          },
+                        },
+                      }}
+                      // Styled Text filed not has tab issue need investigation
+                      sx={{
+                        ".MuiInputLabel-outlined": {
+                          lineHeight: "70px",
+                        },
+                        "& .MuiOutlinedInput-root": {
+                          "& fieldset": {
+                            borderColor: "rgba(255, 255, 255, 0.5)",
+                          },
+                          "&:hover fieldset": {
+                            borderColor: "rgba(255, 255, 255, 0.7)",
+                          },
+                          "&.Mui-focused fieldset": {
+                            borderColor: "rgba(255, 255, 255, 1)",
+                          },
+                        },
+                        "& .MuiInputLabel-root": {
+                          color: "rgba(255, 255, 255, 0.7)",
+                        },
+                        "& .MuiInputLabel-root.Mui-focused": {
+                          color: "rgba(255, 255, 255, 1)",
+                        },
+                        "& .MuiInputBase-input": {
+                          backgroundColor: "#6e6f6f",
+                        },
+                        "& .MuiOutlinedInput-root.Mui-error": {
+                          "& fieldset": {
+                            borderColor: "#f28f8f",
+                          },
+                        },
+                        "& .MuiInputLabel-root.Mui-error": {
+                          color: "#f28f8f",
+                        },
+                        "& .MuiFormHelperText-root.Mui-error": {
+                          color: "#f28f8f",
+                        },
+                      }}
+                    />
+                  )}
                 />
               </Grid>
               <Grid container spacing={2} sx={{ marginTop: "20px" }}>

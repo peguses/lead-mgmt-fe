@@ -50,7 +50,7 @@ export const ApplicationFooterComponent: React.FC<any> = () => {
               <span style={{ fontSize: "16px", marginRight: "2px" }}>
                 &copy;
               </span>
-              Brand. Inc
+              Fenix Capital
             </Typography>
             <Typography
               component={Link}
