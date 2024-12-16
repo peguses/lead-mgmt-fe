@@ -16,6 +16,7 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useState } from "react";
 import { loginAsync } from "../../shared/redux/application.user.slice";
 import { useAppDispatch } from "../../shared/redux/hooks";
+import styled from "@emotion/styled";
 
 export const LoginPageContainer: React.FC<any> = () => {
   const dispatch = useAppDispatch();
@@ -23,6 +24,43 @@ export const LoginPageContainer: React.FC<any> = () => {
   const navigate = useNavigate();
 
   const [message, setMessage] = useState<string | undefined>();
+
+  const StyledTextField = styled(TextField)({
+    ".MuiInputLabel-outlined": {
+      lineHeight: "70px",
+    },
+    "& .MuiOutlinedInput-root": {
+      "& fieldset": {
+        borderColor: "rgba(255, 255, 255, 0.5)",
+      },
+      "&:hover fieldset": {
+        borderColor: "rgba(255, 255, 255, 0.7)",
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "rgba(255, 255, 255, 1)",
+      },
+    },
+    "& .MuiInputLabel-root": {
+      color: "rgba(255, 255, 255, 0.7)",
+    },  
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "rgba(255, 255, 255, 1)",
+    },
+    "& .MuiInputBase-input": {
+      backgroundColor: "#6e6f6f",
+    },
+    "& .MuiOutlinedInput-root.Mui-error": {
+      "& fieldset": {
+        borderColor: "#f28f8f",
+      },
+    },
+    "& .MuiInputLabel-root.Mui-error": {
+      color: "#f28f8f",
+    },
+    "& .MuiFormHelperText-root.Mui-error": {
+      color: "#f28f8f",
+    },
+  });
 
   const {
     register,
@@ -54,7 +92,7 @@ export const LoginPageContainer: React.FC<any> = () => {
         alignItems="center"
         justifyContent="center"
         height="calc(100vh - 200px)"
-        sx={{ backgroundColor: "#" }}
+        // sx={{ backgroundColor: "blue" }}
       >
         <Grid
           size={{ xl: 4, lg: 6, md: 6, sm: 12, xs: 12 }}
@@ -62,8 +100,8 @@ export const LoginPageContainer: React.FC<any> = () => {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            padding: 2,
-            borderRadius: 2,
+            // padding: 2,
+            borderRadius: 4,
             boxShadow: 3,
             height: "100%",
           }}
@@ -76,16 +114,22 @@ export const LoginPageContainer: React.FC<any> = () => {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              backgroundColor: "white",
+              // backgroundColor: "white",
               height: "100%",
+              backgroundColor: "#1E3A5F",
             }}
           >
-            <Grid size={12}>
-              <Typography id="modal-modal-title" variant="h6" component="h2">
+            <Grid size={10}>
+              <Typography
+                id="modal-modal-title"
+                variant="h6"
+                component="h2"
+                sx={{ color: "white", fontWeight: 700 }}
+              >
                 Login
               </Typography>
             </Grid>
-            <Grid size={12}>
+            <Grid size={10}>
               {message && (
                 <Alert
                   severity="error"
@@ -95,7 +139,7 @@ export const LoginPageContainer: React.FC<any> = () => {
                 </Alert>
               )}
               <Grid size={12}>
-                <TextField
+                <StyledTextField
                   variant={"outlined"}
                   fullWidth
                   size="small"
@@ -114,23 +158,21 @@ export const LoginPageContainer: React.FC<any> = () => {
                     input: {
                       startAdornment: (
                         <InputAdornment position="start">
-                          <EmailOutlinedIcon />
+                          <EmailOutlinedIcon sx={{ color: "white" }} />
                         </InputAdornment>
                       ),
                       sx: {
                         marginTop: "20px",
+                        color: "white",
+                        fontWeight: 700,
+                        userSelect: "none",
                       },
-                    },
-                  }}
-                  sx={{
-                    ".MuiInputLabel-outlined": {
-                      lineHeight: "70px",
                     },
                   }}
                 />
               </Grid>
               <Grid size={12}>
-                <TextField
+                <StyledTextField
                   type={showPassword ? "text" : "password"}
                   variant={"outlined"}
                   fullWidth
@@ -141,36 +183,39 @@ export const LoginPageContainer: React.FC<any> = () => {
                   })}
                   error={!!errors.password}
                   placeholder={"Password"}
+                  autoComplete="off"
+                  // tabIndex={0}
                   slotProps={{
                     input: {
                       endAdornment: (
                         <InputAdornment
                           position="end"
-                          onClick={handleClickShowPassword}
+                          // onClick={handleClickShowPassword}
                         >
                           <div onClick={handleClickShowPassword}>
-                            {showPassword ? <Visibility /> : <VisibilityOff />}
+                            {showPassword ? (
+                              <Visibility sx={{ color: "white" }} />
+                            ) : (
+                              <VisibilityOff sx={{ color: "white" }} />
+                            )}
                           </div>
                         </InputAdornment>
                       ),
                       startAdornment: (
                         <InputAdornment position="start">
-                          <KeyIcon />
+                          <KeyIcon sx={{ color: "white" }} />
                         </InputAdornment>
                       ),
                       sx: {
                         marginTop: "20px",
+                        fontWeight: 700,
+                        color: "white",
                       },
-                    },
-                  }}
-                  sx={{
-                    ".MuiInputLabel-outlined": {
-                      lineHeight: "70px",
                     },
                   }}
                 />
               </Grid>
-              <Grid container spacing={2} sx={{ marginTop: "10px" }}>
+              <Grid container spacing={2} sx={{ marginTop: "20px" }}>
                 <Grid size={12}>
                   <Button
                     onClick={handleSubmit(login)}
@@ -178,6 +223,20 @@ export const LoginPageContainer: React.FC<any> = () => {
                     color="primary"
                     fullWidth
                     disabled={!isValid}
+                    sx={{
+                      backgroundColor: "#abccf7",
+                      color: "#1E3A5F",
+                      "&:hover": {
+                        backgroundColor: "#91a5bf",
+                      },
+                      "&.Mui-disabled": {
+                        backgroundColor: "#6e6f6f",
+                        color: "#ffffff",
+                        "&:hover": {
+                          backgroundColor: "#555757",
+                        },
+                      },
+                    }}
                     startIcon={<AssignmentIcon />}
                   >
                     Login

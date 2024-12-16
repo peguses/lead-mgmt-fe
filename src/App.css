@@ -19,6 +19,10 @@
   padding: 0 16px;
 }
 
+.MuiTextField-root input {
+  user-select: none;
+}
+
 
 html, body {
   height: 100%;           /* Ensure that the body and html take full height */

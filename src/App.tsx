@@ -68,10 +68,11 @@ function App() {
           sx={{
             flexGrow: 1,
             bgcolor: "background.default",
-            p: 3,
-            marginTop: "74px",
-            marginBottom: "74px",
+            padding: "24px 24px 48px 24px;",
+            marginTop: "64px",
+            marginBottom: "64px",
             zIndex: 0,
+            // backgroundColor: "blue"
           }}
         >
           <Routes>
