@@ -146,7 +146,7 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
     console.log(applicationId)
     handleFilter({filerKey: "applicationId", filterValue: applicationId})
 
-  },[])
+  },[applicationId])
 
   return (
     <>

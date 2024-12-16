@@ -50,7 +50,18 @@ export const PersonalInformationTab: React.FC<PersonalInformationProps> = ({
   } = useForm<any>({
     mode: "onSubmit",
     defaultValues: applicantInformation
-      ? applicantInformation
+      ? {
+          ...applicantInformation,
+          firstTimeBuyer: applicantInformation.firstTimeBuyer
+            ? "true"
+            : "false",
+          stateCapitalCityBuyer: applicantInformation.stateCapitalCityBuyer
+            ? "true"
+            : "false",
+          buyerAgreedToConnectWithAgent: applicantInformation.buyerAgreedToConnectWithAgent
+            ? "true"
+            : "false",
+        }
       : {
           firstName: "",
           lastName: "",
@@ -387,7 +398,9 @@ export const PersonalInformationTab: React.FC<PersonalInformationProps> = ({
               {...field}
               row
               name="firstTimeBuyer"
-              defaultValue={true}
+              defaultValue={
+                applicantInformation?.firstTimeBuyer ? "true" : "false"
+              }
               onChange={(e) => {
                 clearErrors("firstTimeBuyer");
                 field.onChange(e);
@@ -427,7 +440,9 @@ export const PersonalInformationTab: React.FC<PersonalInformationProps> = ({
             <RadioGroup
               {...field}
               row
-              defaultValue={false}
+              defaultValue={
+                applicantInformation?.stateCapitalCityBuyer ? "true" : "false"
+              }
               name="stateCapitalCityBuyer"
               onChange={(e) => {
                 clearErrors("stateCapitalCityBuyer");
@@ -468,7 +483,11 @@ export const PersonalInformationTab: React.FC<PersonalInformationProps> = ({
             <RadioGroup
               {...field}
               row
-              defaultValue={false}
+              defaultValue={
+                applicantInformation?.buyerAgreedToConnectWithAgent
+                  ? "true"
+                  : "false"
+              }
               name="buyerAgreedToConnectWithAgent"
               onChange={(e) => {
                 clearErrors("buyerAgreedToConnectWithAgent");

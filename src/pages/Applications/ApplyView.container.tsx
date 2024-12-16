@@ -60,6 +60,8 @@ export const ApplyViewContainer: React.FC<any> = () => {
 
   const [generalInfoStateUUID, setGeneralInfoStateUUID] = useState("1");
 
+  const [generalInfoStateOnlyUUID, setGeneralInfoStateOnlyUUID] = useState("1")
+
   const location = useLocation();
 
   const queryParams = new URLSearchParams(location.search);
@@ -120,6 +122,10 @@ export const ApplyViewContainer: React.FC<any> = () => {
     setGeneralInfoStateUUID(uuidv4());
   };
 
+  const handleStateOnlySubmit = () => {
+    setGeneralInfoStateOnlyUUID(uuidv4());
+  };
+
   const setCompletedStep = (step: number, state: boolean) => {
     const steps = completed.map((s: Step) => {
       if (s.id === step) {
@@ -175,6 +181,7 @@ export const ApplyViewContainer: React.FC<any> = () => {
     if (referrerToken) {
       dispatch(setReferrerId(referrerToken));
     }
+
     dispatch(addOrUpdatePrimaryApplicantPersonalInformation(data));
     if (!jointLoan && forward) setActiveStep(1);
   };
@@ -185,7 +192,6 @@ export const ApplyViewContainer: React.FC<any> = () => {
   };
 
   const onPrimaryFinancialInfoSubmit = (data: FinancialInformation) => {
-    console.log(data);
     dispatch(addOrUpdatePrimaryApplicantFinancialInformation(data));
     if (!jointLoan && forward) setActiveStep(2);
   };
@@ -216,6 +222,10 @@ export const ApplyViewContainer: React.FC<any> = () => {
     }
   };
 
+  const onGeneralInfoInfoState = (data: GeneralInformation) => {
+    dispatch(addOrUpdateGeneralInformation(data));
+  };
+
   const handleSingleApplication = () => {
     setJointLoan(false);
     dispatch(setJoinLoanApplication(false));
@@ -234,6 +244,9 @@ export const ApplyViewContainer: React.FC<any> = () => {
   };
 
   const handleBack = () => {
+    if (isStepCompleted(2)) {
+      handleStateOnlySubmit();
+    }
     setActiveStep(backStep());
     setForward(false);
     setBack(true);
@@ -388,12 +401,10 @@ export const ApplyViewContainer: React.FC<any> = () => {
                   <Grid size={{ xl: 6, lg: 6, md: 6, sm: 12, xs: 12 }}>
                     <PersonalInformationTab
                       applicant={"primaryApplicant"}
-                      onSubmit={(data) =>
-                        onPrimaryPersonalInformationSubmit(data)
-                      }
+                      onSubmit={(data) => onPrimaryPersonalInformationSubmit(data)}
                       nextNotification={personalInfoStateUUID}
-                      allowNext={(allow: boolean) => {}}
-                    />
+                      allowNext={(allow: boolean) => { } } 
+                 />
                   </Grid>
                   <Grid size={{ xl: 6, lg: 6, md: 6, sm: 12, xs: 12 }}>
                     <PersonalInformationTab
@@ -497,6 +508,8 @@ export const ApplyViewContainer: React.FC<any> = () => {
             <Fragment>
               <GeneralInformationTab
                 onSubmit={(data) => onGeneralInfoInfoSubmit(data)}
+                onState={(data) => onGeneralInfoInfoState(data)}
+                stateNotification={generalInfoStateOnlyUUID}
                 nextNotification={generalInfoStateUUID}
                 allowNext={(allow: boolean) => {
                   setAllowNextStep(allow);

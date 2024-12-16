@@ -51,7 +51,18 @@ const FinancialInformationTab: React.FC<FinancialInformationProps> = ({
   } = useForm<any>({
     mode: "onSubmit",
     defaultValues: financialInformation
-      ? financialInformation
+      ? {
+          ...financialInformation,
+          parentWillBeGuarantors: financialInformation.parentWillBeGuarantors
+            ? "true"
+            : "false",
+          wereBankrupted: financialInformation.wereBankrupted
+            ? "true"
+            : "false",
+          hasDefaulted: financialInformation.hasDefaulted
+            ? "true"
+            : "false",
+        }
       : {
           annualIncome: undefined,
           lengthOfEmployment: undefined,
@@ -78,9 +89,7 @@ const FinancialInformationTab: React.FC<FinancialInformationProps> = ({
   const [hasDefaulted, setHasDefaulted] = useState<boolean>(false);
 
   useEffect(() => {
-    setHasDefaulted(
-      financialInformation?.hasDefaulted || false
-    );
+    setHasDefaulted(financialInformation?.hasDefaulted || false);
   }, [financialInformation]);
 
   const transformData = (data: any): FinancialInformation => {
@@ -289,7 +298,9 @@ const FinancialInformationTab: React.FC<FinancialInformationProps> = ({
             <RadioGroup
               {...field}
               row
-              defaultValue={false}
+              defaultValue={
+                financialInformation?.parentWillBeGuarantors ? "true" : "false"
+              }
               name="parentWillBeGuarantors"
               onChange={(e) => {
                 clearErrors("parentWillBeGuarantors");
@@ -687,7 +698,9 @@ const FinancialInformationTab: React.FC<FinancialInformationProps> = ({
             <RadioGroup
               {...field}
               row
-              defaultValue=""
+              defaultValue={
+                financialInformation?.wereBankrupted ? "true" : "false"
+              }
               name="wereBankrupted"
               onChange={(e) => {
                 clearErrors("wereBankrupted");
@@ -728,7 +741,9 @@ const FinancialInformationTab: React.FC<FinancialInformationProps> = ({
             <RadioGroup
               {...field}
               row
-              defaultValue={true}
+              defaultValue={
+                financialInformation?.wereBankrupted ? "true" : "false"
+              }
               name="hasDefaulted"
               onChange={(e: any) => {
                 clearErrors("hasDefaulted");

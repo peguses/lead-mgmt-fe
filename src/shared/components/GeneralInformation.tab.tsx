@@ -19,14 +19,19 @@ import React from "react";
 import { NumericFormatWrapper } from "./NumericFormatWrapper";
 
 interface GeneralInformationProps {
+  onState?: (data: any) => void;
+  stateNotification?: string;
   onSubmit?: (data: any) => void;
-  readonly?: boolean;
   nextNotification?: string;
   allowNext?: (allow: boolean) => void;
   alert: string | undefined;
+  readonly?: boolean;
+
 }
 
 const GeneralInformationTab: React.FC<GeneralInformationProps> = ({
+  onState,
+  stateNotification,
   onSubmit,
   readonly = false,
   nextNotification,
@@ -52,7 +57,15 @@ const GeneralInformationTab: React.FC<GeneralInformationProps> = ({
   } = useForm<any>({
     mode: "onSubmit",
     defaultValues: generalInformation
-      ? generalInformation
+      ? {
+          ...generalInformation,
+          hasPropertyOffer: generalInformation.hasPropertyOffer
+            ? "true"
+            : "false",
+          applicantAgreedOnConditions: generalInformation.applicantAgreedOnConditions
+            ? "true"
+            : "false",
+        }
       : {
           numberOfDependant: "",
           hasPropertyOffer: false,
@@ -86,6 +99,14 @@ const GeneralInformationTab: React.FC<GeneralInformationProps> = ({
       })();
     }
   }, [nextNotification]);
+
+  useEffect(() => {
+    if (!readonly && onState && stateNotification !== "1") {
+      handleSubmit((data) => {
+        onState(transformData(data));
+      })();
+    }
+  }, [stateNotification]);
 
   useEffect(() => {
     setHasOfferForProperty(generalInformation?.hasPropertyOffer || false);
@@ -163,7 +184,7 @@ const GeneralInformationTab: React.FC<GeneralInformationProps> = ({
             <RadioGroup
               {...field}
               row
-              defaultValue={false}
+              defaultValue={generalInformation?.hasPropertyOffer ? "true" : "false"}
               name="hasPropertyOffer"
               onChange={(e: any) => {
                 clearErrors("hasPropertyOffer");
@@ -278,6 +299,7 @@ const GeneralInformationTab: React.FC<GeneralInformationProps> = ({
             <RadioGroup
               {...field}
               row
+              defaultValue={generalInformation?.applicantAgreedOnConditions ? "true" : "false"}
               name="applicantAgreedOnConditions"
               onChange={(e) => {
                 clearErrors("applicantAgreedOnConditions");
