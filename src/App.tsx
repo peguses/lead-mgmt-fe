@@ -37,9 +37,9 @@ function App() {
   const { hasPermission } = usePermission();
 
   useEffect(() => {
-    // dispatch(removeSecondaryApplicant());
-    // dispatch(removePrimaryApplicant());
-    // dispatch(removeGeneralInformation());
+    dispatch(removeSecondaryApplicant());
+    dispatch(removePrimaryApplicant());
+    dispatch(removeGeneralInformation());
     dispatch(resetApplication());
     dispatch(resetManagedUser());
     dispatch(fetchStatusesAsync())
@@ -77,7 +77,7 @@ function App() {
         >
           <Routes>
             <Route path="/login" element={<LoginPageContainer />} />
-            <Route path="/apply" element={<ApplyViewContainer />} />
+            <Route path="/" element={<ApplyViewContainer />} />
             <Route path="/status" element={<ApplicationStatusContainer />}/>
             <Route element={<RequireAuth />}>
               <Route

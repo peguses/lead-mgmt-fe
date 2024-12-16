@@ -57,7 +57,7 @@ export const UsersListContainer: React.FC<any> = () => {
   });
 
   const referrerUrl = (referrerToken?: string) =>{
-    return referrerToken ? `${window.location.origin}/apply?referrerToken=${referrerToken}` : "";
+    return referrerToken ? `${window.location.origin}/?referrerToken=${referrerToken}` : "";
   }
 
 

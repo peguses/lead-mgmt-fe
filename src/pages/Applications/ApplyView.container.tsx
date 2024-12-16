@@ -208,9 +208,9 @@ export const ApplyViewContainer: React.FC<any> = () => {
             ? application.secondaryApplicant
             : undefined,
         })
-      ).then((err: any) => {
-        if (!err.error) {
-          navigate("/status");
+      ).then((response: any) => {
+        if (!response.error) {
+          navigate(`/status?applicationId=${response.payload.application.applicationId}&state="success"`);
         }
       });
     }

@@ -201,9 +201,9 @@ export const ApplicationListContainer: React.FC<any> = () => {
     dispatch(fetchApplicationsAsync({ page: page, limit: rowsPerPage }));
   };
 
-  const handleAdd = () => {
-    dispatch(setReferrerId(currentUser?.user?.referrerToken));
-    navigate(`/apply`);
+  const handleAdd = async () => {
+    await Promise.all([dispatch(setReferrerId(currentUser?.user?.referrerToken))]);
+    navigate(`/?referrerToken=${currentUser?.user?.referrerToken}`);
   };
 
   return (

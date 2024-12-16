@@ -76,7 +76,7 @@ export const UserInformationComponent: React.FC<UserInformationProps> = ({
 
   const referrerUrl = (referrerToken?: string) => {
     return referrerToken
-      ? `${window.location.origin}/apply?referrerToken=${referrerToken}`
+      ? `${window.location.origin}?referrerToken=${referrerToken}`
       : "";
   };
 

@@ -22,29 +22,38 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import {
-  Application,
   fetchApplicationAsync,
   ManagedApplication,
   resetApplication,
+  Status,
 } from "../../shared/redux/application.slice";
 import { useAppDispatch, useAppSelector } from "../../shared/redux/hooks";
 import { Controller, useForm } from "react-hook-form";
 import { FilterList } from "@mui/icons-material";
 import CancelIcon from "@mui/icons-material/Cancel";
-import { useNavigate } from "react-router-dom";
-import { findLatestStatus, findStatus } from "../../shared/utils/find.application.status.util";
+import { useLocation, useNavigate } from "react-router-dom";
+import { findStatus } from "../../shared/utils/find.application.status.util";
 import moment from "moment";
 import UploadIcon from "@mui/icons-material/Upload";
 import { FileUploadModal } from "../../shared/components/FileUpload.modal";
 import CheckCircleOutlineOutlinedIcon from "@mui/icons-material/CheckCircleOutlineOutlined";
 
 export const ApplicationStatusContainer: React.FC<any> = () => {
+  
   const isSmallScreen = useMediaQuery("(max-width: 900px)");
 
   const [viewStatusModelOpen, setViewStatusModelOpen] =
     useState<boolean>(false);
 
   const navigate = useNavigate();
+
+  const location = useLocation();
+
+  const queryParams = new URLSearchParams(location.search);
+
+  const applicationId = queryParams.get("applicationId");
+
+  const state = queryParams.get("state");
 
   const [uploadDocumentModelOpen, setUploadDocumentModelOpen] =
     useState<boolean>(false);
@@ -118,13 +127,26 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
 
   useEffect(() => {
     dispatch(resetApplication());
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (!application.isLoading && application.application) {
       setViewStatusModelOpen(false);
     }
   }, [application.isLoading, application]);
+
+  const formatUpdatedDateTime = (status: Status | undefined) => {
+    return status?.createDateTime ? moment(
+      status.createDateTime
+    ).format("yyyy-MM-DD:HH:hh") : "";
+  }
+
+  useEffect(() => {
+
+    console.log(applicationId)
+    handleFilter({filerKey: "applicationId", filterValue: applicationId})
+
+  },[])
 
   return (
     <>
@@ -133,7 +155,6 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
           <Typography sx={{ fontSize: "24px", fontWeight: 700 }}>
             Inquiry Status
           </Typography>
-          {!application.isLoading && (
             <>
               <TextField
                 size="small"
@@ -166,10 +187,7 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
                     shrink: true,
                   },
                 }}
-                value={moment(
-                  findStatus(application.application.applicationStatus)
-                    ?.createDateTime
-                ).format("yyyy-MM-DD:HH:hh")}
+                value={formatUpdatedDateTime(findStatus(application.application.applicationStatus))}
                 disabled={true}
               />
 
@@ -213,11 +231,10 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
                   },
                 }}
                 fullWidth
-                value={findLatestStatus(application.application.applicationStatus)?.note}
+                value={findStatus(application.application.applicationStatus)?.note}
                 disabled={true}
               />
             </>
-          )}
           {!isSmallScreen && (
             <Grid container sx={{ marginTop: "20px" }} size={12}>
               {application.application.documents?.length !== 0 && (
@@ -262,7 +279,7 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
             </Grid>
           )}
           <Grid sx={{ marginTop: "10px" }} container spacing={2}>
-            <Grid size={{ xl: 4, lg: 6, md: 12, sm: 12, xs: 12 }}>
+            {!applicationId && (<Grid size={{ xl: 4, lg: 6, md: 12, sm: 12, xs: 12 }}>
               <Button
                 onClick={() => setViewStatusModelOpen(true)}
                 variant="contained"
@@ -273,6 +290,7 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
                 VIEW STATUS
               </Button>
             </Grid>
+            )}
             {application.application.applicationId !== 0 && !application.isLoading && (
               <Grid size={{ xl: 4, lg: 6, md: 12, sm: 12, xs: 12 }}>
                 <Button
