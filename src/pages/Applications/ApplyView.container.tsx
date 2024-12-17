@@ -86,6 +86,15 @@ export const ApplyViewContainer: React.FC<any> = () => {
 
   const [submitting, setSubmitting] = useState<boolean>(false);
 
+  const [primaryPersonalInfoValid, setPrimaryPersonalInfoValid] = useState<boolean>(false);
+
+  const [secondaryPersonalInfoValid, setSecondaryPersonalInfoValid] = useState<boolean>(false);
+
+  const [primaryFinancialInfoValid, setPrimaryFinancialInfoValid] = useState<boolean>(false);
+
+  const [secondaryFinancialInfoValid, setSecondaryFinancialInfoValid] = useState<boolean>(false);
+
+
   const [completed, setCompleted] = useState<Step[]>([
     { id: 0, completed: false, currentStep: true },
     { id: 1, completed: false, currentStep: false },
@@ -111,17 +120,20 @@ export const ApplyViewContainer: React.FC<any> = () => {
     setPersonalInfoStateUUID(uuidv4());
     setForward(true);
     setBack(false);
+    setAllowNextStep(false)
   };
 
   const handleFinancialInformationSubmit = () => {
     setFinancialInfoStateUUID(uuidv4());
     setForward(true);
     setBack(false);
+    setAllowNextStep(false)
   };
 
   const handleSubmit = () => {
     setSubmitting(true);
     setGeneralInfoStateUUID(uuidv4());
+    setAllowNextStep(false)
   };
 
   const handleStateOnlySubmit = () => {
@@ -163,6 +175,14 @@ export const ApplyViewContainer: React.FC<any> = () => {
     dispatch(removePrimaryApplicant());
     dispatch(removeGeneralInformation());
   }, []);
+
+  useEffect(() => {
+    setAllowNextStep(jointLoan ? primaryPersonalInfoValid && secondaryPersonalInfoValid : primaryPersonalInfoValid);
+  }, [primaryPersonalInfoValid, secondaryPersonalInfoValid, jointLoan]);
+
+  useEffect(() => {
+    setAllowNextStep(jointLoan ? primaryFinancialInfoValid && secondaryFinancialInfoValid : primaryFinancialInfoValid);
+  }, [primaryFinancialInfoValid, secondaryFinancialInfoValid, jointLoan])
 
   useEffect(() => {
     if (
@@ -422,7 +442,9 @@ export const ApplyViewContainer: React.FC<any> = () => {
                       applicant={"primaryApplicant"}
                       onSubmit={(data) => onPrimaryPersonalInformationSubmit(data)}
                       nextNotification={personalInfoStateUUID}
-                      allowNext={(allow: boolean) => { } } 
+                      allowNext={(allow: boolean) => { 
+                        setPrimaryPersonalInfoValid(allow)
+                      }} 
                  />
                   </Grid>
                   <Grid size={{ xl: 6, lg: 6, md: 6, sm: 12, xs: 12 }}>
@@ -433,8 +455,9 @@ export const ApplyViewContainer: React.FC<any> = () => {
                       }
                       nextNotification={personalInfoStateUUID}
                       allowNext={(allow: boolean) => {
-                        setAllowNextStep(allow);
-                        setCompletedStep(0, allow);
+                        // setAllowNextStep(allow);
+                        setSecondaryPersonalInfoValid(allow)
+                        // setCompletedStep(0, allow);
                       }}
                     />
                   </Grid>
@@ -478,7 +501,9 @@ export const ApplyViewContainer: React.FC<any> = () => {
                       applicant={"primaryApplicant"}
                       onSubmit={(data) => onPrimaryFinancialInfoSubmit(data)}
                       nextNotification={financialInfoStateUUID}
-                      allowNext={(allow: boolean) => { } } 
+                      allowNext={(allow: boolean) => { 
+                        setPrimaryFinancialInfoValid(allow)
+                      }} 
                       onState={(data) =>onPrimaryApplicantFinancialInfoState(data)} 
                       stateNotification={financialInfoStateOnlyUUID}/>
                   </Grid>
@@ -488,8 +513,9 @@ export const ApplyViewContainer: React.FC<any> = () => {
                       onSubmit={(data) => onSecondaryFinancialInfoSubmit(data)}
                       nextNotification={financialInfoStateUUID}
                       allowNext={(allow: boolean) => {
-                        setAllowNextStep(allow);
-                        setCompletedStep(1, allow);
+                        // setAllowNextStep(allow);
+                        setSecondaryFinancialInfoValid(allow)
+                        // setCompletedStep(1, allow);
                       }} 
                       onState={(data) =>onSecondaryApplicantFinancialInfoState(data)} 
                       stateNotification={financialInfoStateOnlyUUID}  

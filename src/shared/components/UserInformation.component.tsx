@@ -129,6 +129,8 @@ export const UserInformationComponent: React.FC<UserInformationProps> = ({
     dispatch(updateUserAsync(data)).then((err: any) => {
       if (!err.error) {
         navigate("/users");
+      } else {
+        setMessage("User update failed");
       }
     });
   };
@@ -498,7 +500,7 @@ export const UserInformationComponent: React.FC<UserInformationProps> = ({
           >
             <Grid size={12}>
               <Typography id="modal-modal-title" variant="h6" component="h2">
-                Are you sure you want to delete this lead ?
+                Are you sure you want to delete this user ?
               </Typography>
             </Grid>
             <Grid
