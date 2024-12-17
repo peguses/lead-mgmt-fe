@@ -205,16 +205,21 @@ const INITIAL_STATE: ManagedApplication = {
 
 export const fetchApplicationAsync = createAsyncThunk(
   "managedApplication/fetchApplication",
-  async (props: any) => {
-    const { applicationId, filterBy, filter } = props;
-    const response = await fetchApplication({
-      applicationId,
-      filterBy,
-      filter,
-    });
-    return {
-      application: response.data.data as any,
-    };
+  async (props: any, { rejectWithValue }) => {
+    try {
+      const { applicationId, filterBy, filter } = props;
+      const response = await fetchApplication({
+        applicationId,
+        filterBy,
+        filter,
+      });
+      return {
+        application: response.data.data as any,
+      };
+
+    } catch(error: any) {
+        return rejectWithValue(error.response.data.message);
+    }
   }
 );
 
@@ -262,7 +267,7 @@ export const createApplicationStatusAsync = createAsyncThunk(
       };
     } catch (error: any) {
       return rejectWithValue(
-        error.response.data.errors || error.response.data.message
+        error.response.data.errors || error.response.data.message || error.message
       );
     }
   }
@@ -380,10 +385,10 @@ export const applicationSlice = createSlice({
       state.isLoading = false;
       state.loadingFailed = false;
     });
-    builder.addCase(fetchApplicationAsync.rejected, (state) => {
-      state = { ...state };
+    builder.addCase(fetchApplicationAsync.rejected, (state, action) => {
       state.isLoading = false;
       state.loadingFailed = true;
+      state.errorMessageIfFailed = action.payload;
     });
 
     builder.addCase(assignOfficeAsync.pending, (state) => {

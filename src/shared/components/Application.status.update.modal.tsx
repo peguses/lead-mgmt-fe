@@ -82,7 +82,7 @@ export const ApplicationStatusUpdateModal: React.FC<
           userId: currentUser?.user?.id,
           note: data?.note,
         })
-      )]);
+      )])
 
       onClose();
 

@@ -1,4 +1,5 @@
 import {
+  Alert,
   Button,
   FormControl,
   FormHelperText,
@@ -40,7 +41,6 @@ import CheckCircleOutlineOutlinedIcon from "@mui/icons-material/CheckCircleOutli
 import { ApplicationUser } from "../../shared/redux/application.user.slice";
 
 export const ApplicationStatusContainer: React.FC<any> = () => {
-  
   const isSmallScreen = useMediaQuery("(max-width: 900px)");
 
   const [viewStatusModelOpen, setViewStatusModelOpen] =
@@ -120,13 +120,15 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
 
   const currentUser = useAppSelector((state): ApplicationUser | undefined => {
     return state?.applicationUser;
-  })
+  });
 
-  const handleFilter = ({ filerKey, filterValue }) => {
+  const handleFilter = async ({ filerKey, filterValue }) => {
     if (filerKey === "applicationId") {
-      dispatch(
-        fetchApplicationAsync({ applicationId: filterValue })
-      );
+      dispatch(fetchApplicationAsync({ applicationId: filterValue })).then((message: any) => {
+          if (!message.error) {
+            setUploadDocumentModelOpen(false)
+          }
+      })
     }
   };
 
@@ -134,189 +136,200 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
     dispatch(resetApplication());
   }, [dispatch]);
 
-  useEffect(() => {
-    if (!application.isLoading && application.application) {
-      setViewStatusModelOpen(false);
-    }
-  }, [application.isLoading, application]);
-
   const formatUpdatedDateTime = (status: Status | undefined) => {
-    return status?.createDateTime ? moment(
-      status.createDateTime
-    ).format("yyyy-MM-DD:HH:hh") : "";
-  }
+    return status?.createDateTime
+      ? moment(status.createDateTime).format("yyyy-MM-DD:HH:hh")
+      : "";
+  };
 
   useEffect(() => {
-
-    handleFilter({filerKey: "applicationId", filterValue: applicationId})
-
-  },[applicationId]);
+    if (applicationId) {
+      handleFilter({ filerKey: "applicationId", filterValue: applicationId });
+    }
+  }, [applicationId]);
 
   const document = () => {
-
     return {
-      applicationId:application.application.applicationId,
-      userId: currentUser?.user?.id
-    }
-
-  }
+      applicationId: application.application.applicationId,
+      userId: currentUser?.user?.id,
+    };
+  };
 
   return (
     <>
       <Grid container justifyContent={"center"}>
         <Grid size={{ xl: 5, lg: 5, md: 8, sm: 12, xs: 12 }}>
-          <Typography sx={{ fontSize: "24px", fontWeight: 700 }}>
+          <Typography
+            sx={{ fontSize: "24px", fontWeight: 700, marginBottom: "20px" }}
+          >
             Inquiry Status
           </Typography>
-            <>
-              <TextField
-                size="small"
-                label="Inquiry Status"
-                variant={"filled"}
-                fullWidth
-                value={
-                  findStatus(application.application.applicationStatus)?.status
-                }
-                disabled={true}
-                slotProps={{
-                  inputLabel: {
-                    shrink: true,
-                  },
-                }}
-                sx={{
-                  ".MuiInputLabel-outlined": {
-                    lineHeight: "70px",
-                  },
-                }}
-              />
+          <>
+            <TextField
+              size="small"
+              label="Inquiry Status"
+              variant={"filled"}
+              fullWidth
+              value={
+                findStatus(application.application.applicationStatus)?.status
+              }
+              disabled={true}
+              slotProps={{
+                inputLabel: {
+                  shrink: true,
+                },
+              }}
+              sx={{
+                ".MuiInputLabel-outlined": {
+                  lineHeight: "70px",
+                },
+              }}
+            />
 
-              <TextField
-                size="small"
-                label="Last updated"
-                variant={"filled"}
-                fullWidth
-                slotProps={{
-                  inputLabel: {
-                    shrink: true,
-                  },
-                }}
-                value={formatUpdatedDateTime(findStatus(application.application.applicationStatus))}
-                disabled={true}
-              />
+            <TextField
+              size="small"
+              label="Last updated"
+              variant={"filled"}
+              fullWidth
+              slotProps={{
+                inputLabel: {
+                  shrink: true,
+                },
+              }}
+              value={formatUpdatedDateTime(
+                findStatus(application.application.applicationStatus)
+              )}
+              disabled={true}
+            />
 
-              <TextField
-                size="small"
-                label="Processing officer"
-                variant={"filled"}
-                fullWidth
-                slotProps={{
-                  inputLabel: {
-                    shrink: true,
-                  },
-                }}
-                value={application.application.processingOfficer}
-                disabled={true}
-              />
+            <TextField
+              size="small"
+              label="Processing officer"
+              variant={"filled"}
+              fullWidth
+              slotProps={{
+                inputLabel: {
+                  shrink: true,
+                },
+              }}
+              value={application.application.processingOfficer}
+              disabled={true}
+            />
 
-              <TextField
-                size="small"
-                label="Your referrer"
-                variant={"filled"}
-                fullWidth
-                slotProps={{
-                  inputLabel: {
-                    shrink: true,
-                  },
-                }}
-                value={application.application.referrer}
-                disabled={true}
-              />
+            <TextField
+              size="small"
+              label="Your referrer"
+              variant={"filled"}
+              fullWidth
+              slotProps={{
+                inputLabel: {
+                  shrink: true,
+                },
+              }}
+              value={application.application.referrer}
+              disabled={true}
+            />
 
-              <TextField
-                size="small"
-                multiline
-                label="Note"
-                rows={2}
-                variant={"filled"}
-                slotProps={{
-                  inputLabel: {
-                    shrink: true,
-                  },
-                }}
-                fullWidth
-                value={findStatus(application.application.applicationStatus)?.note}
-                disabled={true}
-              />
-            </>
+            <TextField
+              size="small"
+              multiline
+              label="Note"
+              rows={2}
+              variant={"filled"}
+              slotProps={{
+                inputLabel: {
+                  shrink: true,
+                },
+              }}
+              fullWidth
+              value={
+                findStatus(application.application.applicationStatus)?.note
+              }
+              disabled={true}
+            />
+          </>
           {!isSmallScreen && (
             <Grid container sx={{ marginTop: "20px" }} size={12}>
-              {!application.application?.documents?.isLoading && application.application?.documents?.list?.length !== 0 && (
-                <TableContainer>
-                  <Table sx={{ minWidth: 650 }} aria-label="lead table">
-                    <TableHead>
-                      <StyledTableRow>
-                        <StyledTableCell sx={{ fontWeight: 700 }}>
-                          Document
-                        </StyledTableCell>
-                        <StyledTableCell sx={{ fontWeight: 700 }} align="left">
-                          Remark
-                        </StyledTableCell>
-                        <StyledTableCell sx={{ fontWeight: 700 }} align="left">
-                          Url
-                        </StyledTableCell>
-                      </StyledTableRow>
-                    </TableHead>
-                    <TableBody>
-                      {application?.application.documents?.list?.map((row, index) => (
-                        <StyledTableRow
-                          key={`${row.name}${index}`}
-                          sx={{
-                            "&:last-child td, &:last-child th": { border: 0 },
-                          }}
-                        >
-                          <StyledTableCell component="th" scope="row">
-                            {row?.name}
+              {!application.application?.documents?.isLoading &&
+                application.application?.documents?.list?.length !== 0 && (
+                  <TableContainer>
+                    <Table sx={{ minWidth: 650 }} aria-label="lead table">
+                      <TableHead>
+                        <StyledTableRow>
+                          <StyledTableCell sx={{ fontWeight: 700 }}>
+                            Document
                           </StyledTableCell>
-                          <StyledTableCell align="left">
-                            {row?.remark}
+                          <StyledTableCell
+                            sx={{ fontWeight: 700 }}
+                            align="left"
+                          >
+                            Remark
                           </StyledTableCell>
-                          <StyledTableCell align="left">
-                            {row?.path}
+                          <StyledTableCell
+                            sx={{ fontWeight: 700 }}
+                            align="left"
+                          >
+                            Url
                           </StyledTableCell>
                         </StyledTableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              )}
+                      </TableHead>
+                      <TableBody>
+                        {application?.application.documents?.list?.map(
+                          (row, index) => (
+                            <StyledTableRow
+                              key={`${row.name}${index}`}
+                              sx={{
+                                "&:last-child td, &:last-child th": {
+                                  border: 0,
+                                },
+                              }}
+                            >
+                              <StyledTableCell component="th" scope="row">
+                                {row?.name}
+                              </StyledTableCell>
+                              <StyledTableCell align="left">
+                                {row?.remark}
+                              </StyledTableCell>
+                              <StyledTableCell align="left">
+                                {row?.path}
+                              </StyledTableCell>
+                            </StyledTableRow>
+                          )
+                        )}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                )}
             </Grid>
           )}
           <Grid sx={{ marginTop: "10px" }} container spacing={2}>
-            {!applicationId && (<Grid size={{ xl: 4, lg: 6, md: 12, sm: 12, xs: 12 }}>
-              <Button
-                onClick={() => setViewStatusModelOpen(true)}
-                variant="contained"
-                color="primary"
-                fullWidth
-                startIcon={<CheckCircleOutlineOutlinedIcon />}
-              >
-                VIEW STATUS
-              </Button>
-            </Grid>
-            )}
-            {application.application.applicationId !== 0 && !application.isLoading && (
+            {!applicationId && (
               <Grid size={{ xl: 4, lg: 6, md: 12, sm: 12, xs: 12 }}>
                 <Button
-                  onClick={() => setUploadDocumentModelOpen(true)}
+                  onClick={() => setViewStatusModelOpen(true)}
                   variant="contained"
                   color="primary"
                   fullWidth
-                  startIcon={<UploadIcon />}
+                  startIcon={<CheckCircleOutlineOutlinedIcon />}
                 >
-                  UPLOAD DOCUMENT
+                  VIEW STATUS
                 </Button>
               </Grid>
             )}
+            {application.application.applicationId !== undefined &&
+              !application.isLoading && (
+                <Grid size={{ xl: 4, lg: 6, md: 12, sm: 12, xs: 12 }}>
+                  <Button
+                    onClick={() => setUploadDocumentModelOpen(true)}
+                    variant="contained"
+                    color="primary"
+                    fullWidth
+                    startIcon={<UploadIcon />}
+                  >
+                    UPLOAD DOCUMENT
+                  </Button>
+                </Grid>
+              )}
           </Grid>
         </Grid>
 
@@ -339,6 +352,21 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
               >
                 View my application
               </Typography>
+            </Grid>
+            <Grid size={12}>
+              {application.errorMessageIfFailed && (
+                <Alert
+                  severity="error"
+                  sx={{
+                    marginTop: "20px",
+                    marginBottom: "10px",
+                    fontSize: "14px",
+                    fontWeight: 700,
+                  }}
+                >
+                  {application.errorMessageIfFailed}
+                </Alert>
+              )}
             </Grid>
             <Grid size={12} sx={{ marginTop: "10px" }}>
               <FormControl
@@ -413,10 +441,14 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
                 }}
               />
             </Grid>
-            <Grid size={12} container justifyContent={"flex-start"} spacing={2} sx={{marginTop: "10px"}}>
-              <Grid
-               size={{xl: 4, lg: 4, md: 4, sm: 12, xs: 12}}
-              >
+            <Grid
+              size={12}
+              container
+              justifyContent={"flex-start"}
+              spacing={2}
+              sx={{ marginTop: "10px" }}
+            >
+              <Grid size={{ xl: 4, lg: 4, md: 4, sm: 12, xs: 12 }}>
                 <Button
                   onClick={handleSubmit(handleFilter)}
                   variant="contained"
@@ -428,9 +460,7 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
                   Filter
                 </Button>
               </Grid>
-              <Grid
-                 size={{xl: 4, lg: 4, md: 4, sm: 12, xs: 12}}
-              >
+              <Grid size={{ xl: 4, lg: 4, md: 4, sm: 12, xs: 12 }}>
                 <Button
                   onClick={() => {
                     setViewStatusModelOpen(false);
