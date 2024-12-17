@@ -10,12 +10,8 @@ import {
   Modal,
   Select,
   styled,
-  Table,
-  TableBody,
   TableCell,
   tableCellClasses,
-  TableContainer,
-  TableHead,
   TableRow,
   TextField,
   Typography,
@@ -40,9 +36,10 @@ import UploadIcon from "@mui/icons-material/Upload";
 import { FileUploadModal } from "../../shared/components/FileUpload.modal";
 import CheckCircleOutlineOutlinedIcon from "@mui/icons-material/CheckCircleOutlineOutlined";
 import { ApplicationUser } from "../../shared/redux/application.user.slice";
+import { DocumentListComponent } from "../../shared/components/DocumentList.component";
 
 export const ApplicationStatusContainer: React.FC<any> = () => {
-  
+
   const isSmallScreen = useMediaQuery("(max-width: 900px)");
 
   const [viewStatusModelOpen, setViewStatusModelOpen] =
@@ -131,7 +128,6 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
         (message: any) => {
           if (!message.error) {
             setViewStatusModelOpen(false);
-            dispatch(resetApplication());
           }
         }
       );
@@ -143,6 +139,7 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
   }, [dispatch]);
 
   const formatUpdatedDateTime = (status: Status | undefined) => {
+    findStatus(application.application.applicationStatus)
     return status?.createDateTime
       ? moment(status.createDateTime).format("yyyy-MM-DD:HH:hh")
       : "";
@@ -256,55 +253,56 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
           </>
           {!isSmallScreen && (
             <Grid container sx={{ marginTop: "20px" }} size={12}>
-              {!application.application?.documents?.isLoading &&
-                application.application?.documents?.list?.length !== 0 && (
-                  <TableContainer>
-                    <Table sx={{ minWidth: 650 }} aria-label="lead table">
-                      <TableHead>
-                        <StyledTableRow>
-                          <StyledTableCell sx={{ fontWeight: 700 }}>
-                            Document
-                          </StyledTableCell>
-                          <StyledTableCell
-                            sx={{ fontWeight: 700 }}
-                            align="left"
-                          >
-                            Remark
-                          </StyledTableCell>
-                          <StyledTableCell
-                            sx={{ fontWeight: 700 }}
-                            align="left"
-                          >
-                            Url
-                          </StyledTableCell>
-                        </StyledTableRow>
-                      </TableHead>
-                      <TableBody>
-                        {application?.application.documents?.list?.map(
-                          (row, index) => (
-                            <StyledTableRow
-                              key={`${row.name}${index}`}
-                              sx={{
-                                "&:last-child td, &:last-child th": {
-                                  border: 0,
-                                },
-                              }}
-                            >
-                              <StyledTableCell component="th" scope="row">
-                                {row?.name}
-                              </StyledTableCell>
-                              <StyledTableCell align="left">
-                                {row?.remark}
-                              </StyledTableCell>
-                              <StyledTableCell align="left">
-                                {row?.path}
-                              </StyledTableCell>
-                            </StyledTableRow>
-                          )
-                        )}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
+              {!application?.isLoading &&
+                application.application?.documents?.length !== 0 && (
+                  // <TableContainer>
+                  //   <Table sx={{ minWidth: 650 }} aria-label="lead table">
+                  //     <TableHead>
+                  //       <StyledTableRow>
+                  //         <StyledTableCell sx={{ fontWeight: 700 }}>
+                  //           Document
+                  //         </StyledTableCell>
+                  //         <StyledTableCell
+                  //           sx={{ fontWeight: 700 }}
+                  //           align="left"
+                  //         >
+                  //           Remark
+                  //         </StyledTableCell>
+                  //         <StyledTableCell
+                  //           sx={{ fontWeight: 700 }}
+                  //           align="left"
+                  //         >
+                  //           Url
+                  //         </StyledTableCell>
+                  //       </StyledTableRow>
+                  //     </TableHead>
+                  //     <TableBody>
+                  //       {application?.application.documents?.list?.map(
+                  //         (row, index) => (
+                  //           <StyledTableRow
+                  //             key={`${row.name}${index}`}
+                  //             sx={{
+                  //               "&:last-child td, &:last-child th": {
+                  //                 border: 0,
+                  //               },
+                  //             }}
+                  //           >
+                  //             <StyledTableCell component="th" scope="row">
+                  //               {row?.name}
+                  //             </StyledTableCell>
+                  //             <StyledTableCell align="left">
+                  //               {row?.remark}
+                  //             </StyledTableCell>
+                  //             <StyledTableCell align="left">
+                  //               {row?.path}
+                  //             </StyledTableCell>
+                  //           </StyledTableRow>
+                  //         )
+                  //       )}
+                  //     </TableBody>
+                  //   </Table>
+                  // </TableContainer>
+                  <DocumentListComponent documents={application.application?.documents}/>
                 )}
             </Grid>
           )}

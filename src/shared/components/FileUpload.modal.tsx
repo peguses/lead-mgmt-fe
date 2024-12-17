@@ -16,7 +16,7 @@ import UploadIcon from "@mui/icons-material/Upload";
 import CancelIcon from "@mui/icons-material/Cancel";
 import FolderOpenIcon from "@mui/icons-material/FolderOpen";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { Documents, uploadDocumentAsync } from "../redux/application.slice";
+import { ManagedApplication, uploadDocumentAsync } from "../redux/application.slice";
 import { LinearProgress } from "@mui/material";
 
 export interface FileUploadComponentProps {
@@ -80,7 +80,6 @@ export const FileUploadModal: React.FC<FileUploadComponentProps> = ({
   }, [open]);
 
   const document = (files: any, description: string) => {
-    console.log(files);
     const formData = new FormData();
 
     formData.append("applicationId", String(data.applicationId));
@@ -96,15 +95,15 @@ export const FileUploadModal: React.FC<FileUploadComponentProps> = ({
     if (files?.length === 1) {
       const file = document(files, `${data.name}, ${data.remark}`);
       dispatch(uploadDocumentAsync(file)).then((result: any) => {
-        if (result.payload.data.message === "Success") {
+        if (result.payload.document.status === "Success") {
           setUploadDocumentModelOpen(false);
         }
       });
     }
   };
 
-  const documents = useAppSelector((state): Documents => {
-    return state.managedApplication.application.documents;
+  const managedApplication = useAppSelector((state): ManagedApplication => {
+    return state.managedApplication;
   });
 
   return (
@@ -121,7 +120,7 @@ export const FileUploadModal: React.FC<FileUploadComponentProps> = ({
             </Typography>
           </Grid>
           <Grid size={12}>
-          {documents.isUploadingFail && (
+          {managedApplication.errorMessageIfFailed && (
             <Alert
               severity="error"
               sx={{
@@ -131,7 +130,7 @@ export const FileUploadModal: React.FC<FileUploadComponentProps> = ({
                 fontWeight: 700,
               }}
             >
-              {documents.errorMessageIfFailed}
+              {managedApplication.errorMessageIfFailed}
             </Alert>
           )}
           </Grid>
@@ -258,7 +257,7 @@ export const FileUploadModal: React.FC<FileUploadComponentProps> = ({
               </Grid>
             </Grid>
           </Grid>
-          {documents.isUploading && documents.uploadingProgress < 100 && (
+          {managedApplication.isDocumentUploading && managedApplication.upDocumentLoadingProgress < 100 && (
             <Grid
               sx={{ marginTop: "10px", marginBottom: "10px" }}
               size={12}
@@ -266,7 +265,7 @@ export const FileUploadModal: React.FC<FileUploadComponentProps> = ({
             >
               <LinearProgress
                 variant="determinate"
-                value={documents.uploadingProgress}
+                value={managedApplication.upDocumentLoadingProgress}
               />
             </Grid>
           )}

@@ -67,16 +67,6 @@ export interface Document {
   path: string;
 }
 
-export interface Documents {
-  list?: Document[];
-  isDownloading?: boolean;
-  isUploading?: boolean;
-  uploadingProgress: number;
-  isLoading?: boolean;
-  isUploadingFail?: boolean;
-  errorMessageIfFailed?: any | undefined;
-}
-
 export interface Application {
   applicationId: number | undefined;
   referrer: string | undefined;
@@ -90,7 +80,7 @@ export interface Application {
   secondaryApplicant?: Applicant | undefined;
   createDateTime: Date | undefined;
   loaded: boolean;
-  documents: Documents;
+  documents?: Document[];
 }
 
 export interface UpdateStatusRequest {
@@ -102,9 +92,13 @@ export interface UpdateStatusRequest {
 
 export interface ManagedApplication {
   application: Application;
-  errorMessageIfFailed: any | undefined;
-  isLoading: boolean;
   loadingFailed: boolean;
+  isDocumentDownloading?: boolean | undefined;
+  isDocumentUploading?: boolean | undefined;
+  upDocumentLoadingProgress: number;
+  isLoading?: boolean | undefined;
+  isDocumentUploadingFail?: boolean | undefined;
+  errorMessageIfFailed?: any | undefined | undefined;
 }
 
 const INITIAL_STATE: ManagedApplication = {
@@ -191,16 +185,12 @@ const INITIAL_STATE: ManagedApplication = {
       referralOption: "",
       applicantAgreedOnConditions: false,
     },
-    documents: {
-      list: [],
-      isDownloading: false,
-      isUploading: false,
-      uploadingProgress: 0,
-      isLoading: false,
-      isUploadingFail: false,
-      errorMessageIfFailed: "",
-    },
+    documents: [],
   },
+  isDocumentDownloading: false,
+  isDocumentUploading: false,
+  upDocumentLoadingProgress: 0,
+  isDocumentUploadingFail: false,
 };
 
 export const fetchApplicationAsync = createAsyncThunk(
@@ -371,7 +361,7 @@ export const applicationSlice = createSlice({
     },
 
     updateFileUploadProgress: (state, action) => {
-      state.application.documents.uploadingProgress = action.payload;
+      state.upDocumentLoadingProgress = action.payload;
     },
   },
 
@@ -440,33 +430,26 @@ export const applicationSlice = createSlice({
     });
 
     builder.addCase(uploadDocumentAsync.pending, (state) => {
-      state.application.documents = {
-        isUploadingFail: false,
-        isLoading: false,
-        isDownloading: false,
-        isUploading: true,
-        uploadingProgress: 0
-      };
+      state.isDocumentUploading =  true;
+      state.isLoading =  false;
+      state.isDocumentDownloading =  false;
+      state.isDocumentUploadingFail =  false;
+      state.upDocumentLoadingProgress =  0;
     });
     builder.addCase(uploadDocumentAsync.fulfilled, (state, action) => {
-      state.application.documents = {
-        isUploadingFail: false,
-        isLoading: false,
-        isDownloading: false,
-        isUploading: false,
-        uploadingProgress: 100
-      };
+      state.isDocumentUploading =  false;
+      state.isLoading =  false;
+      state.isDocumentDownloading =  false;
+      state.isDocumentUploadingFail =  false;
+      state.upDocumentLoadingProgress =  100;
     });
     builder.addCase(uploadDocumentAsync.rejected, (state, action) => {
-      console.log(action)
-      state.application.documents = {
-        isUploadingFail: true,
-        isLoading: false,
-        isDownloading: false,
-        isUploading: false,
-        errorMessageIfFailed: action.payload || "Uploading failed",
-        uploadingProgress: 0
-      };
+      state.isDocumentUploading =  false;
+      state.isLoading =  false;
+      state.isDocumentDownloading =  false;
+      state.isDocumentUploadingFail =  true;
+      state.upDocumentLoadingProgress =  0;
+      state.errorMessageIfFailed = action.payload || "Uploading failed";
     });
   },
 });

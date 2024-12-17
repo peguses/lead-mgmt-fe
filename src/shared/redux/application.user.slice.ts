@@ -9,8 +9,7 @@ export interface ApplicationUser {
     loadingFailed: boolean,
     user: User | undefined,
     loginError: any,
-    authToken: string | undefined,
-
+    authToken: string | undefined;
 
 }
 
