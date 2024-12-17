@@ -37,6 +37,7 @@ import moment from "moment";
 import UploadIcon from "@mui/icons-material/Upload";
 import { FileUploadModal } from "../../shared/components/FileUpload.modal";
 import CheckCircleOutlineOutlinedIcon from "@mui/icons-material/CheckCircleOutlineOutlined";
+import { ApplicationUser } from "../../shared/redux/application.user.slice";
 
 export const ApplicationStatusContainer: React.FC<any> = () => {
   
@@ -117,6 +118,10 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
     return state?.managedApplication;
   });
 
+  const currentUser = useAppSelector((state): ApplicationUser | undefined => {
+    return state?.applicationUser;
+  })
+
   const handleFilter = ({ filerKey, filterValue }) => {
     if (filerKey === "applicationId") {
       dispatch(
@@ -145,7 +150,16 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
 
     handleFilter({filerKey: "applicationId", filterValue: applicationId})
 
-  },[applicationId])
+  },[applicationId]);
+
+  const document = () => {
+
+    return {
+      applicationId:application.application.applicationId,
+      userId: currentUser?.user?.id
+    }
+
+  }
 
   return (
     <>
@@ -236,7 +250,7 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
             </>
           {!isSmallScreen && (
             <Grid container sx={{ marginTop: "20px" }} size={12}>
-              {application.application.documents?.length !== 0 && (
+              {!application.application?.documents?.isLoading && application.application?.documents?.list?.length !== 0 && (
                 <TableContainer>
                   <Table sx={{ minWidth: 650 }} aria-label="lead table">
                     <TableHead>
@@ -253,7 +267,7 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
                       </StyledTableRow>
                     </TableHead>
                     <TableBody>
-                      {application?.application.documents?.map((row, index) => (
+                      {application?.application.documents?.list?.map((row, index) => (
                         <StyledTableRow
                           key={`${row.name}${index}`}
                           sx={{
@@ -432,7 +446,7 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
             </Grid>
           </Grid>
         </Modal>
-        <FileUploadModal open={uploadDocumentModelOpen} />
+        <FileUploadModal data={document()} open={uploadDocumentModelOpen} />
       </Grid>
     </>
   );

@@ -37,3 +37,12 @@ export const createApplication = async(data: Application):Promise<AxiosResponse<
 export const createStatus = (statusRequest: UpdateStatusRequest): Promise<AxiosResponse<any>> => {
     return apiKit.post("/application-states", {...statusRequest})
 }
+
+export const uploadDocument = (document: FormData, onUploadProgress): Promise<AxiosResponse<any>> => {
+    return apiKit.post("/documents", document, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+        onUploadProgress
+    });
+}

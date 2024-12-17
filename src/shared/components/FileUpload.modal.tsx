@@ -1,4 +1,5 @@
 import {
+  Alert,
   Button,
   Grid2 as Grid,
   InputAdornment,
@@ -14,13 +15,18 @@ import DescriptionIcon from "@mui/icons-material/Description";
 import UploadIcon from "@mui/icons-material/Upload";
 import CancelIcon from "@mui/icons-material/Cancel";
 import FolderOpenIcon from "@mui/icons-material/FolderOpen";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { Documents, uploadDocumentAsync } from "../redux/application.slice";
+import { LinearProgress } from "@mui/material";
 
 export interface FileUploadComponentProps {
+  data: any;
   open: boolean;
 }
 
 export const FileUploadModal: React.FC<FileUploadComponentProps> = ({
   open,
+  data,
 }) => {
   const [uploadDocumentModelOpen, setUploadDocumentModelOpen] =
     useState<boolean>(false);
@@ -28,6 +34,8 @@ export const FileUploadModal: React.FC<FileUploadComponentProps> = ({
   const [files, setFiles] = useState<FileList | null>();
 
   const [fileBrowsed, setFileBrowsed] = useState<boolean>(false);
+
+  const dispatch = useAppDispatch();
 
   const HiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
@@ -71,7 +79,34 @@ export const FileUploadModal: React.FC<FileUploadComponentProps> = ({
     setUploadDocumentModelOpen(open);
   }, [open]);
 
-  const handleUpload = () => {};
+  const document = (files: any, description: string) => {
+    console.log(files);
+    const formData = new FormData();
+
+    formData.append("applicationId", String(data.applicationId));
+    formData.append("description", String(description));
+    if (data.userId) {
+      formData.append("userId", String(data.userId));
+    }
+    formData.append("documents[]", files[0]);
+    return formData;
+  };
+
+  const handleUpload = (data: any) => {
+    if (files?.length === 1) {
+      const file = document(files, `${data.name}, ${data.remark}`);
+      dispatch(uploadDocumentAsync(file)).then((result: any) => {
+        if (result.payload.data.message === "Success") {
+          setUploadDocumentModelOpen(false);
+        }
+      });
+    }
+  };
+
+  const documents = useAppSelector((state): Documents => {
+    return state.managedApplication.application.documents;
+  });
+
   return (
     <>
       <Modal open={uploadDocumentModelOpen} onClose={() => {}}>
@@ -84,6 +119,21 @@ export const FileUploadModal: React.FC<FileUploadComponentProps> = ({
             <Typography variant="h6" component="h2">
               Upload Document
             </Typography>
+          </Grid>
+          <Grid size={12}>
+          {documents.isUploadingFail && (
+            <Alert
+              severity="error"
+              sx={{
+                marginTop: "20px",
+                marginBottom: "10px",
+                fontSize: "14px",
+                fontWeight: 700,
+              }}
+            >
+              {documents.errorMessageIfFailed}
+            </Alert>
+          )}
           </Grid>
           <Grid size={12} sx={{ marginTop: "10px" }}>
             <TextField
@@ -208,6 +258,18 @@ export const FileUploadModal: React.FC<FileUploadComponentProps> = ({
               </Grid>
             </Grid>
           </Grid>
+          {documents.isUploading && documents.uploadingProgress < 100 && (
+            <Grid
+              sx={{ marginTop: "10px", marginBottom: "10px" }}
+              size={12}
+              spacing={2}
+            >
+              <LinearProgress
+                variant="determinate"
+                value={documents.uploadingProgress}
+              />
+            </Grid>
+          )}
           <Grid
             size={12}
             container
@@ -215,9 +277,7 @@ export const FileUploadModal: React.FC<FileUploadComponentProps> = ({
             spacing={2}
             sx={{ marginTop: "10px" }}
           >
-            <Grid
-              size={{xl: "grow", lg: "grow", md: "grow", sm: 12, xs: 12}}
-            >
+            <Grid size={{ xl: "grow", lg: "grow", md: "grow", sm: 12, xs: 12 }}>
               <Button
                 onClick={handleSubmit(handleUpload)}
                 variant="contained"
@@ -229,9 +289,7 @@ export const FileUploadModal: React.FC<FileUploadComponentProps> = ({
                 UPLOAD
               </Button>
             </Grid>
-            <Grid
-             size={{xl: "grow", lg: "grow", md: "grow", sm: 12, xs: 12}}
-            >
+            <Grid size={{ xl: "grow", lg: "grow", md: "grow", sm: 12, xs: 12 }}>
               <Button
                 onClick={() => {
                   setUploadDocumentModelOpen(false);

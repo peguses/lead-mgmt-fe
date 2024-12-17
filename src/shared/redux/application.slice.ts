@@ -4,6 +4,7 @@ import {
   createStatus,
   fetchApplication,
   updateApplication,
+  uploadDocument,
 } from "../services/application.service";
 import { ApplicationStatus } from "./application.status.slice";
 
@@ -66,6 +67,16 @@ export interface Document {
   path: string;
 }
 
+export interface Documents {
+  list?: Document[];
+  isDownloading?: boolean;
+  isUploading?: boolean;
+  uploadingProgress: number;
+  isLoading?: boolean;
+  isUploadingFail?: boolean;
+  errorMessageIfFailed?: any | undefined;
+}
+
 export interface Application {
   applicationId: number | undefined;
   referrer: string | undefined;
@@ -79,9 +90,8 @@ export interface Application {
   secondaryApplicant?: Applicant | undefined;
   createDateTime: Date | undefined;
   loaded: boolean;
-  documents?: Document[];
+  documents: Documents;
 }
-
 
 export interface UpdateStatusRequest {
   applicationId: number;
@@ -181,7 +191,15 @@ const INITIAL_STATE: ManagedApplication = {
       referralOption: "",
       applicantAgreedOnConditions: false,
     },
-    documents: [],
+    documents: {
+      list: [],
+      isDownloading: false,
+      isUploading: false,
+      uploadingProgress: 0,
+      isLoading: false,
+      isUploadingFail: false,
+      errorMessageIfFailed: "",
+    },
   },
 };
 
@@ -241,6 +259,25 @@ export const createApplicationStatusAsync = createAsyncThunk(
       const response = await createStatus(data);
       return {
         status: response.data as any,
+      };
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response.data.errors || error.response.data.message
+      );
+    }
+  }
+);
+
+export const uploadDocumentAsync = createAsyncThunk(
+  "managedApplication/uploadDocument",
+  async (data: FormData, {dispatch, rejectWithValue }) => {
+    try {
+      const response = await uploadDocument(data, (event) => {
+        const progress = Math.round((event.loaded * 100) / event.total);
+        dispatch(updateFileUploadProgress(progress));
+      });
+      return {
+        document: response.data as any,
       };
     } catch (error: any) {
       return rejectWithValue(
@@ -327,6 +364,10 @@ export const applicationSlice = createSlice({
     resetApplicationSubmitError: (state) => {
       state.errorMessageIfFailed = undefined;
     },
+
+    updateFileUploadProgress: (state, action) => {
+      state.application.documents.uploadingProgress = action.payload;
+    },
   },
 
   extraReducers: (builder) => {
@@ -392,6 +433,36 @@ export const applicationSlice = createSlice({
       state.loadingFailed = true;
       state.errorMessageIfFailed = action.payload;
     });
+
+    builder.addCase(uploadDocumentAsync.pending, (state) => {
+      state.application.documents = {
+        isUploadingFail: false,
+        isLoading: false,
+        isDownloading: false,
+        isUploading: true,
+        uploadingProgress: 0
+      };
+    });
+    builder.addCase(uploadDocumentAsync.fulfilled, (state, action) => {
+      state.application.documents = {
+        isUploadingFail: false,
+        isLoading: false,
+        isDownloading: false,
+        isUploading: false,
+        uploadingProgress: 100
+      };
+    });
+    builder.addCase(uploadDocumentAsync.rejected, (state, action) => {
+      console.log(action)
+      state.application.documents = {
+        isUploadingFail: true,
+        isLoading: false,
+        isDownloading: false,
+        isUploading: false,
+        errorMessageIfFailed: action.payload || "Uploading failed",
+        uploadingProgress: 0
+      };
+    });
   },
 });
 
@@ -409,5 +480,6 @@ export const {
   resetApplication,
   setReferrerId,
   resetApplicationSubmitError,
+  updateFileUploadProgress,
 } = applicationSlice.actions;
 export default applicationSlice.reducer;
