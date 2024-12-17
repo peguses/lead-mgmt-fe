@@ -27,7 +27,8 @@ import {
 } from "../../shared/redux/application.slice";
 import { ApplicationStatusUpdateModal } from "../../shared/components/Application.status.update.modal";
 import { PersonalInformationTab } from "../../shared/components/PersonalInformation.tab";
-
+import usePermission from "../../shared/hooks/usePermission";
+import { Permission } from "../../shared/redux/role.slice";
 
 interface Step {
   id: number;
@@ -39,17 +40,23 @@ export const ApplicationViewContainer: React.FC<any> = () => {
 
   const navigate = useNavigate();
 
+  const { hasPermission } = usePermission();
+
   const { applicationId } = useParams();
 
   const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
+
+  const [canUpdate, setCanUpdate] = useState<boolean>(false);
 
   useEffect(() => {
     dispatch(fetchApplicationAsync({ applicationId }));
   }, [applicationId]);
 
-  const application = useAppSelector((state): ManagedApplication | undefined => {
-    return state?.managedApplication;
-  });
+  const application = useAppSelector(
+    (state): ManagedApplication | undefined => {
+      return state?.managedApplication;
+    }
+  );
 
   const [activeStep, setActiveStep] = useState<number>(0);
 
@@ -61,6 +68,10 @@ export const ApplicationViewContainer: React.FC<any> = () => {
     { code: "1APP", name: "1 Applicant" },
     { code: "2APP", name: "2 Applicants" },
   ];
+
+  useEffect(() => {
+    setCanUpdate(hasPermission([Permission.UPDATE_APPLICATION]));
+  }, [hasPermission]);
 
   const handleUpdate = () => {
     setOpenUpdateModal(true);
@@ -82,7 +93,7 @@ export const ApplicationViewContainer: React.FC<any> = () => {
       <Grid
         size={
           jointLoan && activeStep !== 2
-            ? {xl: 8, lg: 8, md: 12, sm: 12, xs: 12}
+            ? { xl: 8, lg: 8, md: 12, sm: 12, xs: 12 }
             : { xl: 4, lg: 4, md: 12, sm: 12, xs: 12 }
         }
         sx={{ marginTop: "5px", marginBottom: "20px" }}
@@ -204,35 +215,25 @@ export const ApplicationViewContainer: React.FC<any> = () => {
                     <Grid size={{ xl: 6, lg: 6, md: 6, sm: 12, xs: 12 }}>
                       <PersonalInformationTab
                         applicant={"primaryApplicant"}
-                        readonly={true} nextNotification={""}                      />
+                        readonly={true}
+                        nextNotification={""}
+                      />
                     </Grid>
                     <Grid size={{ xl: 6, lg: 6, md: 6, sm: 12, xs: 12 }}>
                       <PersonalInformationTab
                         applicant={"secondaryApplicant"}
-                        readonly={true} nextNotification={""}                      />
+                        readonly={true}
+                        nextNotification={""}
+                      />
                     </Grid>
                   </Grid>
                 ) : (
                   <PersonalInformationTab
-                      applicant={"primaryApplicant"}
-                      readonly={true} nextNotification={""}                  />
+                    applicant={"primaryApplicant"}
+                    readonly={true}
+                    nextNotification={""}
+                  />
                 )}
-                <Grid container justifyContent={"end"}>
-                  <Grid
-                    size={{ xl: 3, lg: 3, md: 6, sm: 12, xs: 12 }}
-                    sx={{ marginTop: "20px" }}
-                  >
-                    <Button
-                      onClick={handleUpdate}
-                      variant="contained"
-                      color="primary"
-                      fullWidth
-                      startIcon={<CheckCircleOutlineOutlinedIcon />}
-                    >
-                      Update
-                    </Button>
-                  </Grid>
-                </Grid>
               </Fragment>
             )}
             {activeStep === 1 && (
@@ -260,44 +261,30 @@ export const ApplicationViewContainer: React.FC<any> = () => {
                     readonly={true}
                   />
                 )}
-                <Grid container justifyContent={"end"}>
-                  <Grid
-                    size={{ xl: 3, lg: 3, md: 6, sm: 12, xs: 12 }}
-                    sx={{ marginTop: "20px" }}
-                  >
-                    <Button
-                      onClick={handleUpdate}
-                      variant="contained"
-                      color="primary"
-                      fullWidth
-                      startIcon={<CheckCircleOutlineOutlinedIcon />}
-                    >
-                      Update
-                    </Button>
-                  </Grid>
-                </Grid>
               </Fragment>
             )}
             {activeStep === 2 && (
               <Fragment>
                 <GeneralInformationTab readonly={true} alert={undefined} />
-                <Grid container justifyContent={"end"}>
-                  <Grid
-                    size={{ xl: 3, lg: 3, md: 6, sm: 12, xs: 12 }}
-                    sx={{ marginTop: "20px" }}
-                  >
-                    <Button
-                      onClick={handleUpdate}
-                      variant="contained"
-                      color="primary"
-                      fullWidth
-                      startIcon={<CheckCircleOutlineOutlinedIcon />}
-                    >
-                      Update
-                    </Button>
-                  </Grid>
-                </Grid>
               </Fragment>
+            )}
+            {canUpdate && (
+              <Grid container justifyContent={"end"}>
+                <Grid
+                  size={{ xl: 3, lg: 3, md: 6, sm: 12, xs: 12 }}
+                  sx={{ marginTop: "20px" }}
+                >
+                  <Button
+                    onClick={handleUpdate}
+                    variant="contained"
+                    color="primary"
+                    fullWidth
+                    startIcon={<CheckCircleOutlineOutlinedIcon />}
+                  >
+                    Update
+                  </Button>
+                </Grid>
+              </Grid>
             )}
           </Grid>
         )}

@@ -61,7 +61,8 @@ export const createUserAsync = createAsyncThunk(
         user: response.data as any,
       };
     } catch (error: any) {
-      return rejectWithValue(error.response.data.error);
+      console.log(error)
+      return rejectWithValue(error.response.data.errors);
     }
   }
 );

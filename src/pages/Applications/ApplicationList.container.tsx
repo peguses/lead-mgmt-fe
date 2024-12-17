@@ -58,9 +58,14 @@ import CreditCardIcon from "@mui/icons-material/CreditCard";
 import { ApplicationUser } from "../../shared/redux/application.user.slice";
 import { ApplicationFilters } from "../../shared/constants/UserFilters.constant";
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
+import usePermission from "../../shared/hooks/usePermission";
+import { Permission } from "../../shared/redux/role.slice";
 
 export const ApplicationListContainer: React.FC<any> = () => {
+
   const dispatch = useAppDispatch();
+
+  const { hasPermission } = usePermission();
 
   const isSmallScreen = useMediaQuery("(max-width: 900px)");
 
@@ -120,6 +125,10 @@ export const ApplicationListContainer: React.FC<any> = () => {
 
   const [applications, setApplications] = useState<Application[]>([]);
 
+  const [canAssign, setCanAssign] = useState<boolean>(false);
+
+  const [canDelete, setCanDelete] = useState<boolean>(false)
+
   const [isApplicationsLoading, setIsApplicationsLoading] = useState<
     boolean | undefined
   >(false);
@@ -134,6 +143,11 @@ export const ApplicationListContainer: React.FC<any> = () => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+
+  useEffect(() => {
+    setCanAssign(hasPermission([Permission.ASSIGN_APPLICATION]));
+    setCanDelete(hasPermission([Permission.DELETE_APPLICATION]))
+  }, [hasPermission]);
 
   useEffect(() => {
     dispatch(fetchApplicationsAsync({ page: page, limit: rowsPerPage }));
@@ -370,7 +384,7 @@ export const ApplicationListContainer: React.FC<any> = () => {
                               <HourglassEmptyIcon />
                             </IconButton>
                           </Grid>
-                          <Grid size={2}>
+                          {canAssign && (<Grid size={2}>
                             <IconButton
                               color="primary"
                               onClick={() =>
@@ -379,8 +393,8 @@ export const ApplicationListContainer: React.FC<any> = () => {
                             >
                               <AssignmentIcon />
                             </IconButton>
-                          </Grid>
-                          <Grid size={2}>
+                          </Grid> )}
+                          { canDelete && (<Grid size={2}>
                             <IconButton
                               color="primary"
                               onClick={() => {
@@ -390,7 +404,7 @@ export const ApplicationListContainer: React.FC<any> = () => {
                             >
                               <DeleteIcon />
                             </IconButton>
-                          </Grid>
+                          </Grid> )}
                         </Grid>
                       </StyledTableCell>
                     </StyledTableRow>
