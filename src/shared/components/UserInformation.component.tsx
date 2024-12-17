@@ -1,4 +1,4 @@
-import { AccountCircle } from "@mui/icons-material";
+import { AccountCircle, ChevronLeft } from "@mui/icons-material";
 import {
   Alert,
   AlertTitle,
@@ -36,7 +36,6 @@ import { User } from "../interfaces/user.interface";
 import CancelIcon from "@mui/icons-material/Cancel";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useNavigate } from "react-router-dom";
-import ArrowCircleLeftOutlinedIcon from "@mui/icons-material/ArrowCircleLeftOutlined";
 import LinkIcon from '@mui/icons-material/Link';
 
 interface UserInformationProps {
@@ -186,9 +185,18 @@ export const UserInformationComponent: React.FC<UserInformationProps> = ({
             <Button
               sx={{
                 textTransform: "none",
-                color: "primary.main",
+                color: "#1E3A5F",
+                fontWeight: 700
               }}
-              startIcon={<ArrowCircleLeftOutlinedIcon />}
+              startIcon={<ChevronLeft
+                sx={{
+                  borderRadius: "50%",
+                  height: "26px",
+                  width: "26px",
+                  backgroundColor: "#1E3A5F",
+                  color: "white",
+                }}
+              />}
               variant="text"
               disableRipple
               onClick={() => {

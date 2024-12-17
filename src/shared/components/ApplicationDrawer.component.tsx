@@ -20,8 +20,7 @@ import usePermission from "../hooks/usePermission";
 import { Permission } from "../redux/role.slice";
 import { useAppDispatch } from "../redux/hooks";
 import { resetApplication } from "../redux/application.slice";
-import { ChevronLeft, ChevronRight } from '@mui/icons-material';
-
+import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 
 interface Menu {
   id: number;
@@ -144,9 +143,25 @@ export const ApplicationDrawerComponent: React.FC<any> = ({
           }}
         >
           {menuOpen ? (
-            <ChevronLeft sx={{ borderRadius: '50%', height: "36px", width: "36px", backgroundColor: "#1E3A5F", color: "white"}} />
+            <ChevronLeft
+              sx={{
+                borderRadius: "50%",
+                height: "36px",
+                width: "36px",
+                backgroundColor: "#1E3A5F",
+                color: "white",
+              }}
+            />
           ) : (
-            <ChevronRight sx={{ borderRadius: '50%', height: "36px", width: "36px", backgroundColor: "#1E3A5F", color: "white"}} />
+            <ChevronRight
+              sx={{
+                borderRadius: "50%",
+                height: "36px",
+                width: "36px",
+                backgroundColor: "#1E3A5F",
+                color: "white",
+              }}
+            />
           )}
         </IconButton>
       )}
@@ -157,7 +172,6 @@ export const ApplicationDrawerComponent: React.FC<any> = ({
             dispatch(resetApplication());
             setSelectedMenuItem(1, true);
             navigate("/");
-            
           }}
           disableRipple
           sx={
@@ -191,7 +205,6 @@ export const ApplicationDrawerComponent: React.FC<any> = ({
             setSelectedMenuItem(2, true);
             dispatch(resetApplication());
             navigate("/status");
-
           }}
           disableRipple
           sx={
