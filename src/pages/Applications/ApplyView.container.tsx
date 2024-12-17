@@ -43,6 +43,7 @@ import { useAppDispatch, useAppSelector } from "../../shared/redux/hooks";
 import { useLocation, useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { PersonalInformationTab } from "../../shared/components/PersonalInformation.tab";
+import { ChevronLeft } from "@mui/icons-material";
 
 interface Step {
   id: number;
@@ -387,9 +388,20 @@ export const ApplyViewContainer: React.FC<any> = () => {
             <Button
               sx={{
                 textTransform: "none",
-                color: "primary.main",
+                color: "#1E3A5F",
+                fontWeight: 700,
               }}
-              startIcon={<ArrowCircleLeftOutlinedIcon />}
+              startIcon={
+                <ChevronLeft 
+                sx={{
+                  height: "26px",
+                  width: "26px",
+                  boxShadow: 4,
+                  borderRadius: "50%",
+                  backgroundColor: current === 0 ? "#908c8c": "#1E3A5F",
+                  color: "white",
+              }}
+              />}
               variant="text"
               disableRipple
               onClick={handleBack}
@@ -406,7 +418,7 @@ export const ApplyViewContainer: React.FC<any> = () => {
             />
           </Box>
         </Grid>
-        <Grid size={12}>
+        <Grid size={12} sx={{marginTop: "10px"}}>
           {current === 0 && (
             <Fragment>
               <Grid>

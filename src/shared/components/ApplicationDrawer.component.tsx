@@ -14,15 +14,13 @@ import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import useViewport from "../hooks/useViewport";
-import { useDispatch } from "react-redux";
 import { setViewport } from "../redux/common.slice";
 import styled from "@emotion/styled";
 import usePermission from "../hooks/usePermission";
 import { Permission } from "../redux/role.slice";
-import ArrowCircleLeftRoundedIcon from '@mui/icons-material/ArrowCircleLeftRounded';
-import ArrowCircleRightRoundedIcon from '@mui/icons-material/ArrowCircleRightRounded';
 import { useAppDispatch } from "../redux/hooks";
 import { resetApplication } from "../redux/application.slice";
+import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 
 
 interface Menu {
@@ -139,16 +137,16 @@ export const ApplicationDrawerComponent: React.FC<any> = ({
             position: "fixed",
             top: "75px",
             left: open ? "223px" : "43px",
-            boxShadow: 4,
+            boxShadow: 10,
             zIndex: (theme) => theme.zIndex.snackbar,
             overflowY: "clip",
             color: "black",
           }}
         >
           {menuOpen ? (
-            <ArrowCircleLeftRoundedIcon sx={{ height: "36px", width: "36px"}} />
+            <ChevronLeft sx={{ borderRadius: '50%', height: "36px", width: "36px", backgroundColor: "#1E3A5F", color: "white"}} />
           ) : (
-            <ArrowCircleRightRoundedIcon sx={{ height: "36px", width: "36px"}}/>
+            <ChevronRight sx={{ borderRadius: '50%', height: "36px", width: "36px", backgroundColor: "#1E3A5F", color: "white"}} />
           )}
         </IconButton>
       )}

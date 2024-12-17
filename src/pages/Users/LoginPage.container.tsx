@@ -167,8 +167,8 @@ export const LoginPageContainer: React.FC<any> = () => {
                       slotProps={{
                         input: {
                           startAdornment: (
-                            <InputAdornment position="start">
-                              <EmailOutlinedIcon sx={{ color: "white" }} />
+                            <InputAdornment sx={{ marginRight: "5px"}} position="start">
+                              <EmailOutlinedIcon sx={{ color: "white"}} />
                             </InputAdornment>
                           ),
                           sx: {
