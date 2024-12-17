@@ -53,6 +53,13 @@ export const DocumentListComponent: React.FC<any> = ({ documents }) => {
     setCanDownload(hasPermission([Permission.DOWNLOAD_DOCUMENT]));
   }, [hasPermission]);
 
+  const handleDownload = (name, path) => {
+    const link = document.createElement('a');
+    link.href = `${process.env.REACT_APP_LEAD_MANAGEMENT}/${path}`; 
+    link.download = name;
+    link.click();
+  }
+
   return (
     <>
       <Grid container size={12} spacing={1}>
@@ -92,7 +99,7 @@ export const DocumentListComponent: React.FC<any> = ({ documents }) => {
                     backgroundColor: index % 2 === 0 ? "#d6dce2" : "white",
                   }}
                 >
-                  <IconButton color="primary">
+                  <IconButton color="primary" onClick={() => handleDownload(document.name, document.path)}>
                     <DownloadIcon />
                   </IconButton>
                 </StyledGrid>

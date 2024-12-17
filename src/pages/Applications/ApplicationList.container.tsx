@@ -50,7 +50,6 @@ import {
   findLatestStatusNote,
 } from "../../shared/utils/find.application.status.util";
 import { fetchUsersAsync, Users } from "../../shared/redux/users.slice";
-import { IRole } from "../../shared/redux/role.slice";
 import FilterDropdown, {
   Filter,
 } from "../../shared/components/TableFilter.dialog";
@@ -58,6 +57,7 @@ import RefreshIcon from "@mui/icons-material/Refresh";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import { ApplicationUser } from "../../shared/redux/application.user.slice";
 import { ApplicationFilters } from "../../shared/constants/UserFilters.constant";
+import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 
 export const ApplicationListContainer: React.FC<any> = () => {
   const dispatch = useAppDispatch();
@@ -195,6 +195,10 @@ export const ApplicationListContainer: React.FC<any> = () => {
 
   const handleNavigate = (applicationId: number) => {
     navigate(`/applications/${applicationId}`);
+  };
+
+  const handleStatusNavigate = (applicationId: number) => {
+    navigate(`/status?applicationId=${applicationId}`);
   };
 
   const handleRefresh = () => {
@@ -354,6 +358,16 @@ export const ApplicationListContainer: React.FC<any> = () => {
                               }}
                             >
                               <Visibility />
+                            </IconButton>
+                          </Grid>
+                          <Grid size={2}>
+                            <IconButton
+                              color="primary"
+                              onClick={() => {
+                                handleStatusNavigate(row?.applicationId || 0);
+                              }}
+                            >
+                              <HourglassEmptyIcon />
                             </IconButton>
                           </Grid>
                           <Grid size={2}>

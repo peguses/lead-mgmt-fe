@@ -22,13 +22,12 @@ import FinancialInformationTab from "../../shared/components/FinancialInformatio
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../shared/redux/hooks";
 import {
-  Application,
   fetchApplicationAsync,
   ManagedApplication,
 } from "../../shared/redux/application.slice";
 import { ApplicationStatusUpdateModal } from "../../shared/components/Application.status.update.modal";
 import { PersonalInformationTab } from "../../shared/components/PersonalInformation.tab";
-import { ManagedModalProps } from "@mui/material/Modal/ModalManager";
+
 
 interface Step {
   id: number;
