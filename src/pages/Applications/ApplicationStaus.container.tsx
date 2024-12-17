@@ -26,6 +26,7 @@ import {
   fetchApplicationAsync,
   ManagedApplication,
   resetApplication,
+  resetApplicationSubmitError,
   Status,
 } from "../../shared/redux/application.slice";
 import { useAppDispatch, useAppSelector } from "../../shared/redux/hooks";
@@ -41,6 +42,7 @@ import CheckCircleOutlineOutlinedIcon from "@mui/icons-material/CheckCircleOutli
 import { ApplicationUser } from "../../shared/redux/application.user.slice";
 
 export const ApplicationStatusContainer: React.FC<any> = () => {
+  
   const isSmallScreen = useMediaQuery("(max-width: 900px)");
 
   const [viewStatusModelOpen, setViewStatusModelOpen] =
@@ -123,12 +125,16 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
   });
 
   const handleFilter = async ({ filerKey, filterValue }) => {
+    dispatch(resetApplicationSubmitError());
     if (filerKey === "applicationId") {
-      dispatch(fetchApplicationAsync({ applicationId: filterValue })).then((message: any) => {
+      dispatch(fetchApplicationAsync({ applicationId: filterValue })).then(
+        (message: any) => {
           if (!message.error) {
-            setUploadDocumentModelOpen(false)
+            setViewStatusModelOpen(false);
+            dispatch(resetApplication());
           }
-      })
+        }
+      );
     }
   };
 
@@ -306,7 +312,10 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
             {!applicationId && (
               <Grid size={{ xl: 4, lg: 6, md: 12, sm: 12, xs: 12 }}>
                 <Button
-                  onClick={() => setViewStatusModelOpen(true)}
+                  onClick={() => {
+                    dispatch(resetApplicationSubmitError());
+                    setViewStatusModelOpen(true);
+                  }}
                   variant="contained"
                   color="primary"
                   fullWidth
@@ -464,7 +473,7 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
                 <Button
                   onClick={() => {
                     setViewStatusModelOpen(false);
-                    navigate("/");
+                    navigate("/applications");
                   }}
                   variant="outlined"
                   fullWidth

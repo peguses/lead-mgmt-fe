@@ -21,6 +21,8 @@ import usePermission from "../hooks/usePermission";
 import { Permission } from "../redux/role.slice";
 import ArrowCircleLeftRoundedIcon from '@mui/icons-material/ArrowCircleLeftRounded';
 import ArrowCircleRightRoundedIcon from '@mui/icons-material/ArrowCircleRightRounded';
+import { useAppDispatch } from "../redux/hooks";
+import { resetApplication } from "../redux/application.slice";
 
 
 interface Menu {
@@ -59,7 +61,7 @@ export const ApplicationDrawerComponent: React.FC<any> = ({
 
   const viewPort = useViewport();
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const navigate = useNavigate();
 
@@ -154,8 +156,10 @@ export const ApplicationDrawerComponent: React.FC<any> = ({
         <ListItem
           component={StyledButton}
           onClick={() => {
-            navigate("/");
+            dispatch(resetApplication());
             setSelectedMenuItem(1, true);
+            navigate("/");
+            
           }}
           disableRipple
           sx={
@@ -186,8 +190,10 @@ export const ApplicationDrawerComponent: React.FC<any> = ({
         <ListItem
           component={StyledButton}
           onClick={() => {
-            navigate("/status");
             setSelectedMenuItem(2, true);
+            dispatch(resetApplication());
+            navigate("/status");
+
           }}
           disableRipple
           sx={
@@ -219,8 +225,8 @@ export const ApplicationDrawerComponent: React.FC<any> = ({
           <ListItem
             component={StyledButton}
             onClick={() => {
-              navigate("/applications");
               setSelectedMenuItem(3, true);
+              navigate("/applications");
             }}
             disableRipple
             sx={
@@ -253,8 +259,8 @@ export const ApplicationDrawerComponent: React.FC<any> = ({
           <ListItem
             component={StyledButton}
             onClick={() => {
-              navigate("/users");
               setSelectedMenuItem(4, true);
+              navigate("/users");
             }}
             disableRipple
             sx={
