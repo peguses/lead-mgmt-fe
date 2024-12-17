@@ -54,6 +54,7 @@ const GeneralInformationTab: React.FC<GeneralInformationProps> = ({
     handleSubmit,
     formState: { errors, isValid },
     clearErrors,
+    getValues
   } = useForm<any>({
     mode: "onSubmit",
     defaultValues: generalInformation
@@ -102,9 +103,7 @@ const GeneralInformationTab: React.FC<GeneralInformationProps> = ({
 
   useEffect(() => {
     if (!readonly && onState && stateNotification !== "1") {
-      handleSubmit((data) => {
-        onState(transformData(data));
-      })();
+      onState(getValues());
     }
   }, [stateNotification]);
 
@@ -317,7 +316,7 @@ const GeneralInformationTab: React.FC<GeneralInformationProps> = ({
               />
               <FormControlLabel
                 value={false}
-                control={<Radio disabled={true} />}
+                control={<Radio disabled={readonly} />}
                 label="No"
               />
             </RadioGroup>

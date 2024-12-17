@@ -22,14 +22,14 @@ import { LinearProgress } from "@mui/material";
 export interface FileUploadComponentProps {
   data: any;
   open: boolean;
+  onClose: () => void;
 }
 
 export const FileUploadModal: React.FC<FileUploadComponentProps> = ({
   open,
   data,
+  onClose
 }) => {
-  const [uploadDocumentModelOpen, setUploadDocumentModelOpen] =
-    useState<boolean>(false);
 
   const [files, setFiles] = useState<FileList | null>();
 
@@ -75,10 +75,6 @@ export const FileUploadModal: React.FC<FileUploadComponentProps> = ({
     },
   });
 
-  useEffect(() => {
-    setUploadDocumentModelOpen(open);
-  }, [open]);
-
   const document = (files: any, description: string) => {
     const formData = new FormData();
 
@@ -96,7 +92,7 @@ export const FileUploadModal: React.FC<FileUploadComponentProps> = ({
       const file = document(files, `${data.name}, ${data.remark}`);
       dispatch(uploadDocumentAsync(file)).then((result: any) => {
         if (result.payload.document.status === "Success") {
-          setUploadDocumentModelOpen(false);
+          onClose()
         }
       });
     }
@@ -108,7 +104,7 @@ export const FileUploadModal: React.FC<FileUploadComponentProps> = ({
 
   return (
     <>
-      <Modal open={uploadDocumentModelOpen} onClose={() => {}}>
+      <Modal open={open} onClose={() => {}}>
         <Grid
           container
           sx={style}
@@ -259,6 +255,7 @@ export const FileUploadModal: React.FC<FileUploadComponentProps> = ({
           </Grid>
           {managedApplication.isDocumentUploading && managedApplication.upDocumentLoadingProgress < 100 && (
             <Grid
+              container
               sx={{ marginTop: "10px", marginBottom: "10px" }}
               size={12}
               spacing={2}
@@ -291,7 +288,7 @@ export const FileUploadModal: React.FC<FileUploadComponentProps> = ({
             <Grid size={{ xl: "grow", lg: "grow", md: "grow", sm: 12, xs: 12 }}>
               <Button
                 onClick={() => {
-                  setUploadDocumentModelOpen(false);
+                  onClose();
                 }}
                 variant="outlined"
                 fullWidth

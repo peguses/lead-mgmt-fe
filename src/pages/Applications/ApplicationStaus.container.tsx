@@ -9,13 +9,11 @@ import {
   MenuItem,
   Modal,
   Select,
-  styled,
-  TableCell,
-  tableCellClasses,
-  TableRow,
+  CircularProgress,
   TextField,
   Typography,
   useMediaQuery,
+  Backdrop,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import {
@@ -72,27 +70,6 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
     },
   });
 
-  const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-      backgroundColor: theme.palette.common.black,
-      color: theme.palette.common.white,
-    },
-    [`&.${tableCellClasses.body}`]: {
-      fontSize: 14,
-    },
-    whiteSpace: "normal",
-    wordWrap: "break-word",
-  }));
-
-  const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    "&:nth-of-type(odd)": {
-      backgroundColor: theme.palette.action.hover,
-    },
-    "&:last-child td, &:last-child th": {
-      border: 0,
-    },
-  }));
-
   const dispatch = useAppDispatch();
 
   const filters = [
@@ -133,6 +110,11 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
       );
     }
   };
+
+  const onFiledUploaded = () => {
+    handleFilter({ filerKey: "applicationId", filterValue: applicationId || application.application.applicationId });
+    setUploadDocumentModelOpen(false);
+  }
 
   useEffect(() => {
     dispatch(resetApplication());
@@ -254,59 +236,30 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
           {!isSmallScreen && (
             <Grid container sx={{ marginTop: "20px" }} size={12}>
               {!application?.isLoading &&
-                application.application?.documents?.length !== 0 && (
-                  // <TableContainer>
-                  //   <Table sx={{ minWidth: 650 }} aria-label="lead table">
-                  //     <TableHead>
-                  //       <StyledTableRow>
-                  //         <StyledTableCell sx={{ fontWeight: 700 }}>
-                  //           Document
-                  //         </StyledTableCell>
-                  //         <StyledTableCell
-                  //           sx={{ fontWeight: 700 }}
-                  //           align="left"
-                  //         >
-                  //           Remark
-                  //         </StyledTableCell>
-                  //         <StyledTableCell
-                  //           sx={{ fontWeight: 700 }}
-                  //           align="left"
-                  //         >
-                  //           Url
-                  //         </StyledTableCell>
-                  //       </StyledTableRow>
-                  //     </TableHead>
-                  //     <TableBody>
-                  //       {application?.application.documents?.list?.map(
-                  //         (row, index) => (
-                  //           <StyledTableRow
-                  //             key={`${row.name}${index}`}
-                  //             sx={{
-                  //               "&:last-child td, &:last-child th": {
-                  //                 border: 0,
-                  //               },
-                  //             }}
-                  //           >
-                  //             <StyledTableCell component="th" scope="row">
-                  //               {row?.name}
-                  //             </StyledTableCell>
-                  //             <StyledTableCell align="left">
-                  //               {row?.remark}
-                  //             </StyledTableCell>
-                  //             <StyledTableCell align="left">
-                  //               {row?.path}
-                  //             </StyledTableCell>
-                  //           </StyledTableRow>
-                  //         )
-                  //       )}
-                  //     </TableBody>
-                  //   </Table>
-                  // </TableContainer>
+                application.application?.documents?.length !== 0 ?  (
                   <DocumentListComponent documents={application.application?.documents}/>
+                ): (
+                  <Backdrop
+                    className="diagnose-loader"
+                    sx={{
+                      color: "primary.main",
+                      marginRight: "20%",
+                      position: "absolute",
+                      inset: "0",
+                      zIndex: "10",
+                      backgroundColor: "primary.contrastText",
+                    }}
+                    open={application?.isLoading || false}
+                  >
+                    <CircularProgress
+                      color="inherit"
+                      sx={{ marginLeft: "250px", textAlign: "center" }}
+                    />
+                  </Backdrop>
                 )}
             </Grid>
           )}
-          <Grid sx={{ marginTop: "10px" }} container spacing={2}>
+          <Grid container sx={{ marginTop: "10px" }} spacing={2}>
             {!applicationId && (
               <Grid size={{ xl: 4, lg: 6, md: 12, sm: 12, xs: 12 }}>
                 <Button
@@ -388,6 +341,7 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
                 <Controller
                   name="filerKey"
                   control={control}
+                  defaultValue={""}
                   rules={{ required: "Filer is required" }}
                   render={({ field }) => (
                     <Select
@@ -421,6 +375,7 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
                 size="small"
                 fullWidth
                 label="Filter"
+                defaultValue={""}
                 {...register("filterValue", {
                   required: "Filter value is required",
                 })}
@@ -483,7 +438,7 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
             </Grid>
           </Grid>
         </Modal>
-        <FileUploadModal data={document()} open={uploadDocumentModelOpen} />
+        <FileUploadModal onClose={onFiledUploaded} data={document()} open={uploadDocumentModelOpen} />
       </Grid>
     </>
   );

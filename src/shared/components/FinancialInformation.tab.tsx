@@ -52,6 +52,7 @@ const FinancialInformationTab: React.FC<FinancialInformationProps> = ({
     handleSubmit,
     formState: { errors, isValid },
     clearErrors,
+    getValues
   } = useForm<any>({
     mode: "onSubmit",
     defaultValues: financialInformation
@@ -151,9 +152,7 @@ const FinancialInformationTab: React.FC<FinancialInformationProps> = ({
 
   useEffect(() => {
     if (!readonly && onState && stateNotification !== "1") {
-      handleSubmit((data) => {
-        onState(transformData(data));
-      })();
+      onState(getValues());
     }
   }, [stateNotification]);
 

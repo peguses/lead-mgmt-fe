@@ -13,7 +13,7 @@ export interface DocumentListComponentProps {
 
 export const DocumentListComponent: React.FC<any> = ({ documents }) => {
   const yScroll = {
-    height: "300px",
+    maxHeight: "300px",
     overflowY: "auto",
     border: "1px solid #ccc",
     overflowX: "hidden",
@@ -37,6 +37,7 @@ export const DocumentListComponent: React.FC<any> = ({ documents }) => {
   const StyledGrid = styled(Grid)({
     wordWrap: "break-word",
     overflowWrap: "break-word",
+    alignContent: "center"
   });
 
   const StyledCell = styled("span")({
@@ -62,7 +63,7 @@ export const DocumentListComponent: React.FC<any> = ({ documents }) => {
 
   return (
     <>
-      <Grid container size={12} spacing={1}>
+      <Grid container size={12} spacing={1} sx={{backgroundColor: "black", color: "white" , fontSize: "14px", height: "30px", fontWeight: 600}}>
         <Grid container size={12} spacing={1}>
           <StyledGrid size={6}>Name</StyledGrid>
           <StyledGrid size={canDownload ? 5 : 6}>Remark</StyledGrid>
@@ -72,7 +73,7 @@ export const DocumentListComponent: React.FC<any> = ({ documents }) => {
       <Grid container size={12} spacing={0} sx={yScroll}>
         {documents?.map((document: Document, index) => {
           return (
-            <>
+             <Grid  key={index} container size={12}>
               <StyledGrid
                 size={6}
                 sx={{
@@ -104,7 +105,7 @@ export const DocumentListComponent: React.FC<any> = ({ documents }) => {
                   </IconButton>
                 </StyledGrid>
               )}
-            </>
+              </Grid>
           );
         })}
       </Grid>
