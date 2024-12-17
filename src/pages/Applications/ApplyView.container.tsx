@@ -282,11 +282,12 @@ export const ApplyViewContainer: React.FC<any> = () => {
     setPersonalInfoStateUUID("1");
     setFinancialInfoStateUUID("1");
     setGeneralInfoStateUUID("1");
-    if (isStepCompleted(2)) {
+
+    if (activeStep(completed) === 2) {
       handleStateOnlySubmit();
     }
 
-    if (isStepCompleted(1)) {
+    if (activeStep(completed) === 1) {
       setFinancialInfoStateOnlyUUID(uuidv4());
     }
 
@@ -459,9 +460,7 @@ export const ApplyViewContainer: React.FC<any> = () => {
                       }
                       nextNotification={personalInfoStateUUID}
                       allowNext={(allow: boolean) => {
-                        // setAllowNextStep(allow);
-                        setSecondaryPersonalInfoValid(allow)
-                        // setCompletedStep(0, allow);
+                        setSecondaryPersonalInfoValid(allow);
                       }}
                     />
                   </Grid>
@@ -508,7 +507,7 @@ export const ApplyViewContainer: React.FC<any> = () => {
                       allowNext={(allow: boolean) => { 
                         setPrimaryFinancialInfoValid(allow)
                       }} 
-                      onState={(data) =>onPrimaryApplicantFinancialInfoState(data)} 
+                      onState={(data) => onPrimaryApplicantFinancialInfoState(data)} 
                       stateNotification={financialInfoStateOnlyUUID}/>
                   </Grid>
                   <Grid size={{ xl: 6, lg: 6, md: 6, sm: 12, xs: 12 }}>
@@ -517,11 +516,9 @@ export const ApplyViewContainer: React.FC<any> = () => {
                       onSubmit={(data) => onSecondaryFinancialInfoSubmit(data)}
                       nextNotification={financialInfoStateUUID}
                       allowNext={(allow: boolean) => {
-                        // setAllowNextStep(allow);
                         setSecondaryFinancialInfoValid(allow)
-                        // setCompletedStep(1, allow);
                       }} 
-                      onState={(data) =>onSecondaryApplicantFinancialInfoState(data)} 
+                      onState={(data) => onSecondaryApplicantFinancialInfoState(data)} 
                       stateNotification={financialInfoStateOnlyUUID}  
                       />
                   </Grid>
