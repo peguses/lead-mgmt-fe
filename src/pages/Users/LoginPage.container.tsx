@@ -167,7 +167,7 @@ export const LoginPageContainer: React.FC<any> = () => {
                       slotProps={{
                         input: {
                           startAdornment: (
-                            <InputAdornment sx={{ marginRight: "5px"}} position="start">
+                            <InputAdornment position="start">
                               <EmailOutlinedIcon sx={{ color: "white"}} />
                             </InputAdornment>
                           ),
@@ -175,7 +175,10 @@ export const LoginPageContainer: React.FC<any> = () => {
                             marginTop: "20px",
                             color: "white",
                             fontWeight: 700,
-                            // userSelect: "none",
+                            
+                            "& input" :{
+                                paddingLeft: "5px"
+                            }
                           },
                         },
                       }}
@@ -224,6 +227,9 @@ export const LoginPageContainer: React.FC<any> = () => {
                             marginTop: "20px",
                             fontWeight: 700,
                             color: "white",
+                            "& input" :{
+                              paddingLeft: "5px"
+                            }
                           },
                         },
                       }}

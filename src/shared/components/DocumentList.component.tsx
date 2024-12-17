@@ -37,7 +37,7 @@ export const DocumentListComponent: React.FC<any> = ({ documents }) => {
   const StyledGrid = styled(Grid)({
     wordWrap: "break-word",
     overflowWrap: "break-word",
-    alignContent: "center"
+    alignContent: "center",
   });
 
   const StyledCell = styled("span")({
@@ -55,17 +55,28 @@ export const DocumentListComponent: React.FC<any> = ({ documents }) => {
   }, [hasPermission]);
 
   const handleDownload = (name, path) => {
-    const link = document.createElement('a');
-    link.href = `${process.env.REACT_APP_LEAD_MANAGEMENT}/${path}`; 
+    const link = document.createElement("a");
+    link.href = `${process.env.REACT_APP_LEAD_MANAGEMENT}/${path}`;
     link.download = name;
     link.click();
-  }
+  };
 
   return (
     <>
-      <Grid container size={12} spacing={1} sx={{backgroundColor: "black", color: "white" , fontSize: "14px", height: "30px", fontWeight: 600}}>
+      <Grid
+        container
+        size={12}
+        spacing={1}
+        sx={{
+          backgroundColor: "black",
+          color: "white",
+          fontSize: "14px",
+          height: "30px",
+          fontWeight: 600,
+        }}
+      >
         <Grid container size={12} spacing={1}>
-          <StyledGrid size={6}>Name</StyledGrid>
+          <StyledGrid size={6} sx={{paddingLeft:"5px"}}>Name</StyledGrid>
           <StyledGrid size={canDownload ? 5 : 6}>Remark</StyledGrid>
           {canDownload && <StyledGrid size={1}>Action</StyledGrid>}
         </Grid>
@@ -73,7 +84,7 @@ export const DocumentListComponent: React.FC<any> = ({ documents }) => {
       <Grid container size={12} spacing={0} sx={yScroll}>
         {documents?.map((document: Document, index) => {
           return (
-             <Grid  key={index} container size={12}>
+            <Grid key={index} container size={12}>
               <StyledGrid
                 size={6}
                 sx={{
@@ -100,12 +111,15 @@ export const DocumentListComponent: React.FC<any> = ({ documents }) => {
                     backgroundColor: index % 2 === 0 ? "#d6dce2" : "white",
                   }}
                 >
-                  <IconButton color="primary" onClick={() => handleDownload(document.name, document.path)}>
+                  <IconButton
+                    color="primary"
+                    onClick={() => handleDownload(document.name, document.path)}
+                  >
                     <DownloadIcon />
                   </IconButton>
                 </StyledGrid>
               )}
-              </Grid>
+            </Grid>
           );
         })}
       </Grid>
