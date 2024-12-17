@@ -177,11 +177,15 @@ export const ApplyViewContainer: React.FC<any> = () => {
   }, []);
 
   useEffect(() => {
-    setAllowNextStep(jointLoan ? primaryPersonalInfoValid && secondaryPersonalInfoValid : primaryPersonalInfoValid);
+    const allow = jointLoan ? primaryPersonalInfoValid && secondaryPersonalInfoValid : primaryPersonalInfoValid;
+    setAllowNextStep(allow);
+    setCompletedStep(0, allow);
   }, [primaryPersonalInfoValid, secondaryPersonalInfoValid, jointLoan]);
 
   useEffect(() => {
-    setAllowNextStep(jointLoan ? primaryFinancialInfoValid && secondaryFinancialInfoValid : primaryFinancialInfoValid);
+    const allow = jointLoan ? primaryFinancialInfoValid && secondaryFinancialInfoValid : primaryFinancialInfoValid
+    setAllowNextStep(allow);
+    setCompletedStep(1, allow);
   }, [primaryFinancialInfoValid, secondaryFinancialInfoValid, jointLoan])
 
   useEffect(() => {
