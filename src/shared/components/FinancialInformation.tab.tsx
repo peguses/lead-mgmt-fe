@@ -54,7 +54,7 @@ const FinancialInformationTab: React.FC<FinancialInformationProps> = ({
     clearErrors,
     getValues
   } = useForm<any>({
-    mode: "onSubmit",
+    mode: "all",
     defaultValues: financialInformation
       ? {
           ...financialInformation,

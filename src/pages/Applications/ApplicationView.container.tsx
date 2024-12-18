@@ -28,6 +28,7 @@ import { PersonalInformationTab } from "../../shared/components/PersonalInformat
 import usePermission from "../../shared/hooks/usePermission";
 import { Permission } from "../../shared/redux/role.slice";
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
+import { fetchStatusesAsync } from "../../shared/redux/application.status.slice";
 
 interface Step {
   id: number;
@@ -48,6 +49,7 @@ export const ApplicationViewContainer: React.FC<any> = () => {
   const [canUpdate, setCanUpdate] = useState<boolean>(false);
 
   useEffect(() => {
+    dispatch(fetchStatusesAsync());
     dispatch(fetchApplicationAsync({ applicationId }));
   }, [applicationId]);
 

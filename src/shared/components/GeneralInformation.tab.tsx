@@ -56,7 +56,7 @@ const GeneralInformationTab: React.FC<GeneralInformationProps> = ({
     clearErrors,
     getValues
   } = useForm<any>({
-    mode: "onSubmit",
+    mode: "all",
     defaultValues: generalInformation
       ? {
           ...generalInformation,

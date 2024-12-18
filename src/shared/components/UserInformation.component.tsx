@@ -333,11 +333,11 @@ export const UserInformationComponent: React.FC<UserInformationProps> = ({
               })}
               slotProps={{
                 input: {
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <LinkIcon />
-                    </InputAdornment>
-                  ),
+                  // startAdornment: (
+                  //   <InputAdornment position="start">
+                  //     <LinkIcon />
+                  //   </InputAdornment>
+                  // ),
                   sx: {
                     marginTop: !hidden() ? "20px" : "",
                   },
@@ -346,6 +346,9 @@ export const UserInformationComponent: React.FC<UserInformationProps> = ({
               sx={{
                 ".MuiInputLabel-outlined": {
                   lineHeight: "70px",
+                  display: 'flex',
+                  justifyContent: 'center',
+                  position: 'relative',
                 },
               }}
             />

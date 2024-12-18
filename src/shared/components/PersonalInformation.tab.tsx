@@ -48,7 +48,7 @@ export const PersonalInformationTab: React.FC<PersonalInformationProps> = ({
     formState: { errors, isValid },
     clearErrors,
   } = useForm<any>({
-    mode: "onSubmit",
+    mode: "all",
     defaultValues: applicantInformation
       ? {
           ...applicantInformation,
