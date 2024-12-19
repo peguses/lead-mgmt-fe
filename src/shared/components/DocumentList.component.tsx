@@ -6,6 +6,8 @@ import usePermission from "../hooks/usePermission";
 import { Permission } from "../redux/role.slice";
 import { useEffect, useState } from "react";
 import DownloadIcon from "@mui/icons-material/Download";
+import axios from "axios";
+import { downloadDocument } from "../services/application.service";
 
 export interface DocumentListComponentProps {
   documents: Document[];
@@ -54,11 +56,19 @@ export const DocumentListComponent: React.FC<any> = ({ documents }) => {
     setCanDownload(hasPermission([Permission.DOWNLOAD_DOCUMENT]));
   }, [hasPermission]);
 
-  const handleDownload = (name, path) => {
-    const link = document.createElement("a");
-    link.href = `${process.env.REACT_APP_LEAD_MANAGEMENT}/${path}`;
-    link.download = name;
-    link.click();
+  const handleDownload = async (name, path) => {
+    try {
+      const response = await downloadDocument(path);
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(response.data);
+      link.download = name;
+      document.body.appendChild(link);
+      link.click();
+
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error("Error downloading:", error);
+    }
   };
 
   return (
@@ -76,7 +86,9 @@ export const DocumentListComponent: React.FC<any> = ({ documents }) => {
         }}
       >
         <Grid container size={12} spacing={1}>
-          <StyledGrid size={6} sx={{paddingLeft:"5px"}}>Name</StyledGrid>
+          <StyledGrid size={6} sx={{ paddingLeft: "5px" }}>
+            Name
+          </StyledGrid>
           <StyledGrid size={canDownload ? 5 : 6}>Remark</StyledGrid>
           {canDownload && <StyledGrid size={1}>Action</StyledGrid>}
         </Grid>

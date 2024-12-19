@@ -46,3 +46,9 @@ export const uploadDocument = (document: FormData, onUploadProgress): Promise<Ax
         onUploadProgress
     });
 }
+
+export const downloadDocument = (path: string): Promise<AxiosResponse<any>> => {
+    return apiKit.get(`${process.env.REACT_APP_LEAD_MANAGEMENT}/documents/${path}`, {
+        responseType: "blob",
+    });
+}
