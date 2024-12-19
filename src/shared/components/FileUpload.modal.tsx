@@ -91,7 +91,7 @@ export const FileUploadModal: React.FC<FileUploadComponentProps> = ({
     if (files?.length === 1) {
       const file = document(files, `${data.name}, ${data.remark}`);
       dispatch(uploadDocumentAsync(file)).then((result: any) => {
-        if (result.payload.document.status === "Success") {
+        if (result?.payload?.document?.status === "Success") {
           onClose()
         }
       });
