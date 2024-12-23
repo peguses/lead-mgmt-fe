@@ -1,4 +1,5 @@
 import {
+  Backdrop,
   Box,
   Button,
   FormControl,
@@ -9,6 +10,7 @@ import {
   Step,
   StepLabel,
   Stepper,
+  CircularProgress,
 } from "@mui/material";
 import React, { Fragment, useEffect, useState } from "react";
 import GeneralInformationTab from "../../shared/components/GeneralInformation.tab";
@@ -27,7 +29,7 @@ import { ApplicationStatusUpdateModal } from "../../shared/components/Applicatio
 import { PersonalInformationTab } from "../../shared/components/PersonalInformation.tab";
 import usePermission from "../../shared/hooks/usePermission";
 import { Permission } from "../../shared/redux/role.slice";
-import { ChevronLeft, ChevronRight } from '@mui/icons-material';
+import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import { fetchStatusesAsync } from "../../shared/redux/application.status.slice";
 
 interface Step {
@@ -91,115 +93,116 @@ export const ApplicationViewContainer: React.FC<any> = () => {
 
   return (
     <Grid container size={12} justifyContent={"center"}>
-      <Grid
-        size={
-          jointLoan && activeStep !== 2
-            ? { xl: 8, lg: 8, md: 12, sm: 12, xs: 12 }
-            : { xl: 4, lg: 4, md: 12, sm: 12, xs: 12 }
-        }
-        sx={{ marginTop: "5px", marginBottom: "20px" }}
-      >
-        <Grid size={12}>
-          <Stepper nonLinear activeStep={activeStep}>
-            <Step key={"personal"} completed={true}>
-              <StepLabel
-                icon={<PersonIcon />}
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
-              >
-                Personal
-              </StepLabel>
-            </Step>
-            <Step key={"financial"} completed={true}>
-              <StepLabel
-                icon={<AttachMoneyIcon />}
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
-              >
-                Financial
-              </StepLabel>
-            </Step>
-            <Step key={"general"} completed={true}>
-              <StepLabel
-                icon={<InfoIcon />}
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
-              >
-                General
-              </StepLabel>
-            </Step>
-          </Stepper>
-        </Grid>
-        <Grid sx={{ marginTop: "5px" }} size={12}>
-          <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
-            <Button
-              sx={{
-                textTransform: "none",
-                color: "#1E3A5F",
-                fontWeight: 700
-              }}
-              startIcon={
-                <ChevronLeft 
-                sx={{
-                    height: "26px",
-                    width: "26px",
-                    boxShadow: 4,
-                    borderRadius: "50%",
-                    backgroundColor: "#1E3A5F",
-                    color: "white"
-                }}
-                />
-              }
-              variant="text"
-              disableRipple
-              onClick={handleBack}
-            >
-              Back
-            </Button>
-            <Box
-              sx={{
-                flexGrow: 1,
-                height: "1px",
-                backgroundColor: "gray",
-              }}
-            />
-            <Button
-              sx={{
-                textTransform: "none",
-                color: "#1E3A5F",
-                fontWeight: 700
-              }}
-              endIcon={
-                <ChevronRight
+      {!application?.isLoading ? (
+        <Grid
+          size={
+            jointLoan && activeStep !== 2
+              ? { xl: 8, lg: 8, md: 12, sm: 12, xs: 12 }
+              : { xl: 4, lg: 4, md: 12, sm: 12, xs: 12 }
+          }
+          sx={{ marginTop: "5px", marginBottom: "20px" }}
+        >
+          <Grid size={12}>
+            <Stepper nonLinear activeStep={activeStep}>
+              <Step key={"personal"} completed={true}>
+                <StepLabel
+                  icon={<PersonIcon />}
                   sx={{
-                    height: "26px",
-                    width: "26px",
-                    boxShadow: 4,
-                    borderRadius: "50%",
-                    backgroundColor: activeStep === 2 ? "#908c8c": "#1E3A5F",
-                    color: "white"
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
                   }}
-                />
-              }
-              variant="text"
-              disableRipple
-              onClick={handleNext}
-              disabled={activeStep === 2}
-            >
-              Next
-            </Button>
-          </Box>
-        </Grid>
-        {!application?.isLoading && (
+                >
+                  Personal
+                </StepLabel>
+              </Step>
+              <Step key={"financial"} completed={true}>
+                <StepLabel
+                  icon={<AttachMoneyIcon />}
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                  }}
+                >
+                  Financial
+                </StepLabel>
+              </Step>
+              <Step key={"general"} completed={true}>
+                <StepLabel
+                  icon={<InfoIcon />}
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                  }}
+                >
+                  General
+                </StepLabel>
+              </Step>
+            </Stepper>
+          </Grid>
+          <Grid sx={{ marginTop: "5px" }} size={12}>
+            <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
+              <Button
+                sx={{
+                  textTransform: "none",
+                  color: "#1E3A5F",
+                  fontWeight: 700,
+                }}
+                startIcon={
+                  <ChevronLeft
+                    sx={{
+                      height: "26px",
+                      width: "26px",
+                      boxShadow: 4,
+                      borderRadius: "50%",
+                      backgroundColor: "#1E3A5F",
+                      color: "white",
+                    }}
+                  />
+                }
+                variant="text"
+                disableRipple
+                onClick={handleBack}
+              >
+                Back
+              </Button>
+              <Box
+                sx={{
+                  flexGrow: 1,
+                  height: "1px",
+                  backgroundColor: "gray",
+                }}
+              />
+              <Button
+                sx={{
+                  textTransform: "none",
+                  color: "#1E3A5F",
+                  fontWeight: 700,
+                }}
+                endIcon={
+                  <ChevronRight
+                    sx={{
+                      height: "26px",
+                      width: "26px",
+                      boxShadow: 4,
+                      borderRadius: "50%",
+                      backgroundColor: activeStep === 2 ? "#908c8c" : "#1E3A5F",
+                      color: "white",
+                    }}
+                  />
+                }
+                variant="text"
+                disableRipple
+                onClick={handleNext}
+                disabled={activeStep === 2}
+              >
+                Next
+              </Button>
+            </Box>
+          </Grid>
+
           <Grid sx={{ marginTop: "20px" }} size={12}>
             {activeStep === 0 && (
               <Fragment>
@@ -312,8 +315,26 @@ export const ApplicationViewContainer: React.FC<any> = () => {
               </Grid>
             )}
           </Grid>
-        )}
-      </Grid>
+        </Grid>
+      ) : (
+        <Backdrop
+          className="diagnose-loader"
+          sx={{
+            color: "primary.main",
+            marginRight: "20%",
+            position: "absolute",
+            inset: "0",
+            zIndex: "10",
+            backgroundColor: "primary.contrastText",
+          }}
+          open={application?.isLoading || false}
+        >
+          <CircularProgress
+            color="inherit"
+            sx={{ marginLeft: "250px", textAlign: "center" }}
+          />
+        </Backdrop>
+      )}
       <ApplicationStatusUpdateModal
         open={openUpdateModal}
         application={application?.application}
