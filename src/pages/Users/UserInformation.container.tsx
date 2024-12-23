@@ -121,7 +121,7 @@ export const UserInformationContainer: React.FC<any> = () => {
         >
           <CircularProgress
             color="inherit"
-            sx={{ marginLeft: "250px", textAlign: "center" }}
+            sx={{ marginLeft: {xl: "250px", lg: "250px", md: "250px", sm: "100px", xs: "100px"}, textAlign: "center" }}
           />
         </Backdrop>
       </>)
