@@ -62,6 +62,7 @@ import usePermission from "../../shared/hooks/usePermission";
 import { Permission } from "../../shared/redux/role.slice";
 
 export const ApplicationListContainer: React.FC<any> = () => {
+
   const StyledGrid = styled(Grid)({
     wordWrap: "break-word",
     overflowWrap: "break-word",
@@ -89,27 +90,6 @@ export const ApplicationListContainer: React.FC<any> = () => {
     boxShadow: 24,
     p: 4,
   };
-
-  const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-      backgroundColor: theme.palette.common.black,
-      color: theme.palette.common.white,
-    },
-    [`&.${tableCellClasses.body}`]: {
-      fontSize: 14,
-    },
-    whiteSpace: "normal",
-    wordWrap: "break-word",
-  }));
-
-  const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    "&:nth-of-type(odd)": {
-      backgroundColor: theme.palette.action.hover,
-    },
-    "&:last-child td, &:last-child th": {
-      border: 0,
-    },
-  }));
 
   const navigate = useNavigate();
 
@@ -305,7 +285,6 @@ export const ApplicationListContainer: React.FC<any> = () => {
                 fontSize: "14px",
                 height: "30px",
                 fontWeight: 600,
-                
               }}
             >
               <Grid container size={12} spacing={1}>
@@ -319,13 +298,14 @@ export const ApplicationListContainer: React.FC<any> = () => {
                   size={{ xl: 1, lg: 1, md: 3, sm: 3, xs: 3 }}
                   sx={{ fontWeight: 700, paddingLeft: "5px" }}
                 >
-                  Lead Name
+                  Name
                 </StyledGrid>
                 <StyledGrid
                   display={{
                     xl: "block",
                     lg: "block",
-                    md: "none",paddingLeft: "5px",
+                    md: "none",
+                    paddingLeft: "5px",
                     sm: "none",
                     xs: "none",
                   }}
@@ -344,14 +324,14 @@ export const ApplicationListContainer: React.FC<any> = () => {
                     xs: "none",
                   }}
                   size={2}
-                  sx={{ fontWeight: 700, paddingLeft: "5px"}}
+                  sx={{ fontWeight: 700, paddingLeft: "5px" }}
                 >
                   Processing Officer
                 </StyledGrid>
 
                 <StyledGrid
                   size={{ xl: 1, lg: 1, md: 3, sm: 3, xs: 3 }}
-                  sx={{ fontWeight: 700, paddingLeft: "5px"}}
+                  sx={{ fontWeight: 700, paddingLeft: "5px" }}
                 >
                   Status
                 </StyledGrid>
@@ -365,7 +345,7 @@ export const ApplicationListContainer: React.FC<any> = () => {
                     xs: "none",
                   }}
                   size={1}
-                  sx={{ fontWeight: 700, paddingLeft: "5px"}}
+                  sx={{ fontWeight: 700, paddingLeft: "5px" }}
                 >
                   Request Date
                 </StyledGrid>
@@ -379,7 +359,7 @@ export const ApplicationListContainer: React.FC<any> = () => {
                     xs: "none",
                   }}
                   size={2}
-                  sx={{ fontWeight: 700, paddingLeft: "5px"}}
+                  sx={{ fontWeight: 700, paddingLeft: "5px" }}
                 >
                   Notes
                 </StyledGrid>
@@ -513,7 +493,12 @@ export const ApplicationListContainer: React.FC<any> = () => {
                         backgroundColor: index % 2 === 0 ? "#d6dce2" : "white",
                       }}
                     >
-                      <Grid size={12} container spacing={{xl: 1, lg: 1, md: 1, sm: 4, xs: 4}} justifyContent="flex-start">
+                      <Grid
+                        size={12}
+                        container
+                        spacing={{ xl: 1, lg: 1, md: 1, sm: 4, xs: 3 }}
+                        justifyContent="flex-start"
+                      >
                         <Grid size={{ xl: 3, lg: 3, md: 3, sm: 3, xs: 3 }}>
                           <IconButton
                             color="primary"

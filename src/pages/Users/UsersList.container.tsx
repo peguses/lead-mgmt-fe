@@ -33,10 +33,23 @@ import { User } from "../../shared/interfaces/user.interface";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { fetchRolesAsync, Roles } from "../../shared/redux/role.slice";
 import { findApplicationRole } from "../../shared/utils/find.application.role.util";
-import FilterDropdown, { Filter } from "../../shared/components/TableFilter.dialog";
+import FilterDropdown, {
+  Filter,
+} from "../../shared/components/TableFilter.dialog";
 import { UserFilters } from "../../shared/constants/UserFilters.constant";
 
 export const UsersListContainer: React.FC<any> = () => {
+  const StyledGrid = styled(Grid)({
+    wordWrap: "break-word",
+    overflowWrap: "break-word",
+    alignContent: "center",
+  });
+
+  const StyledCell = styled("span")({
+    padding: "5px",
+    fontSize: "12px",
+    fontWeight: 400,
+  });
 
   const isSmallScreen = useMediaQuery("(max-width: 900px)");
 
@@ -56,10 +69,11 @@ export const UsersListContainer: React.FC<any> = () => {
     return state?.roles;
   });
 
-  const referrerUrl = (referrerToken?: string) =>{
-    return referrerToken ? `${window.location.origin}/?referrerToken=${referrerToken}` : "";
-  }
-
+  const referrerUrl = (referrerToken?: string) => {
+    return referrerToken
+      ? `${window.location.origin}/?referrerToken=${referrerToken}`
+      : "";
+  };
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -68,9 +82,9 @@ export const UsersListContainer: React.FC<any> = () => {
     },
     [`&.${tableCellClasses.body}`]: {
       fontSize: 14,
-      wordWrap: 'break-word',
-      whiteSpace: 'normal',
-      maxWidth: '200px'
+      wordWrap: "break-word",
+      whiteSpace: "normal",
+      maxWidth: "200px",
     },
   }));
 
@@ -92,8 +106,15 @@ export const UsersListContainer: React.FC<any> = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    dispatch(fetchUsersAsync({page: page, limit: rowsPerPage, key: filter?.key, value: filter?.value}));
-  }, [dispatch,  page, rowsPerPage, filter]);
+    dispatch(
+      fetchUsersAsync({
+        page: page,
+        limit: rowsPerPage,
+        key: filter?.key,
+        value: filter?.value,
+      })
+    );
+  }, [dispatch, page, rowsPerPage, filter]);
 
   const usersList = useAppSelector((state): Users | undefined => {
     return state?.users;
@@ -133,7 +154,7 @@ export const UsersListContainer: React.FC<any> = () => {
   };
 
   const handleRefresh = () => {
-    dispatch(fetchUsersAsync({page: page, limit: rowsPerPage}));
+    dispatch(fetchUsersAsync({ page: page, limit: rowsPerPage }));
   };
 
   return (
@@ -158,9 +179,9 @@ export const UsersListContainer: React.FC<any> = () => {
           <Grid
             container
             size={{ xl: 4, lg: 6, md: 6, sm: 12, xs: 12 }}
-            spacing={{xl: 1, lg: 1, md: 1}}
+            spacing={{ xl: 1, lg: 1, md: 1 }}
           >
-            <Grid size={{xl:8, lg: 8, md: 8, sm: 10, xs: 10}}>
+            <Grid size={{ xl: 8, lg: 8, md: 8, sm: 8, xs: 8 }}>
               <Button
                 onClick={handleAdd}
                 variant="contained"
@@ -171,10 +192,13 @@ export const UsersListContainer: React.FC<any> = () => {
                 Add User
               </Button>
             </Grid>
-            <Grid size={{xl:2, lg: 2, md: 2, sm: 1, xs: 1}}>
-              <FilterDropdown onFilter={(data: Filter) => setFilter(data)} filters={UserFilters}/>
+            <Grid size={{ xl: 2, lg: 2, md: 2, sm: 2, xs: 2 }}>
+              <FilterDropdown
+                onFilter={(data: Filter) => setFilter(data)}
+                filters={UserFilters}
+              />
             </Grid>
-            <Grid size={{xl:2, lg: 2, md: 2, sm:1, xs: 1}}>
+            <Grid size={{ xl: 2, lg: 2, md: 2, sm: 1, xs: 1 }}>
               <IconButton
                 onClick={handleRefresh}
                 sx={{
@@ -197,81 +221,172 @@ export const UsersListContainer: React.FC<any> = () => {
         </Grid>
         <Grid size={12} sx={{ marginTop: "10px" }}>
           {!isUsersLoading ? (
-            <Paper sx={{ width: "100%", mb: 2 }}>
-              <TableContainer>
-                <Table sx={{ minWidth: 650 }} aria-label="lead table">
-                  <TableHead>
-                    <StyledTableRow>
-                      {!isSmallScreen && (
-                        <StyledTableCell sx={{ fontWeight: 700 }}>
-                          First Name
-                        </StyledTableCell>
-                      )}
-                      {!isSmallScreen && (
-                        <StyledTableCell sx={{ fontWeight: 700 }} align="left">
-                          Last Name
-                        </StyledTableCell>
-                      )}
-                      <StyledTableCell sx={{ fontWeight: 700 }} align="left">
-                        User Name
-                      </StyledTableCell>
-                      {!isSmallScreen && (
-                        <StyledTableCell sx={{ fontWeight: 700 }} align="left">
-                          Roles
-                        </StyledTableCell>
-                      )}
-                      {!isSmallScreen && (
-                        <StyledTableCell sx={{ fontWeight: 700 }} align="left">
-                          Referral Url
-                        </StyledTableCell>
-                      )}
-                      <StyledTableCell
-                        sx={{ fontWeight: 700, minWidth: { sm: "100px" } }}
-                        align="right"
-                      >
-                        Actions
-                      </StyledTableCell>
-                    </StyledTableRow>
-                  </TableHead>
-                  <TableBody>
-                    {!isUsersLoading &&
-                      users?.length !== 0 &&
-                      users?.map((row) => (
-                        <StyledTableRow
-                          key={row.email}
+            <>
+              <Grid
+                container
+                size={12}
+                spacing={1}
+                sx={{
+                  backgroundColor: "black",
+                  color: "white",
+                  fontSize: "14px",
+                  height: "30px",
+                  fontWeight: 600,
+                }}
+              >
+                <Grid container size={12} spacing={1}>
+                  <StyledGrid
+                    display={{
+                      xl: "block",
+                      lg: "block",
+                      md: "block",
+                      sm: "none",
+                      xs: "none",
+                    }}
+                    size={{ xl: 2, lg: 2, md: 2, sm: 4, xs: 4 }}
+                    sx={{ fontWeight: 700, paddingLeft: "5px" }}
+                  >
+                    First Name
+                  </StyledGrid>
+                  <StyledGrid
+                    size={{ xl: 2, lg: 2, md: 2, sm: 4, xs: 4 }}
+                    display={{
+                      xl: "block",
+                      lg: "block",
+                      md: "block",
+                      sm: "none",
+                      xs: "none",
+                    }}
+                    sx={{ fontWeight: 700, paddingLeft: "5px" }}
+                  >
+                    Last Name
+                  </StyledGrid>
+                  <StyledGrid
+                   size={{ xl: 2, lg: 2, md: 2, sm: 4, xs: 4 }}
+                    sx={{ fontWeight: 700, paddingLeft: "5px" }}
+                  >
+                    Username
+                  </StyledGrid>
+
+                  <StyledGrid
+                   size={{ xl: 1, lg: 1, md: 2, sm: 4, xs: 4 }}
+                    sx={{ fontWeight: 700, paddingLeft: "5px" }}
+                  >
+                    Role
+                  </StyledGrid>
+
+                  <StyledGrid
+                    display={{
+                      xl: "block",
+                      lg: "block",
+                      md: "block",
+                      sm: "none",
+                      xs: "none",
+                    }}
+                    size={{ xl: 3, lg: 3, md: 2, sm: 4, xs: 4 }}
+                    sx={{ fontWeight: 700, paddingLeft: "5px" }}
+                  >
+                    Referral Url
+                  </StyledGrid>
+
+                  <StyledGrid
+                    size={{ xl: 2, lg: 2, md: 2, sm: 3, xs: 3 }}
+                    sx={{ fontWeight: 700 }}
+                  >
+                    Actions
+                  </StyledGrid>
+                </Grid>
+              </Grid>
+              <Grid container size={12} spacing={0}>
+                {!isUsersLoading &&
+                  users?.length !== 0 &&
+                  users?.map((row, i) => {
+                    return (
+                      <Grid key={i} container size={12}>
+                        <StyledGrid
+                          size={{ xl: 2, lg: 2, md: 2}}
+                          display={{
+                            xl: "block",
+                            lg: "block",
+                            md: "block",
+                            sm: "none",
+                            xs: "none",
+                          }}
                           sx={{
-                            "&:last-child td, &:last-child th": { border: 0 },
+                            borderLeft: "1px solid #ccc",
+                            borderBottom: "1px solid #ccc",
+                            backgroundColor: i % 2 === 0 ? "#d6dce2" : "white",
                           }}
                         >
-                          {!isSmallScreen && (
-                            <StyledTableCell component="th" scope="row">
-                              {row.firstName}
-                            </StyledTableCell>
-                          )}
-                          {!isSmallScreen && (
-                            <StyledTableCell>{row?.lastName}</StyledTableCell>
-                          )}
-                          <StyledTableCell align="left">
-                            {row?.email}
-                          </StyledTableCell>
-                          {!isSmallScreen && (
-                            <StyledTableCell align="left">
-                              {findApplicationRole(row?.role?.name, roles?.roles)?.name}
-                            </StyledTableCell>
-                          )}
-                          {!isSmallScreen && (
-                            <StyledTableCell align="left">
-                              {referrerUrl(row?.referrerToken)}
-                            </StyledTableCell>
-                          )}
-                          <StyledTableCell
-                            align="right"
-                            sx={{ minWidth: { sm: "100px" } }}
-                          >
-                            <Grid
+                          <StyledCell>{row.firstName}</StyledCell>
+                        </StyledGrid>
+                        <StyledGrid
+                         display={{
+                          xl: "block",
+                          lg: "block",
+                          md: "block",
+                          sm: "none",
+                          xs: "none",
+                        }}
+                          size={{ xl: 2, lg: 2, md: 2}}
+                          sx={{
+                            borderLeft: "1px solid #ccc",
+                            borderBottom: "1px solid #ccc",
+                            backgroundColor: i % 2 === 0 ? "#d6dce2" : "white",
+                          }}
+                        >
+                          <StyledCell>{row.lastName}</StyledCell>
+                        </StyledGrid>
+                        <StyledGrid
+                          size={{ xl: 2, lg: 2, md: 2, sm: 4, xs: 4 }}
+                          sx={{
+                            borderLeft: "1px solid #ccc",
+                            borderBottom: "1px solid #ccc",
+                            backgroundColor: i % 2 === 0 ? "#d6dce2" : "white",
+                          }}
+                        >
+                          <StyledCell>{row.email}</StyledCell>
+                        </StyledGrid>
+                        <StyledGrid
+                          size={{ xl: 1, lg: 1, md: 2, sm: 4, xs: 4 }}
+                          sx={{
+                            borderLeft: "1px solid #ccc",
+                            borderBottom: "1px solid #ccc",
+                            backgroundColor: i % 2 === 0 ? "#d6dce2" : "white",
+                          }}
+                        >
+                          <StyledCell>{findApplicationRole(row?.role?.name, roles?.roles)?.name}</StyledCell>
+                        </StyledGrid>
+                        <StyledGrid
+                          size={{ xl: 3, lg: 3, md: 2}}
+                          display={{
+                            xl: "block",
+                            lg: "block",
+                            md: "block",
+                            sm: "none",
+                            xs: "none",
+                          }}
+                          sx={{
+                            borderLeft: "1px solid #ccc",
+                            borderBottom: "1px solid #ccc",
+                            backgroundColor: i % 2 === 0 ? "#d6dce2" : "white",
+                          }}
+                        >
+                          <StyledCell>{referrerUrl(row?.referrerToken)}</StyledCell>
+                        </StyledGrid>
+                        <StyledGrid
+                          size={{ xl: 2, lg: 2, md: 2, sm: 4, xs: 4 }}
+                          sx={{
+                            borderLeft: "1px solid #ccc",
+                            borderBottom: "1px solid #ccc",
+                            backgroundColor: i % 2 === 0 ? "#d6dce2" : "white",
+                          }}
+                        >
+                          <Grid
+                              size={12}
                               container
-                              spacing={1}
-                              justifyContent="flex-end"
+                              spacing={{xl: 1, lg: 1, md: 1, sm: 4, xs: 3}}
+                              justifyContent="flex-start"
                             >
                               <Grid size={2}>
                                 <IconButton
@@ -319,12 +434,11 @@ export const UsersListContainer: React.FC<any> = () => {
                                 </IconButton>
                               </Grid>
                             </Grid>
-                          </StyledTableCell>
-                        </StyledTableRow>
-                      ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
+                        </StyledGrid>
+                      </Grid>
+                    );
+                  })}
+              </Grid>
               <TablePagination
                 rowsPerPageOptions={[5, 10, 25]}
                 component="div"
@@ -334,7 +448,7 @@ export const UsersListContainer: React.FC<any> = () => {
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
               />
-            </Paper>
+            </>
           ) : (
             <Backdrop
               className="diagnose-loader"
