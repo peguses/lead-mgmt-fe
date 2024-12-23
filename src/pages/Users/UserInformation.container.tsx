@@ -9,6 +9,7 @@ import {
   UserManagedAction,
 } from "../../shared/redux/managed.user.slice";
 import { Roles } from "../../shared/redux/role.slice";
+import { Backdrop, CircularProgress } from "@mui/material";
 
 export const UserInformationContainer: React.FC<any> = () => {
 
@@ -104,6 +105,26 @@ export const UserInformationContainer: React.FC<any> = () => {
           )}
         </>
       );
+    } else {
+      return (<>
+       <Backdrop
+          className="diagnose-loader"
+          sx={{
+            color: "primary.main",
+            marginRight: "20%",
+            position: "absolute",
+            inset: "0",
+            zIndex: "10",
+            backgroundColor: "primary.contrastText",
+          }}
+          open={managedUser?.isLoading || roles?.isLoading || false}
+        >
+          <CircularProgress
+            color="inherit"
+            sx={{ marginLeft: "250px", textAlign: "center" }}
+          />
+        </Backdrop>
+      </>)
     }
     
   };
