@@ -14,27 +14,27 @@ export interface DocumentListComponentProps {
 }
 
 export const DocumentListComponent: React.FC<any> = ({ documents }) => {
-  const yScroll = {
-    maxHeight: "300px",
-    overflowY: "auto",
-    border: "1px solid #ccc",
-    overflowX: "hidden",
-    "&::-webkit-scrollbar": {
-      width: "10px",
-    },
-    "&::-webkit-scrollbar-track": {
-      backgroundColor: "#FFFFF",
-      borderRadius: "10px",
-    },
-    "&::-webkit-scrollbar-thumb": {
-      backgroundColor: "#1E3A5F",
-      borderRadius: "10px",
-      border: "3px solid #FFFFF",
-    },
-    "&::-webkit-scrollbar-thumb:hover": {
-      backgroundColor: "#1E3A5F",
-    },
-  };
+    const yScroll = {
+      maxHeight: "300px",
+      overflowY: "auto",
+      border: "1px solid #ccc",
+      overflowX: "hidden",
+      "&::-webkit-scrollbar": {
+        width: "10px",
+      },
+      "&::-webkit-scrollbar-track": {
+        backgroundColor: "#FFFFF",
+        borderRadius: "10px",
+      },
+      "&::-webkit-scrollbar-thumb": {
+        backgroundColor: "#1E3A5F",
+        borderRadius: "10px",
+        border: "3px solid #FFFFF",
+      },
+      "&::-webkit-scrollbar-thumb:hover": {
+        backgroundColor: "#1E3A5F",
+      },
+    };
 
   const StyledGrid = styled(Grid)({
     wordWrap: "break-word",

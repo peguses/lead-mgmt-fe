@@ -43,7 +43,7 @@ import {
   fetchApplicationAsync,
   ManagedApplication,
   resetApplication,
-  setReferrerId
+  setReferrerId,
 } from "../../shared/redux/application.slice";
 import {
   findLatestStatus,
@@ -57,17 +57,26 @@ import RefreshIcon from "@mui/icons-material/Refresh";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import { ApplicationUser } from "../../shared/redux/application.user.slice";
 import { ApplicationFilters } from "../../shared/constants/UserFilters.constant";
-import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
+import HourglassEmptyIcon from "@mui/icons-material/HourglassEmpty";
 import usePermission from "../../shared/hooks/usePermission";
 import { Permission } from "../../shared/redux/role.slice";
 
 export const ApplicationListContainer: React.FC<any> = () => {
+  const StyledGrid = styled(Grid)({
+    wordWrap: "break-word",
+    overflowWrap: "break-word",
+    alignContent: "center",
+  });
+
+  const StyledCell = styled("span")({
+    padding: "5px",
+    fontSize: "12px",
+    fontWeight: 400,
+  });
 
   const dispatch = useAppDispatch();
 
   const { hasPermission } = usePermission();
-
-  const isSmallScreen = useMediaQuery("(max-width: 900px)");
 
   const style = {
     position: "absolute",
@@ -127,7 +136,7 @@ export const ApplicationListContainer: React.FC<any> = () => {
 
   const [canAssign, setCanAssign] = useState<boolean>(false);
 
-  const [canDelete, setCanDelete] = useState<boolean>(false)
+  const [canDelete, setCanDelete] = useState<boolean>(false);
 
   const [isApplicationsLoading, setIsApplicationsLoading] = useState<
     boolean | undefined
@@ -146,7 +155,7 @@ export const ApplicationListContainer: React.FC<any> = () => {
 
   useEffect(() => {
     setCanAssign(hasPermission([Permission.ASSIGN_APPLICATION]));
-    setCanDelete(hasPermission([Permission.DELETE_APPLICATION]))
+    setCanDelete(hasPermission([Permission.DELETE_APPLICATION]));
   }, [hasPermission]);
 
   useEffect(() => {
@@ -187,15 +196,15 @@ export const ApplicationListContainer: React.FC<any> = () => {
 
   const handleAssign = (officer: any) => {
     const { processingOfficer } = officer;
-      dispatch(
-        assignOfficeAsync({
-          applicationId: managedApplication?.application.applicationId,
-          processingOfficerId: processingOfficer,
-        })
-      ).then((error: any) => {
-        dispatch(fetchApplicationsAsync({ page: page, limit: rowsPerPage }))
-        setOpenAssign(false);
+    dispatch(
+      assignOfficeAsync({
+        applicationId: managedApplication?.application.applicationId,
+        processingOfficerId: processingOfficer,
       })
+    ).then((error: any) => {
+      dispatch(fetchApplicationsAsync({ page: page, limit: rowsPerPage }));
+      setOpenAssign(false);
+    });
   };
 
   const openAssignModel = async (applicationId: number | undefined) => {
@@ -220,7 +229,9 @@ export const ApplicationListContainer: React.FC<any> = () => {
   };
 
   const handleAdd = async () => {
-    await Promise.all([dispatch(setReferrerId(currentUser?.user?.referrerToken))]);
+    await Promise.all([
+      dispatch(setReferrerId(currentUser?.user?.referrerToken)),
+    ]);
     navigate(`/?referrerToken=${currentUser?.user?.referrerToken}`);
   };
 
@@ -242,7 +253,7 @@ export const ApplicationListContainer: React.FC<any> = () => {
             size={{ xl: 4, lg: 6, md: 6, sm: 12, xs: 12 }}
             spacing={{ xl: 1, lg: 1, md: 1 }}
           >
-            <Grid size={{ xl: 8, lg: 8, md: 8, sm: 10, xs: 10 }}>
+            <Grid size={{ xl: 8, lg: 8, md: 8, sm: 8, xs: 8 }}>
               <Button
                 onClick={handleAdd}
                 variant="contained"
@@ -253,7 +264,7 @@ export const ApplicationListContainer: React.FC<any> = () => {
                 APPLICATION
               </Button>
             </Grid>
-            <Grid size={{ xl: 2, lg: 2, md: 2, sm: 1, xs: 1 }}>
+            <Grid size={{ xl: 2, lg: 2, md: 2, sm: 2, xs: 2 }}>
               <FilterDropdown
                 onFilter={(data: Filter) => setFilter(data)}
                 filters={ApplicationFilters}
@@ -283,108 +294,257 @@ export const ApplicationListContainer: React.FC<any> = () => {
       </Grid>
       <Grid size={12} sx={{ marginTop: "10px" }}>
         {!isApplicationsLoading ? (
-          <Paper sx={{ width: "100%", mb: 2 }}>
-            <TableContainer>
-              <Table sx={{ minWidth: 650 }} aria-label="lead table">
-                <TableHead>
-                  <StyledTableRow>
-                    {!isSmallScreen && (
-                      <StyledTableCell sx={{ fontWeight: 700 }}>
-                        Lead ID
-                      </StyledTableCell>
-                    )}
-                    <StyledTableCell sx={{ fontWeight: 700 }} align="left">
-                      Lead Name
-                    </StyledTableCell>
-                    {!isSmallScreen && (
-                      <StyledTableCell sx={{ fontWeight: 700 }} align="left">
-                        Referrer
-                      </StyledTableCell>
-                    )}
-                    {!isSmallScreen && (
-                      <StyledTableCell sx={{ fontWeight: 700 }} align="left">
-                        Processing Officer
-                      </StyledTableCell>
-                    )}
-                    <StyledTableCell sx={{ fontWeight: 700 }} align="left">
-                      Status
-                    </StyledTableCell>
-                    {!isSmallScreen && (
-                      <StyledTableCell sx={{ fontWeight: 700 }} align="left">
-                        Request Date
-                      </StyledTableCell>
-                    )}
-                    <StyledTableCell sx={{ fontWeight: 700 }} align="left">
-                      Notes
-                    </StyledTableCell>
-                    <StyledTableCell
-                      sx={{ fontWeight: 700, minWidth: "200px" }}
-                      align="right"
+          <>
+            <Grid
+              container
+              size={12}
+              spacing={1}
+              sx={{
+                backgroundColor: "black",
+                color: "white",
+                fontSize: "14px",
+                height: "30px",
+                fontWeight: 600,
+                
+              }}
+            >
+              <Grid container size={12} spacing={1}>
+                <StyledGrid
+                  size={{ xl: 1, lg: 1, md: 3, sm: 3, xs: 3 }}
+                  sx={{ fontWeight: 700, paddingLeft: "5px" }}
+                >
+                  Lead ID
+                </StyledGrid>
+                <StyledGrid
+                  size={{ xl: 1, lg: 1, md: 3, sm: 3, xs: 3 }}
+                  sx={{ fontWeight: 700, paddingLeft: "5px" }}
+                >
+                  Lead Name
+                </StyledGrid>
+                <StyledGrid
+                  display={{
+                    xl: "block",
+                    lg: "block",
+                    md: "none",paddingLeft: "5px",
+                    sm: "none",
+                    xs: "none",
+                  }}
+                  size={2}
+                  sx={{ fontWeight: 700, paddingLeft: "5px" }}
+                >
+                  Referrer
+                </StyledGrid>
+
+                <StyledGrid
+                  display={{
+                    xl: "block",
+                    lg: "block",
+                    md: "none",
+                    sm: "none",
+                    xs: "none",
+                  }}
+                  size={2}
+                  sx={{ fontWeight: 700, paddingLeft: "5px"}}
+                >
+                  Processing Officer
+                </StyledGrid>
+
+                <StyledGrid
+                  size={{ xl: 1, lg: 1, md: 3, sm: 3, xs: 3 }}
+                  sx={{ fontWeight: 700, paddingLeft: "5px"}}
+                >
+                  Status
+                </StyledGrid>
+
+                <StyledGrid
+                  display={{
+                    xl: "block",
+                    lg: "block",
+                    md: "none",
+                    sm: "none",
+                    xs: "none",
+                  }}
+                  size={1}
+                  sx={{ fontWeight: 700, paddingLeft: "5px"}}
+                >
+                  Request Date
+                </StyledGrid>
+
+                <StyledGrid
+                  display={{
+                    xl: "block",
+                    lg: "block",
+                    md: "none",
+                    sm: "none",
+                    xs: "none",
+                  }}
+                  size={2}
+                  sx={{ fontWeight: 700, paddingLeft: "5px"}}
+                >
+                  Notes
+                </StyledGrid>
+
+                <StyledGrid
+                  size={{ xl: 1, lg: 1, md: 3, sm: 3, xs: 3 }}
+                  sx={{ fontWeight: 700 }}
+                >
+                  Actions
+                </StyledGrid>
+              </Grid>
+            </Grid>
+            <Grid container size={12} spacing={0}>
+              {applications?.map((row, index) => {
+                return (
+                  <Grid key={index} container size={12}>
+                    <StyledGrid
+                      size={{ xl: 1, lg: 1, md: 3, sm: 3, xs: 3 }}
+                      sx={{
+                        borderLeft: "1px solid #ccc",
+                        borderBottom: "1px solid #ccc",
+                        backgroundColor: index % 2 === 0 ? "#d6dce2" : "white",
+                      }}
                     >
-                      Actions
-                    </StyledTableCell>
-                  </StyledTableRow>
-                </TableHead>
-                <TableBody>
-                  {applications?.map((row) => (
-                    <StyledTableRow
-                      key={row?.applicationId}
-                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                      <StyledCell>{row.applicationId}</StyledCell>
+                    </StyledGrid>
+                    <StyledGrid
+                      size={{ xl: 1, lg: 1, md: 3, sm: 3, xs: 3 }}
+                      sx={{
+                        borderLeft: "1px solid #ccc",
+                        borderBottom: "1px solid #ccc",
+                        backgroundColor: index % 2 === 0 ? "#d6dce2" : "white",
+                      }}
                     >
-                      {!isSmallScreen && (
-                        <StyledTableCell component="th" scope="row">
-                          {row?.applicationId}
-                        </StyledTableCell>
-                      )}
-                      <StyledTableCell align="left">
-                        {`${row?.primaryApplicant?.personalInformation?.firstName} ${row?.primaryApplicant?.personalInformation?.lastName}`}
-                      </StyledTableCell>
-                      {!isSmallScreen && (
-                        <StyledTableCell align="left">
-                          {row?.referrer}
-                        </StyledTableCell>
-                      )}
-                      {!isSmallScreen && (
-                        <StyledTableCell align="left">
-                          {row?.processingOfficer}
-                        </StyledTableCell>
-                      )}
-                      <StyledTableCell align="left">
+                      <StyledCell>{`${row?.primaryApplicant?.personalInformation?.firstName} ${row?.primaryApplicant?.personalInformation?.lastName}`}</StyledCell>
+                    </StyledGrid>
+                    <StyledGrid
+                      display={{
+                        xl: "block",
+                        lg: "block",
+                        md: "none",
+                        sm: "none",
+                        xs: "none",
+                      }}
+                      size={2}
+                      sx={{
+                        borderLeft: "1px solid #ccc",
+                        borderBottom: "1px solid #ccc",
+                        backgroundColor: index % 2 === 0 ? "#d6dce2" : "white",
+                      }}
+                    >
+                      <StyledCell>{row?.referrer}</StyledCell>
+                    </StyledGrid>
+                    <StyledGrid
+                      display={{
+                        xl: "block",
+                        lg: "block",
+                        md: "none",
+                        sm: "none",
+                        xs: "none",
+                      }}
+                      size={2}
+                      sx={{
+                        borderLeft: "1px solid #ccc",
+                        borderBottom: "1px solid #ccc",
+                        backgroundColor: index % 2 === 0 ? "#d6dce2" : "white",
+                      }}
+                    >
+                      <StyledCell>{row?.processingOfficer}</StyledCell>
+                    </StyledGrid>
+                    <StyledGrid
+                      size={{ xl: 1, lg: 1, md: 3, sm: 3, xs: 3 }}
+                      sx={{
+                        borderLeft: "1px solid #ccc",
+                        borderBottom: "1px solid #ccc",
+                        backgroundColor: index % 2 === 0 ? "#d6dce2" : "white",
+                      }}
+                    >
+                      <StyledCell>
                         {findLatestStatus(row?.applicationStatus)}
-                      </StyledTableCell>
-                      {!isSmallScreen && (
-                        <StyledTableCell align="left">
-                          <Moment format="YYYY-MM-DD HH:MM">
-                            {row?.createDateTime}
-                          </Moment>
-                        </StyledTableCell>
-                      )}
-                      <StyledTableCell align="left">
+                      </StyledCell>
+                    </StyledGrid>
+                    <StyledGrid
+                      display={{
+                        xl: "block",
+                        lg: "block",
+                        md: "none",
+                        sm: "none",
+                        xs: "none",
+                      }}
+                      size={1}
+                      sx={{
+                        borderLeft: "1px solid #ccc",
+                        borderBottom: "1px solid #ccc",
+                        backgroundColor: index % 2 === 0 ? "#d6dce2" : "white",
+                      }}
+                    >
+                      <StyledCell>
+                        {" "}
+                        <Moment format="YYYY-MM-DD HH:MM">
+                          {row?.createDateTime}
+                        </Moment>
+                      </StyledCell>
+                    </StyledGrid>
+                    <StyledGrid
+                      display={{
+                        xl: "block",
+                        lg: "block",
+                        md: "none",
+                        sm: "none",
+                        xs: "none",
+                      }}
+                      size={2}
+                      sx={{
+                        borderLeft: "1px solid #ccc",
+                        borderBottom: "1px solid #ccc",
+                        backgroundColor: index % 2 === 0 ? "#d6dce2" : "white",
+                      }}
+                    >
+                      <StyledCell>
                         {findLatestStatusNote(row?.applicationStatus)}
-                      </StyledTableCell>
-                      <StyledTableCell align="right" sx={{ minWidth: "200px" }}>
-                        <Grid container spacing={1} justifyContent="flex-end">
-                          <Grid size={2}>
-                            <IconButton
-                              color="primary"
-                              onClick={() => {
-                                handleNavigate(row?.applicationId || 0);
-                              }}
-                            >
-                              <Visibility />
-                            </IconButton>
-                          </Grid>
-                          <Grid size={2}>
-                            <IconButton
-                              color="primary"
-                              onClick={() => {
-                                handleStatusNavigate(row?.applicationId || 0);
-                              }}
-                            >
-                              <HourglassEmptyIcon />
-                            </IconButton>
-                          </Grid>
-                          {canAssign && (<Grid size={2}>
+                      </StyledCell>
+                    </StyledGrid>
+
+                    <StyledGrid
+                      size={{ xl: 2, lg: 2, md: 3, sm: 3, xs: 3 }}
+                      sx={{
+                        borderLeft: "1px solid #ccc",
+                        borderBottom: "1px solid #ccc",
+                        borderRight: "1px solid #ccc",
+                        backgroundColor: index % 2 === 0 ? "#d6dce2" : "white",
+                      }}
+                    >
+                      <Grid size={12} container spacing={{xl: 1, lg: 1, md: 1, sm: 4, xs: 4}} justifyContent="flex-start">
+                        <Grid size={{ xl: 3, lg: 3, md: 3, sm: 3, xs: 3 }}>
+                          <IconButton
+                            color="primary"
+                            onClick={() => {
+                              handleNavigate(row?.applicationId || 0);
+                            }}
+                          >
+                            <Visibility />
+                          </IconButton>
+                        </Grid>
+                        <Grid
+                          display={{
+                            xl: "block",
+                            lg: "block",
+                            md: "block",
+                            sm: "block",
+                            xs: "none",
+                          }}
+                          size={{ xl: 3, lg: 3, md: 3, sm: 3, xs: 3 }}
+                        >
+                          <IconButton
+                            color="primary"
+                            onClick={() => {
+                              handleStatusNavigate(row?.applicationId || 0);
+                            }}
+                          >
+                            <HourglassEmptyIcon />
+                          </IconButton>
+                        </Grid>
+                        {canAssign && (
+                          <Grid size={{ xl: 3, lg: 3, md: 3, sm: 3, xs: 3 }}>
                             <IconButton
                               color="primary"
                               onClick={() =>
@@ -393,8 +553,19 @@ export const ApplicationListContainer: React.FC<any> = () => {
                             >
                               <AssignmentIcon />
                             </IconButton>
-                          </Grid> )}
-                          { canDelete && (<Grid size={2}>
+                          </Grid>
+                        )}
+                        {canDelete && (
+                          <Grid
+                            display={{
+                              xl: "block",
+                              lg: "block",
+                              md: "block",
+                              sm: "none",
+                              xs: "none",
+                            }}
+                            size={{ xl: 3, lg: 3, md: 3, sm: 3, xs: 3 }}
+                          >
                             <IconButton
                               color="primary"
                               onClick={() => {
@@ -404,25 +575,26 @@ export const ApplicationListContainer: React.FC<any> = () => {
                             >
                               <DeleteIcon />
                             </IconButton>
-                          </Grid> )}
-                        </Grid>
-                      </StyledTableCell>
-                    </StyledTableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-
-            <TablePagination
-              rowsPerPageOptions={[5, 10, 25]}
-              component="div"
-              count={Number(applicationsList?.pagination?.total)}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-          </Paper>
+                          </Grid>
+                        )}
+                      </Grid>
+                    </StyledGrid>
+                  </Grid>
+                );
+              })}
+            </Grid>
+            <Grid size={{ xl: 12 }}>
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 25]}
+                component="div"
+                count={Number(applicationsList?.pagination?.total)}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
+            </Grid>
+          </>
         ) : (
           <Backdrop
             className="diagnose-loader"
@@ -544,12 +716,11 @@ export const ApplicationListContainer: React.FC<any> = () => {
                   >
                     {users &&
                       !users?.isLoading &&
-                      users.users
-                        .map((stateObj) => (
-                          <MenuItem key={stateObj.email} value={stateObj.id}>
-                            {`${stateObj.firstName} ${stateObj.lastName}`}
-                          </MenuItem>
-                        ))}
+                      users.users.map((stateObj) => (
+                        <MenuItem key={stateObj.email} value={stateObj.id}>
+                          {`${stateObj.firstName} ${stateObj.lastName}`}
+                        </MenuItem>
+                      ))}
                     ;
                   </Select>
                 )}
