@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
 import { Box } from "@mui/material";
 import "./App.css";
 import { useEffect, useState } from "react";
@@ -20,21 +20,19 @@ import { useAppDispatch } from "./shared/redux/hooks";
 import { resetManagedUser } from "./shared/redux/managed.user.slice";
 import { RequireAuth } from "./shared/components/RequireAuth";
 import { LoginPageContainer } from "./pages/Users/LoginPage.container";
-import { store } from "./shared/redux/store";
+import { persistor, store } from "./shared/redux/store";
 import httpApiKit from "./shared/helpers/axios-http-kit";
 import PermittedRoute from "./shared/components/PermittedRoute";
 import { Permission } from "./shared/redux/role.slice";
-import usePermission from "./shared/hooks/usePermission";
 import { ApplyViewContainer } from "./pages/Applications/ApplyView.container";
 import { fetchStatusesAsync } from "./shared/redux/application.status.slice";
+import { resetApplicationUser } from "./shared/redux/application.user.slice";
 
 
 function App() {
   const [open, setOpen] = useState(false);
 
   const dispatch = useAppDispatch();
-
-  const { hasPermission } = usePermission();
 
   useEffect(() => {
     dispatch(removeSecondaryApplicant());
@@ -44,6 +42,13 @@ function App() {
     dispatch(resetManagedUser());
     dispatch(fetchStatusesAsync())
   }, [dispatch]);
+
+  const cleanReduxPersistData = () => {
+    persistor.pause();
+    persistor.flush().then(() => {
+      return persistor.purge();
+    });
+  };
 
   httpApiKit.interceptors.request.use(
     (config) => {
@@ -55,6 +60,18 @@ function App() {
     },
     (error) => {
       return Promise.reject(error);
+    }
+  );
+
+  httpApiKit.interceptors.response.use(
+    response => {
+      return response;
+    },
+    error => {
+      if (error.response && error.response.status === 401) {
+        dispatch(resetApplicationUser())
+        cleanReduxPersistData()
+      }
     }
   );
 

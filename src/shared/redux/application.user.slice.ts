@@ -70,6 +70,10 @@ export const managedUserSlice = createSlice({
     name: "applicationUser",
     initialState: INITIAL_STATE,
     reducers: {
+      resetApplicationUser: (state) => {
+        state.authToken  = undefined
+        state.user = INITIAL_STATE.user
+      }
     },
     extraReducers: (builder) => {
       builder.addCase(loginAsync.pending, (state) => {
@@ -110,4 +114,7 @@ export const managedUserSlice = createSlice({
     },
 });
 
+export const {
+  resetApplicationUser
+} = managedUserSlice.actions;
 export default managedUserSlice.reducer;
