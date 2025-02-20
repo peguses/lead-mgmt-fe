@@ -31,6 +31,7 @@ export const ApplicationDrawerComponent: React.FC<any> = ({
   open,
   setOpen,
 }) => {
+  
   const StyledButton = styled(Button)({
     textTransform: "none",
     color: "white",

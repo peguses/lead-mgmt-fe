@@ -279,8 +279,8 @@ const GeneralInformationTab: React.FC<GeneralInformationProps> = ({
       >
         <AlertTitle>Important</AlertTitle>
         It is important for you to know that any information provided to you by
-        Fenix Capital is not to be considered Financial or Credit Advice. You
-        must read the following Fenix Capital Privacy statement before
+        Invest Capital is not to be considered Financial or Credit Advice. You
+        must read the following Invest Capital Privacy statement before
         submitting your Enquiry Form to understand how your information is used,
         collected and shared.
       </Alert>

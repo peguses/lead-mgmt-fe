@@ -379,6 +379,7 @@ export const UserInformationComponent: React.FC<UserInformationProps> = ({
                   endAdornment: (
                     <InputAdornment
                       position="end"
+                      sx={{alignSelf: "end"}}
                       onClick={handleClickShowPassword}
                     >
                       <div onClick={handleClickShowPassword}>
