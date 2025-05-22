@@ -1,12 +1,10 @@
-import { Box, Grid2 as Grid, IconButton } from "@mui/material";
+import { Grid2 as Grid, IconButton } from "@mui/material";
 import { Document } from "../redux/application.slice";
-import { Link } from "react-router-dom";
 import styled from "@emotion/styled";
 import usePermission from "../hooks/usePermission";
 import { Permission } from "../redux/role.slice";
 import { useEffect, useState } from "react";
 import DownloadIcon from "@mui/icons-material/Download";
-import axios from "axios";
 import { downloadDocument } from "../services/application.service";
 
 export interface DocumentListComponentProps {
