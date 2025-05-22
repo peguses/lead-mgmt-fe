@@ -45,6 +45,7 @@ export const ApplicationNavbarComponent: React.FC<any> = () => {
     handleCloseMenu();
     dispatch(logoutAsync()).then(() => {
       setIsLoggedIn(false);
+      navigate("/login");
     });
   };
 

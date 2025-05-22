@@ -72,6 +72,7 @@ function App() {
         dispatch(resetApplicationUser())
         cleanReduxPersistData()
       }
+      return Promise.reject(error);
     }
   );
 

@@ -41,7 +41,7 @@ export const loginAsync = createAsyncThunk(
       try {
         const response = await login(user);
         return {
-          auth: response.data as any,
+          auth: response?.data as any,
         };
       } catch (error: any) {
         return rejectWithValue(error.response.data.error);
@@ -56,7 +56,7 @@ export const logoutAsync = createAsyncThunk(
     try {
       const response = await logout();
       return {
-        auth: response.data as any,
+        auth: response?.data as any,
       };
     } catch (error: any) {
       return rejectWithValue(error.response.data.error);
@@ -81,8 +81,8 @@ export const managedUserSlice = createSlice({
         state.loadingFailed = false;
       });
       builder.addCase(loginAsync.fulfilled, (state, action) => {
-        state.user = action.payload.auth.data;
-        state.authToken = action.payload.auth.authToken;
+        state.user = action?.payload?.auth?.data;
+        state.authToken = action?.payload?.auth?.authToken;
         state.isLoading = false;
         state.loadingFailed = false;
         state.loginError = "";
