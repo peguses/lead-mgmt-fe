@@ -31,6 +31,7 @@ import Moment from "react-moment";
 import {
   Application,
   assignOfficeAsync,
+  createApplicationStatusAsync,
   fetchApplicationAsync,
   ManagedApplication,
   resetApplication,
@@ -51,6 +52,7 @@ import { ApplicationFilters } from "../../shared/constants/UserFilters.constant"
 import HourglassEmptyIcon from "@mui/icons-material/HourglassEmpty";
 import usePermission from "../../shared/hooks/usePermission";
 import { Permission } from "../../shared/redux/role.slice";
+import { ApplicationStatues } from "../../shared/redux/application.status.slice";
 
 export const ApplicationListContainer: React.FC<any> = () => {
 
@@ -161,8 +163,28 @@ export const ApplicationListContainer: React.FC<any> = () => {
     setPage(newPage);
   };
 
+  const applicationStatuses = useAppSelector(
+    (state): ApplicationStatues | undefined => {
+      return state?.applicationStatuses;
+    }
+  );
+
+  const defaultDelete = (): number | undefined => {
+    return applicationStatuses?.applicationStatuses.find((status) => status.status === 'Deleted')?.id
+  }
+
   const handleDelete = (applicationId: number) => {
-    dispatch(dropApplicationAsync(applicationId));
+
+    if (applicationId && currentUser?.user?.id) {
+      dispatch(
+        createApplicationStatusAsync({
+          applicationId: applicationId,
+          statusId: defaultDelete() || 7,
+          userId: currentUser?.user?.id,
+          note:"deleted",
+        })
+      ).finally(() => { setOpenDelete(false); handleRefresh()}) 
+    }
   };
 
   const handleAssign = (officer: any) => {
@@ -191,7 +213,7 @@ export const ApplicationListContainer: React.FC<any> = () => {
     navigate(`/applications/${applicationId}`);
   };
 
-  const handleStatusNavigate = (applicationId: number) => {
+  const   handleStatusNavigate = (applicationId: number) => {
     navigate(`/status?applicationId=${applicationId}`);
   };
 

@@ -123,7 +123,7 @@ export const DocumentListComponent: React.FC<any> = ({ documents }) => {
                 >
                   <IconButton
                     color="primary"
-                    onClick={() => handleDownload(document.name, document.path)}
+                    onClick={() => handleDownload(document.name, document.id)}
                   >
                     <DownloadIcon />
                   </IconButton>

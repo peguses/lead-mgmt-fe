@@ -73,8 +73,8 @@ export const ApplicationStatusContainer: React.FC<any> = () => {
   const dispatch = useAppDispatch();
 
   const filters = [
-    { code: "email", name: "By Email" },
-    { code: "mobile", name: "By Mobile" },
+    // { code: "email", name: "By Email" },
+    // { code: "mobile", name: "By Mobile" },
     { code: "applicationId", name: "By Application Id" },
   ];
 

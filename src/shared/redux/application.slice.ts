@@ -65,6 +65,7 @@ export interface Document {
   remark: string;
   name: string;
   path: string;
+  id: number;
 }
 
 export interface Application {
