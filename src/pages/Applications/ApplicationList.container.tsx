@@ -182,7 +182,7 @@ export const ApplicationListContainer: React.FC<any> = () => {
     setSelectedApplication(applicationId);
     await Promise.all([
       dispatch(fetchApplicationAsync({ applicationId: applicationId })),
-      dispatch(fetchUsersAsync({ page: 0, limit: 50 })),
+      dispatch(fetchUsersAsync({ page: 0, limit: 50, role: 'PROCESSING_OFFICER' })),
     ]);
     setOpenAssign(true);
   };

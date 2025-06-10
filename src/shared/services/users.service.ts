@@ -2,11 +2,15 @@ import { AxiosResponse } from "axios"
 import apiKit from '../helpers/axios-http-kit';
 import { User } from "../interfaces/user.interface";
 
-export const fetchUsers = async({page, limit, key, value}): Promise<AxiosResponse<any>> => {
+export const fetchUsers = async({page, limit, key, value, role}): Promise<AxiosResponse<any>> => {
     if (key && value) {
         return apiKit.get(`/users?page=${page}&limit=${limit}&filterKey=${key}&filterValue=${value}`);
     }
+    if (role) {
+        return apiKit.get(`/users?page=${page}&limit=${limit}&role=${role}`);
+    }
     return apiKit.get(`/users?page=${page}&limit=${limit}`);
+    
 }
 
 export const fetchUser = async(userId: number): Promise<AxiosResponse<any>> => {

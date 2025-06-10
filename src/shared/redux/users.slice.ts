@@ -17,6 +17,7 @@ export interface UsersQuery {
     limit: number;
     key?: string;
     value?: any;
+    role?: string;
 
 }
 
@@ -31,8 +32,8 @@ const INITIAL_STATE: Users = {
 
 export const fetchUsersAsync = createAsyncThunk(
     "users/fetchUsers",
-    async ({ page, limit, key, value }: UsersQuery) => {
-      const response = await fetchUsers({page, limit, key, value});
+    async ({ page, limit, key, value, role }: UsersQuery) => {
+      const response = await fetchUsers({page, limit, key, value, role});
       return {
         users: response.data as any,
       };
